@@ -1,1 +1,95 @@
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@font-face {
+  font-family: "Netflix Sans";
+  src: url("./assets/fonts/NetflixSans-Regular.woff2") format("woff2"),
+    url("./assets/fonts/NetflixSans-Regular.otf") format("otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Netflix Sans";
+  src: url("./assets/fonts/NetflixSans-Medium.woff2") format("woff2"),
+    url("./assets/fonts/NetflixSans-Medium.otf") format("otf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Netflix Sans";
+  src: url("./assets/fonts/NetflixSans-Light.woff2") format("woff2"),
+    url("./assets/fonts/NetflixSans-Light.otf") format("otf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Netflix Sans";
+  src: url("./assets/fonts/NetflixSans-Bold.woff2") format("woff2"),
+    url("./assets/fonts/NetflixSans-Bold.otf") format("otf");
+  font-weight: bold;
+  font-style: normal;
+}
+
 /* You can add global styles to this file, and also import other style files */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Netflix Sans", sans-serif;
+  color: white;
+  background: black;
+}
+ul {
+  list-style: none;
+}
+h1 {
+  font-size: 5vw;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 14px; /* largeur de la barre de défilement */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #222222; /* couleur de la poignée de défilement */
+  border-radius: 6px; /* bord arrondi de la poignée */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #6e6e6e; /* couleur de la piste de défilement */
+}
+
+/* Pour les navigateurs basés sur Gecko (Firefox) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Pour Microsoft Edge et Internet Explorer */
+body {
+  scrollbar-face-color: #888;
+  scrollbar-shadow-color: #f1f1f1;
+  scrollbar-highlight-color: #f1f1f1;
+  scrollbar-3dlight-color: #f1f1f1;
+  scrollbar-darkshadow-color: #f1f1f1;
+  scrollbar-track-color: #f1f1f1;
+}
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+::ng-deep .swiper-button-disabled{
+  display: none!important;
+  opacity: 0!important;
+}
+:root {
+  --swiper-button-disabled-display: none; /* Exemple */
+}
+.swiper-button-next.swiper-button-disabled, .swiper-button-prev.swiper-button-disabled {
+  display: none !important; /* Votre style personnalisé */
+}

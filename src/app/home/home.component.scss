@@ -1,0 +1,140 @@
+.homepage {
+  min-height: 100vh;
+  .playerBox {
+    position: absolute;
+    z-index: 0;
+    width: 100%; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
+    height: calc(
+      (9 / 16) * (100vw - 20px)
+    ); /* Calcul de la hauteur pour maintenir le ratio 16:9 */
+
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+    opacity: 1;
+    user-select: none;
+    margin-top: -59px;
+    margin-left: 0px;
+    max-width: initial;
+    transition-property: opacity;
+    transition-duration: 1000ms;
+  }
+  .background-iframe {
+    width: 100%;
+    height: calc((9 / 16) * (100vw - 20px));
+    background: linear-gradient(180deg, hsla(0, 0%, 8%, 0) 0, hsla(0, 0%, 8%, 0.15) 15%, hsla(0, 0%, 8%, 0.35) 29%, hsla(0, 0%, 8%, 0.58) 44%, black 87%, black);
+    position: absolute;
+    top: 0;
+  }
+  .fill-container {
+    height: calc(0.5625 * (100vw - 42rem));
+    width: 100%;
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    .last-clip {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-left: 2.8vw;
+      margin-bottom: 5em;
+      z-index: 2;
+      .wrapper-btn {
+        display: flex;
+        margin-top: 1.5vw;
+        flex-wrap: nowrap;
+        button {
+          border: 0px;
+          margin-right: 1rem;
+          padding: 0.6vw;
+          padding-left: 2rem;
+          padding-right: 2.4rem;
+          border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          user-select: none;
+          cursor: pointer;
+          font-size: 1.4vw;
+          font-weight: 500;
+          font-family: "Netflix Sans";
+          gap: 15px;
+          svg {
+            width: 1.3em;
+            height: 1.3em;
+          }
+        }
+        .btn-primary {
+          background-color: white;
+          color: black;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+          }
+        }
+        .btn-secondary {
+          background-color: rgba(109, 109, 110, 0.7);
+          color: white;
+          &:hover {
+            background-color: rgba(109, 109, 110, 0.4);
+          }
+        }
+      }
+    }
+    .control-mute {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-right: 7.5vw;
+      margin-bottom: 5em;
+      z-index: 2;
+      .circle-btn {
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        color: white;
+        background-color: transparent;
+        padding: 0.6vw;
+        cursor: pointer;
+        svg {
+          width: 2em;
+          height: 2em;
+        }
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+    }
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    flex-direction: column;
+
+    z-index: 1;
+    position: relative;
+    .period-title {
+      margin-left: 3em;
+    }
+  }
+}
+
+// .test{
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   .content{
+//     width: 150px;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     img{
+//       width: 100%;
+//       height: 100%;
+//     }
+//   }
+
+// }

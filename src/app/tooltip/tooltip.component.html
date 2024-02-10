@@ -1,0 +1,64 @@
+<div
+  class="tooltip"
+  [ngClass]="{ visible: isVisible }"
+  *ngIf="
+    data.socialMedia.facebook ||
+    data.socialMedia.snap ||
+    data.socialMedia.tiktok ||
+    data.socialMedia.twitter ||
+    data.socialMedia.instagram ||
+    data.socialMedia.youtube ||
+    data.socialMedia.twitch
+  "
+>
+  <h3>{{ data.nameArtiste }}</h3>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.facebook"
+    (click)="navigateToExternalLink(data.socialMedia.facebook)"
+  >
+    <img src="../../../../assets/icons/icon_facebook.png" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.snap"
+    (click)="navigateToExternalLink(data.socialMedia.snap)"
+  >
+    <img src="../../../../assets/icons/icon_snap.png" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.tiktok"
+    (click)="navigateToExternalLink(data.socialMedia.tiktok)"
+  >
+    <img src="../../../../assets/icons/icon_tiktok.png" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.twitter"
+    (click)="navigateToExternalLink(data.socialMedia.twitter)"
+  >
+    <img src="../../../../assets/icons/icon_twitter.webp" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.instagram"
+    (click)="navigateToExternalLink(data.socialMedia.instagram)"
+  >
+    <img src="../../../../assets/icons/icon_instagram.png" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.youtube"
+    (click)="navigateToExternalLink(data.socialMedia.youtube)"
+  >
+    <img src="../../../../assets/icons/icon_youtube.png" />
+  </figure>
+  <figure
+    tabindex="0"
+    *ngIf="data.socialMedia.twitch"
+    (click)="navigateToExternalLink(data.socialMedia.twitch)"
+  >
+    <img src="../../../../assets/icons/icon_twitch.png" />
+  </figure>
+</div>
