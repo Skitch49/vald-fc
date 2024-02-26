@@ -83,13 +83,3 @@ body {
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-::ng-deep .swiper-button-disabled{
-  display: none!important;
-  opacity: 0!important;
-}
-:root {
-  --swiper-button-disabled-display: none; /* Exemple */
-}
-.swiper-button-next.swiper-button-disabled, .swiper-button-prev.swiper-button-disabled {
-  display: none !important; /* Votre style personnalisé */
-}

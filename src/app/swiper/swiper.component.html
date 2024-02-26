@@ -1,5 +1,5 @@
-<div class="wrapper">
-  <swiper-container appSwiper #swiper [config]="swiperConfig">
+<div class="wrapper" *ngIf="!isMobileScreen">
+  <swiper-container appSwiper #swiper [config]="swiperConfig" >
     <swiper-slide *ngFor="let clip of clips">
       <figure routerLink="/clip/{{ clip.url }}">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
@@ -69,6 +69,16 @@
           <h3>{{ clip.name }}</h3>
         </div>
       </div>
+    </swiper-slide>
+  </swiper-container>
+</div>
+
+<div class="wrapper" *ngIf="isMobileScreen">
+  <swiper-container appSwiper #swiper [config]="swiperConfig">
+    <swiper-slide *ngFor="let clip of clips">
+      <figure (click)="openDialog(this.clip)">
+        <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
+      </figure>
     </swiper-slide>
   </swiper-container>
 </div>

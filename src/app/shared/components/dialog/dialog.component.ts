@@ -14,6 +14,8 @@ export class DialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeHoverStates();
+    console.log('in dialog '+JSON.stringify(this.data));
+    
   }
 
   initializeHoverStates() {

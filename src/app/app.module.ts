@@ -25,6 +25,10 @@ register();
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { TooltipComponent } from './tooltip/tooltip.component';
+import { FormsModule } from '@angular/forms';
+import { SearchComponent } from './search/search.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GalleryComponent } from './gallery/gallery.component';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -37,9 +41,11 @@ registerLocaleData(localeFr, 'fr');
     PlayerComponent,
     SwiperDirective,
     DialogComponent,
-    TooltipComponent
+    TooltipComponent,
+    SearchComponent,
+    GalleryComponent
   ],
-  imports: [BrowserModule, AppRoutingModule,MaterialModule],
+  imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule],
   providers: [provideClientHydration(), provideHttpClient(withFetch()), { provide: LOCALE_ID, useValue: "fr-FR" }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

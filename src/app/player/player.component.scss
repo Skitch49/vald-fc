@@ -56,3 +56,9 @@
   }
 }
 
+:host ::ng-deep .ytp-pause-overlay {
+  display: none;
+}
+::ng-deep .ytp-pause-overlay {
+  display: none;
+}

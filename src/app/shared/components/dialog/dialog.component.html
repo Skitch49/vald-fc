@@ -131,16 +131,18 @@
           </span>
         </p>
       </div>
-      <p *ngIf="data.mix">
+      <p *ngIf="data.mix  && data.mix.length > 0">
         Mix :
         <span
-          (mouseenter)="setHoverState('mix', data.mix.nameArtiste, true)"
-          (mouseleave)="setHoverState('mix', data.mix.nameArtiste, false)"
-          >{{ data.mix.nameArtiste }}
+        *ngFor="let mixer of data.mix; let i=index"
+          (mouseenter)="setHoverState('mix', mixer.nameArtiste, true)"
+          (mouseleave)="setHoverState('mix', mixer.nameArtiste, false)"
+          >{{ mixer.nameArtiste }}
           <app-tooltip
-            [isVisible]="hoverStates['mix-' + data.mix.nameArtiste]"
-            [data]="data.mix"
+            [isVisible]="hoverStates['mix-' + mixer.nameArtiste]"
+            [data]="mixer"
           ></app-tooltip>
+          <span *ngIf="i < data.mix.length - 1">,&nbsp;</span>
         </span>
       </p>
       <p *ngIf="data.mastering">

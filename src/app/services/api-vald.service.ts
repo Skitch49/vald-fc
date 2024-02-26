@@ -20,6 +20,10 @@ export class ApiValdService {
     return this.http.get('http://localhost:5000/clip/last-clip');
   }
 
+  getClipsArtistesFeaturing(query: string) {
+    return this.http.get(`http://localhost:5000/clip/search/${query}`);
+  }
+
   getClipsByDateRange(startDate: string, endDate: string): Observable<any> {
     return this.http.get(
       `http://localhost:5000/clip/date-range/${startDate}/${endDate}`

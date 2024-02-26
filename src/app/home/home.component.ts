@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiValdService } from '../services/api-vald.service';
 import { Clip } from '../interface/clip.interface';
@@ -12,11 +12,12 @@ import { DialogComponent } from '../shared/components/dialog/dialog.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-
 export class HomeComponent {
   clips: any;
   lastClip: any;
   dateRange: Clip[] = [];
+  isMobileScreen: boolean = false;
+
   periods: Periode[] = [
     { title: `L'ère V`, startDate: '2021-01-16', endDate: '2024-12-31' },
     { title: 'Post CMEC', startDate: '2019-09-13', endDate: '2021-01-15' },
@@ -34,21 +35,26 @@ export class HomeComponent {
     private apiVald: ApiValdService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.checkScreenSize();
+  }
 
   toggleMute() {
     this.isMuted = !this.isMuted;
     this.updateSafeUrl();
 
-    localStorage.setItem('mute', this.isMuted.toString());
+    if (typeof window !== 'undefined' && window.document) {
+      localStorage.setItem('mute', this.isMuted.toString());
+    }
   }
 
   ngOnInit() {
-
-    const muteValue = localStorage.getItem('mute');
-    if (muteValue) {
-      this.isMuted = muteValue === 'true'; // Convertissez la chaîne en booléen
-      this.updateSafeUrl();
+    if (typeof window !== 'undefined' && window.document) {
+      const muteValue = localStorage.getItem('mute');
+      if (muteValue) {
+        this.isMuted = muteValue === 'true'; // Convertissez la chaîne en booléen
+        this.updateSafeUrl();
+      }
     }
 
     // GET LAST CLIP
@@ -56,7 +62,7 @@ export class HomeComponent {
       this.lastClip = data;
       const safeUrl: SafeResourceUrl =
         this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&mute=${this.isMuted}`
+          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
         );
       this.lastClip.safeUrl = safeUrl;
     });
@@ -84,17 +90,41 @@ export class HomeComponent {
     if (this.lastClip) {
       const safeUrl: SafeResourceUrl =
         this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&mute=${this.isMuted}`
+          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
         );
       this.lastClip.safeUrl = safeUrl;
     }
   }
 
   openDialog() {
-    this.dialog.open(DialogComponent, {
-      width: '48vw',
-      height: 'auto',
-      data: this.lastClip
-    });
+    if (this.isMobileScreen) {
+      this.dialog.open(DialogComponent, {
+        width: '100vw',
+        height: 'auto',
+        data: this.lastClip,
+      });
+    } else {
+      this.dialog.open(DialogComponent, {
+        width: '48vw',
+        height: 'auto',
+        data: this.lastClip,
+      });
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth <= 768) {
+        this.isMobileScreen = true;
+      } else {
+        this.isMobileScreen = false;
+      }
+      console.log(this.isMobileScreen);
+    }
   }
 }

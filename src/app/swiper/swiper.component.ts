@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   Input,
   ViewChild,
   ViewEncapsulation,
@@ -18,11 +19,16 @@ import { MatDialog } from '@angular/material/dialog';
   encapsulation: ViewEncapsulation.None,
 })
 export class SwiperComponent {
+  isMobileScreen = false;
   @Input() clips: Clip[] = [];
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {
+    this.checkScreenSize();
+    
+  }
 
+  
   // Swiper
   swiperConfig: SwiperOptions = {
     slidesPerView: 6.4,
@@ -44,31 +50,63 @@ export class SwiperComponent {
     // Responsive breakpoints
     breakpoints: {
       // when window width is >= 320px
-      320: {
-        slidesPerView: 3,
-        slidesPerGroup: 3,
+      0: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
       },
       // when window width is >= 480px
-      480: {
-        slidesPerView: 3,
+      641: {
+        slidesPerView: 3.5,
         slidesPerGroup: 3,
       },
       // when window width is >= 640px
-      640: {
-        slidesPerView: 4,
+      841: {
+        slidesPerView: 4.5,
         slidesPerGroup: 4,
       },
-      940: {
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+      },
+      1481: {
         slidesPerView: 6.4,
         slidesPerGroup: 6,
       },
     },
   };
   openDialog(clip: any) {
-    this.dialog.open(DialogComponent, {
-      width: '48vw',
-      height: 'auto',
-      data: clip,
-    });
+
+    if (this.isMobileScreen) {
+      this.dialog.open(DialogComponent, {
+        width: '100vw',
+        height: 'auto',
+        data: clip,
+      });
+    } else {
+      this.dialog.open(DialogComponent, {
+        width: '48vw',
+        height: 'auto',
+        data: clip,
+      });
+    }
+
+    
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth <= 768) {
+        this.isMobileScreen = true;
+      } else {
+        this.isMobileScreen = false;
+      }
+      console.log(this.isMobileScreen);
+    }
+   }
+    
 }

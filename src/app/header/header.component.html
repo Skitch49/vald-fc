@@ -1,17 +1,18 @@
-<header [ngClass]="{ scrolled: isScrolled }">
-    <div class="left-header">
-      <figure>
-        <img src="../../assets/logo.png" alt="Vald FC" />
-      </figure>
-      <ul>
-        <li>Accueil</li>
-        <li>Clip</li>
-        <li>Interview</li>
-        <li>Ma liste</li>
-      </ul>
-    </div>
-    <div class="right-header">
-      <button>
+<header [ngClass]="{ scrolled: isScrolled }" *ngIf="!isMobileScreen" class="desktop-device">
+  <div class="left-header">
+    <figure routerLink="/">
+      <img src="../../assets/logo.png" alt="Vald FC" />
+    </figure>
+    <ul>
+      <li>Accueil</li>
+      <li>Clip</li>
+      <li>Interview</li>
+      <li>Ma liste</li>
+    </ul>
+  </div>
+  <div class="right-header">
+    <div class="search" [ngClass]="showSearch ? 'input-search ' : 'not-input'">
+      <button class="loupe" (click)="toggleSearch($event)">
         <svg
           width="24"
           height="24"
@@ -30,26 +31,134 @@
           ></path>
         </svg>
       </button>
-  
-      <button>
+      <input
+        tabindex="1"
+        type="text"
+        class="search-input"
+        placeholder="Clip, artiste, featuring..."
+        *ngIf="showSearch"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        #searchInput
+        [ngClass]="showSearch ? 'input-animation' : ''"
+        autofocus
+      />
+      <button class="close" (click)="closeSearch()" *ngIf="searchQuery > '0'">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          data-name="X"
+          role="button"
+          aria-label="close"
+        >
+          <title>close</title>
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M10.5858 12L2.29291 3.70706L3.70712 2.29285L12 10.5857L20.2929 2.29285L21.7071 3.70706L13.4142 12L21.7071 20.2928L20.2929 21.7071L12 13.4142L3.70712 21.7071L2.29291 20.2928L10.5858 12Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <button>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="ltr-4z3qvp e1svuwfo1"
+        data-name="Bell"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<header
+  class="mobileHeader"
+  (scroll)="onScroll()"
+  [ngClass]="{
+    mobileScrolled: isScrolled
+  }"
+  *ngIf="isMobileScreen"
+>
+  <div class="top-header">
+    <div class="search" [ngClass]="showSearch ? 'input-search ' : 'not-input'">
+      <button class="loupe" (click)="toggleSearch($event)">
         <svg
           width="24"
           height="24"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          class="ltr-4z3qvp e1svuwfo1"
-          data-name="Bell"
+          class="search-icon ltr-4z3qvp e1svuwfo1"
+          data-name="MagnifyingGlass"
           aria-hidden="true"
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
-            d="M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z"
+            d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </button>
+      <input
+        tabindex="1"
+        type="text"
+        class="search-input"
+        placeholder="Clip, artiste, featuring..."
+        *ngIf="showSearch"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        #searchInput
+        [ngClass]="showSearch ? 'input-animation' : ''"
+        autofocus
+      />
+      <button class="close" (click)="closeSearch()" *ngIf="searchQuery > '0'">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          data-name="X"
+          role="button"
+          aria-label="close"
+        >
+          <title>close</title>
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M10.5858 12L2.29291 3.70706L3.70712 2.29285L12 10.5857L20.2929 2.29285L21.7071 3.70706L13.4142 12L21.7071 20.2928L20.2929 21.7071L12 13.4142L3.70712 21.7071L2.29291 20.2928L10.5858 12Z"
             fill="currentColor"
           ></path>
         </svg>
       </button>
     </div>
-  </header>
-  
+  </div>
+  <div
+    class="bottom-header"
+    [ngClass]="{
+    'showMobileMenu': navbarDisplay,
+    'notShowMobileMenu': !navbarDisplay,
+}"
+  >
+    <ul>
+      <li>Clip</li>
+      <li>Interview</li>
+      <li>catégories</li>
+    </ul>
+  </div>
+</header>
