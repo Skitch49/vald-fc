@@ -1,6 +1,6 @@
 <div class="wrapper-dialog">
   <figure>
-    <img src="https://i.ytimg.com/vi/{{ data.url }}/maxresdefault.jpg" alt="" />
+    <img src="https://i.ytimg.com/vi/{{ clip.url }}/maxresdefault.jpg" alt="" />
     <div class="background">
       <button class="close-dialog" mat-dialog-close>
         <svg
@@ -26,81 +26,102 @@
         </svg>
       </button>
     </div>
-  </figure>
-  <div class="header-dialog">
-    <h1 class="title">{{ data.name }}</h1>
-    <div class="wrapper-btn">
-      <button
-        class="btn-primary"
-        mat-dialog-close
-        routerLink="/clip/{{ data.url }}"
+    <div class="header-dialog">
+      <h1 class="title">{{ clip.name }}</h1>
+      <div class="wrapper-btn">
+        <button
+          class="btn-primary"
+          mat-dialog-close
+          routerLink="/clip/{{ clip.url }}"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="ltr-4z3qvp e1svuwfo1"
+            data-name="Play"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          Lecture
+        </button>
+        <button class="btn-circle" *ngIf="data.userId"
+        (click)="likeClip(this.data.clip)"
+  
+        >
+        <svg
+        *ngIf="!isLikedByUser(clip)"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        data-name="non favoris"
+        aria-hidden="true"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="ltr-4z3qvp e1svuwfo1"
-          data-name="Play"
-          aria-hidden="true"
-        >
-          <path
-            d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
-            fill="currentColor"
-          ></path>
-        </svg>
-        Lecture
-      </button>
-      <button class="btn-circle">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="ltr-4z3qvp e1svuwfo1"
-          data-name="Plus"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </button>
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+      <svg
+      *ngIf="isLikedByUser(clip)"
+  
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        data-name="favoris"
+        aria-labelledby=":r4a:"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+        </button>
+      </div>
     </div>
-  </div>
+  </figure>
+  
   <div class="content-dialog">
     <div class="left-content">
       <div class="clip-info">
-        <p class="date">{{ data.date | date : "longDate" }}</p>
-        <p>{{ data.description }}</p>
+        <p class="date">{{ clip.date | date : "longDate" }}</p>
+        <p>{{ clip.description }}</p>
       </div>
       <div class="artiste-info">
         <p>
           Artiste :
           <span tabindex="0"
             (mouseenter)="
-              setHoverState('artiste', data.artiste.nameArtiste, true)
+              setHoverState('artiste', clip.artiste.nameArtiste, true)
               "
             (mouseleave)="
-              setHoverState('artiste', data.artiste.nameArtiste, false)
+              setHoverState('artiste', clip.artiste.nameArtiste, false)
               "
 
-            >{{ data.artiste.nameArtiste }}
+            >{{ clip.artiste.nameArtiste }}
             <app-tooltip
-              [isVisible]="hoverStates['artiste-' + data.artiste.nameArtiste]"
-              [data]="data.artiste"
+              [isVisible]="hoverStates['artiste-' + clip.artiste.nameArtiste]"
+              [data]="clip.artiste"
             ></app-tooltip>
           </span>
         </p>
-        <p *ngIf="data.featuring && data.featuring.length > 0">
+        <p *ngIf="clip.featuring && clip.featuring.length > 0">
           Featuring :
           <span tabindex="0"
-            *ngFor="let feat of data.featuring; let i = index"
+            *ngFor="let feat of clip.featuring; let i = index"
             (mouseenter)="setHoverState('featuring', feat.nameArtiste, true)"
             (mouseleave)="setHoverState('featuring', feat.nameArtiste, false)"
 
@@ -109,17 +130,17 @@
               [isVisible]="hoverStates['featuring-' + feat.nameArtiste]"
               [data]="feat"
             ></app-tooltip
-            ><span *ngIf="i < data.featuring.length - 1">,&nbsp;</span>
+            ><span *ngIf="i < clip.featuring.length - 1">,&nbsp;</span>
           </span>
         </p>
       </div>
     </div>
     <div class="right-content">
-      <div *ngIf="data.produced && data.produced.length > 0">
+      <div *ngIf="clip.produced && clip.produced.length > 0">
         <p>
           Prod by :
           <span
-            *ngFor="let prod of data.produced; let i = index"
+            *ngFor="let prod of clip.produced; let i = index"
             (mouseenter)="setHoverState('produced', prod.nameArtiste, true)"
             (mouseleave)="setHoverState('produced', prod.nameArtiste, false)"
             >{{ prod.nameArtiste
@@ -127,14 +148,14 @@
               [isVisible]="hoverStates['produced-' + prod.nameArtiste]"
               [data]="prod"
             ></app-tooltip
-            ><span *ngIf="i < data.produced.length - 1">,&nbsp;</span>
+            ><span *ngIf="i < clip.produced.length - 1">,&nbsp;</span>
           </span>
         </p>
       </div>
-      <p *ngIf="data.mix  && data.mix.length > 0">
+      <p *ngIf="clip.mix  && clip.mix.length > 0">
         Mix :
         <span
-        *ngFor="let mixer of data.mix; let i=index"
+        *ngFor="let mixer of clip.mix; let i=index"
           (mouseenter)="setHoverState('mix', mixer.nameArtiste, true)"
           (mouseleave)="setHoverState('mix', mixer.nameArtiste, false)"
           >{{ mixer.nameArtiste }}
@@ -142,31 +163,31 @@
             [isVisible]="hoverStates['mix-' + mixer.nameArtiste]"
             [data]="mixer"
           ></app-tooltip>
-          <span *ngIf="i < data.mix.length - 1">,&nbsp;</span>
+          <span *ngIf="i < clip.mix.length - 1">,&nbsp;</span>
         </span>
       </p>
-      <p *ngIf="data.mastering">
+      <p *ngIf="clip.mastering">
         Mastering :
         <span
           (mouseenter)="
-            setHoverState('mastering', data.mastering.nameArtiste, true)
+            setHoverState('mastering', clip.mastering.nameArtiste, true)
           "
           (mouseleave)="
-            setHoverState('mastering', data.mastering.nameArtiste, false)
+            setHoverState('mastering', clip.mastering.nameArtiste, false)
           "
-          >{{ data.mastering.nameArtiste }}
+          >{{ clip.mastering.nameArtiste }}
           <app-tooltip
-            [isVisible]="hoverStates['mastering-' + data.mastering.nameArtiste]"
-            [data]="data.mastering"
+            [isVisible]="hoverStates['mastering-' + clip.mastering.nameArtiste]"
+            [data]="clip.mastering"
           ></app-tooltip>
         </span>
       </p>
 
-      <div *ngIf="data.production && data.production.length > 0">
+      <div *ngIf="clip.production && clip.production.length > 0">
         <p>
           Production :
           <span
-            *ngFor="let production of data.production; let i = index"
+            *ngFor="let production of clip.production; let i = index"
             (mouseenter)="
               setHoverState('production', production.nameArtiste, true)
             "
@@ -178,20 +199,20 @@
               [isVisible]="hoverStates['production-' + production.nameArtiste]"
               [data]="production"
             ></app-tooltip
-            ><span *ngIf="i < data.production.length - 1">,&nbsp;</span>
+            ><span *ngIf="i < clip.production.length - 1">,&nbsp;</span>
           </span>
         </p>
       </div>
 
-      <p *ngIf="data.real">
+      <p *ngIf="clip.real">
         Réalisation :
         <span
-          (mouseenter)="setHoverState('real', data.real.nameArtiste, true)"
-          (mouseleave)="setHoverState('real', data.real.nameArtiste, false)"
-          >{{ data.real.nameArtiste }}
+          (mouseenter)="setHoverState('real', clip.real.nameArtiste, true)"
+          (mouseleave)="setHoverState('real', clip.real.nameArtiste, false)"
+          >{{ clip.real.nameArtiste }}
           <app-tooltip
-            [isVisible]="hoverStates['real-' + data.real.nameArtiste]"
-            [data]="data.real"
+            [isVisible]="hoverStates['real-' + clip.real.nameArtiste]"
+            [data]="clip.real"
           ></app-tooltip>
         </span>
       </p>

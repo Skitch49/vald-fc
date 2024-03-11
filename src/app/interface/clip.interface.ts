@@ -6,4 +6,6 @@ export interface Clip {
   url: string;
   artiste: string;
   featuring: string[];
+  likers:string[];
+  isLiked: boolean
   }

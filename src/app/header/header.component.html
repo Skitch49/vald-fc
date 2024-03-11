@@ -1,13 +1,17 @@
-<header [ngClass]="{ scrolled: isScrolled }" *ngIf="!isMobileScreen" class="desktop-device">
+<header
+  [ngClass]="{ scrolled: isScrolled }"
+  *ngIf="!isMobileScreen"
+  class="desktop-device"
+>
   <div class="left-header">
     <figure routerLink="/">
       <img src="../../assets/logo.png" alt="Vald FC" />
     </figure>
     <ul>
-      <li>Accueil</li>
+      <li routerLink="/">Accueil</li>
       <li>Clip</li>
       <li>Interview</li>
-      <li>Ma liste</li>
+      <li routerLink="/my-list">Ma liste</li>
     </ul>
   </div>
   <div class="right-header">
@@ -83,6 +87,18 @@
         ></path>
       </svg>
     </button>
+    <div *ngIf="!isLoggedIn()">
+      <button (click)="login()">Connexion</button>
+    </div>
+    <div *ngIf="isLoggedIn()" class="userAccount">
+      <figure><img src="{{ userInfo?.info?.picture }}"         tabindex="1" alt={{userInfo?.info?.given_name}}
+        /></figure>
+      <p>{{ userInfo?.info?.given_name }}</p>
+      <div class="logout">
+        <button tabindex="1" (click)="logout()">Déconnexion</button>
+      </div>
+    </div>
+    
   </div>
 </header>
 

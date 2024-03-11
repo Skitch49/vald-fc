@@ -7,6 +7,7 @@ import {
 } from '@angular/animations';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { GoogleApiService, UserInfo } from '../services/google-api.service';
 
 @Component({
   selector: 'app-header',
@@ -20,10 +21,27 @@ export class HeaderComponent {
   isMobileScreen: boolean = false;
   navbarDisplay = true;
   lastScrollTop = 0;
-  
+  userInfo?: UserInfo;
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router,private readonly google: GoogleApiService) {
     this.checkScreenSize();
+    google.userProfileSubject.subscribe((info) => {
+      this.userInfo = info;
+      console.log('info : '+JSON.stringify(info))
+    });
+  }
+
+  login() {
+    this.google.signIn();
+  }
+  
+  isLoggedIn(): boolean {
+    return this.google.isLoggedIn();
+  }
+
+  logout() {
+    this.google.signOut();
   }
 
   @ViewChild('searchInput')
@@ -34,7 +52,7 @@ export class HeaderComponent {
     if (
       this.showSearch &&
       !this.searchInputElement.nativeElement.contains(event.target) &&
-      this.searchQuery.length == 0
+      !this.searchQuery
     ) {
       this.showSearch = false;
       console.log('ici');
@@ -42,7 +60,7 @@ export class HeaderComponent {
   }
 
   onSearchChange(): void {
-    if (this.searchQuery.length > 0) {
+    if (this.searchQuery) {
       this.router.navigate(['/search'], {
         queryParams: { q: this.searchQuery },
       });

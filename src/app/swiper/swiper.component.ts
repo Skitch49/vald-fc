@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -11,6 +12,8 @@ import { SwiperContainer } from 'swiper/element';
 import { SwiperOptions } from 'swiper/types';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GoogleApiService } from '../services/google-api.service';
+import { ApiValdService } from '../services/api-vald.service';
 
 @Component({
   selector: 'app-swiper',
@@ -18,17 +21,23 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './swiper.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class SwiperComponent {
+export class SwiperComponent implements OnInit {
   isMobileScreen = false;
+  userId: string | null = null;
   @Input() clips: Clip[] = [];
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
 
-  constructor(private dialog: MatDialog) {
+  constructor(
+    private dialog: MatDialog,
+    private googleApiService: GoogleApiService,
+    private apiVald: ApiValdService
+  ) {
     this.checkScreenSize();
-    
   }
 
-  
+  ngOnInit() {
+    this.userId = this.googleApiService.getUserId();
+  }
   // Swiper
   swiperConfig: SwiperOptions = {
     slidesPerView: 6.4,
@@ -74,23 +83,14 @@ export class SwiperComponent {
       },
     },
   };
-  openDialog(clip: any) {
-
-    if (this.isMobileScreen) {
-      this.dialog.open(DialogComponent, {
-        width: '100vw',
-        height: 'auto',
-        data: clip,
-      });
-    } else {
-      this.dialog.open(DialogComponent, {
-        width: '48vw',
-        height: 'auto',
-        data: clip,
-      });
-    }
-
-    
+  openDialog(clip: any, userId: string | null) {
+    const dialogConfig = {
+      width: this.isMobileScreen ? '100vw' : '48vw',
+      height: 'auto',
+      maxHeight: '100vh',
+      data: { clip: clip, userId: userId },
+    };
+    this.dialog.open(DialogComponent, dialogConfig);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -99,14 +99,49 @@ export class SwiperComponent {
   }
 
   private checkScreenSize() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       if (window.innerWidth <= 768) {
         this.isMobileScreen = true;
       } else {
         this.isMobileScreen = false;
       }
-      console.log(this.isMobileScreen);
     }
-   }
-    
+  }
+
+  likeClip(clip: Clip) {
+    if (!this.userId) return;
+
+    const isLiked = this.isLikedByUser(clip);
+    this.updateClipLikeState(clip, !isLiked);
+
+    this.apiVald.toggleLike(clip._id, this.userId, !isLiked).subscribe({
+      next: () => {
+        // Gestion de la réponse réussie
+      },
+      error: () => {
+        // Revenir à l'état précédent en cas d'erreur
+        this.updateClipLikeState(clip, isLiked);
+        // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
+      },
+    });
+  }
+  private updateClipLikeState(clip: Clip, isLiked: boolean) {
+    if (isLiked && this.userId) {
+      clip.likers.push(this.userId);
+    } else {
+      if (this.userId) {
+        const index = clip.likers.indexOf(this.userId);
+        if (index > -1) {
+          clip.likers.splice(index, 1);
+        }
+      }
+    }
+  }
+  isLikedByUser(clip: Clip): boolean {
+    if (this.userId) {
+      return clip.likers.includes(this.userId);
+    } else {
+      return false;
+    }
+  }
 }

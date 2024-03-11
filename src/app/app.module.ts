@@ -14,7 +14,7 @@ import { SwiperComponent } from './swiper/swiper.component';
 import { MaterialModule } from './shared/module/material/material.module';
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { PlayerComponent } from './player/player.component';
 import { SwiperDirective } from './shared/directives/swiper.directive';
 import { DialogComponent } from './shared/components/dialog/dialog.component';
@@ -29,6 +29,8 @@ import { FormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GalleryComponent } from './gallery/gallery.component';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { MyListComponent } from './my-list/my-list.component';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -43,9 +45,10 @@ registerLocaleData(localeFr, 'fr');
     DialogComponent,
     TooltipComponent,
     SearchComponent,
-    GalleryComponent
+    GalleryComponent,
+    MyListComponent
   ],
-  imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule],
+  imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot()],
   providers: [provideClientHydration(), provideHttpClient(withFetch()), { provide: LOCALE_ID, useValue: "fr-FR" }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

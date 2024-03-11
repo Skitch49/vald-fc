@@ -6,6 +6,7 @@ import { Periode } from '../interface/periode.interface';
 import { PeriodeData } from '../interface/periodeData.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
+import { GoogleApiService } from '../services/google-api.service';
 
 @Component({
   selector: 'app-home',
@@ -13,11 +14,12 @@ import { DialogComponent } from '../shared/components/dialog/dialog.component';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  clips: any;
+  clips!: Clip;
   lastClip: any;
   dateRange: Clip[] = [];
   isMobileScreen: boolean = false;
-
+  likedClipIds: Set<string> = new Set();
+  userId: string | null = null;
   periods: Periode[] = [
     { title: `L'ère V`, startDate: '2021-01-16', endDate: '2024-12-31' },
     { title: 'Post CMEC', startDate: '2019-09-13', endDate: '2021-01-15' },
@@ -34,7 +36,8 @@ export class HomeComponent {
   constructor(
     private apiVald: ApiValdService,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private readonly google: GoogleApiService
   ) {
     this.checkScreenSize();
   }
@@ -49,6 +52,8 @@ export class HomeComponent {
   }
 
   ngOnInit() {
+    this.userId = this.google.getUserId();
+
     if (typeof window !== 'undefined' && window.document) {
       const muteValue = localStorage.getItem('mute');
       if (muteValue) {
@@ -57,7 +62,20 @@ export class HomeComponent {
       }
     }
 
-    // GET LAST CLIP
+    this.getLastClip();
+
+    this.getClipsByDateRange();
+  }
+
+  ClipIsLiked() {
+    // récupère id de l'utilisateur
+    if (this.userId) {
+      //récupère les clips like par l'utilisateur
+      this.apiVald.getClipsLiked(this.userId).subscribe();
+    }
+  }
+
+  getLastClip() {
     this.apiVald.getLastClip().subscribe((data) => {
       this.lastClip = data;
       const safeUrl: SafeResourceUrl =
@@ -66,13 +84,9 @@ export class HomeComponent {
         );
       this.lastClip.safeUrl = safeUrl;
     });
+  }
 
-    // GET ALL CLIPS
-    this.apiVald.getClips().subscribe((data) => {
-      this.clips = data;
-    });
-
-    // Parcourez les périodes et appelez getClipsByDateRange pour chaque période
+  getClipsByDateRange() {
     this.periods.forEach((period) => {
       this.apiVald
         .getClipsByDateRange(period.startDate, period.endDate)
@@ -96,20 +110,16 @@ export class HomeComponent {
     }
   }
 
-  openDialog() {
-    if (this.isMobileScreen) {
-      this.dialog.open(DialogComponent, {
-        width: '100vw',
-        height: 'auto',
-        data: this.lastClip,
-      });
-    } else {
-      this.dialog.open(DialogComponent, {
-        width: '48vw',
-        height: 'auto',
-        data: this.lastClip,
-      });
-    }
+
+
+  openDialog(clip: any, userId: string | null) {
+    const dialogConfig = {
+      width: this.isMobileScreen ? '100vw' : '48vw',
+      height: 'auto',
+      maxHeight: '100vh',
+      data: { clip: clip, userId: userId },
+    };
+    this.dialog.open(DialogComponent, dialogConfig);
   }
 
   @HostListener('window:resize', ['$event'])

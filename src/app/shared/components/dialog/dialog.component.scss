@@ -37,13 +37,14 @@
   }
   .header-dialog {
     position: absolute;
-    top: 34vh;
+    bottom: 1em;
     left: 3em;
     .title {
       font-size: 3.5vw;
     }
     .wrapper-btn {
       display: flex;
+      align-items: center;
       margin-top: 1.5vw;
       flex-wrap: nowrap;
       gap: 10px;
@@ -113,6 +114,9 @@
         display: flex;
         flex-direction: row;
         gap: 20px;
+        p {
+          padding: 8px 0;
+        }
         span {
           color: white;
           display: inline-block;
@@ -195,8 +199,38 @@
   }
 }
 
-@media screen and (max-width: 1300px) {
- .header-dialog{
-  top: 29vh;
- }
+@media screen and (max-width: 940px) {
+  .header-dialog {
+    .title {
+      font-size: 3.8vw !important;
+    }
+    .btn-primary {
+      font-size: 1.7vw !important;
+    }
+    .btn-circle {
+      padding: 0.3vw !important;
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .header-dialog {
+    bottom: 1.4em !important;
+    .title {
+      font-size: 5.2vw !important;
+    }
+    .btn-primary {
+      font-size: 2.4vw !important;
+    }
+    .btn-circle {
+      padding: 0.6vw !important;
+    }
+  }
+}
+@media screen and (max-width: 640px) {
+  .header-dialog {
+    left: 1.4em !important;
+  }
+  .content-dialog {
+    padding: 0 1.4em !important;
+  }
 }
