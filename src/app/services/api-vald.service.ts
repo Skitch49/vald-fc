@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiValdService {
-  private apiUrl = 'alexis.delaunay.angers.mds-project.fr:3000'; //Or http://localhost:3000 in localhost
+  private apiUrl = 'http://195.110.35.143:40110/'; //Or http://localhost:3000 in localhost
   
   constructor(private http: HttpClient) {}
 

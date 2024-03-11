@@ -1,8 +1,8 @@
 {
-  "name": "vald-fc",
-  "short_name": "vald-fc",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "VALD FC",
+  "short_name": "VALD FC",
+  "theme_color": "#000",
+  "background_color": "#000",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
