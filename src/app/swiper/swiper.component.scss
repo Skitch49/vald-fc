@@ -1,7 +1,7 @@
 swiper-container {
   swiper-slide {
     padding: 0 0.2vw;
-    transform: translateX(60px);
+    left: 60px;
     z-index: 10;
     transition: z-index 0.4s ease;
     position: relative;
@@ -167,7 +167,7 @@ swiper-container::part(container) {
 .swiper-slide-active {
   transition: transform 0.4s ease;
   &:hover {
-    transform: translate(90px, 0);
+    transform: translate(30px, 0);
   }
 }
 @media screen and (max-width: 1800px) {
@@ -195,7 +195,7 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(12) {
     &:hover,
     &:focus-within {
-      transform: translate(30px, 0);
+      transform: translate(-30px, 0);
     }
   }
 }
@@ -211,7 +211,7 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(10) {
     &:hover,
     &:focus-within {
-      transform: translate(30px, 0);
+      transform: translate(-30px, 0);
     }
   }
   .swiper-slide-active ~ swiper-slide:nth-of-type(5),
@@ -229,7 +229,7 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(8) {
     &:hover,
     &:focus-within {
-      transform: translate(30px, 0);
+      transform: translate(-30px, 0);
     }
   }
 
@@ -264,7 +264,7 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(6) {
     &:hover,
     &:focus-within {
-      transform: translate(30px, 0);
+      transform: translate(-30px, 0);
     }
   }
 
@@ -297,7 +297,7 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
     &:hover,
     &:focus-within {
-      transform: translate(30px, 0);
+      transform: translate(-30px, 0);
     }
   }
 
@@ -308,35 +308,94 @@ swiper-container::part(container) {
   .wrapper {
     height: 20.2vh !important;
   }
-  .period-title{
+  .period-title {
     position: relative;
     top: 8px;
   }
 }
+@media screen and (max-width: 550px) {
+  swiper-container::part(button-next) {
+    height: 140px !important;
+    padding: 0px 3.1vw !important;
+    top: 34px !important;
+  }
+}
+@media screen and (max-width: 510px) {
+  swiper-container::part(button-next) {
+    height: 118px !important;
+    padding: 0px 2.6vw !important;
+    top: 39px !important;
+  }
+}
+@media screen and (max-width: 470px) {
+  swiper-container::part(button-next) {
+    height: 117px !important;
+    padding: 0px 1.3vw !important;
+    top: 37px !important;
+  }
+  swiper-slide {
+    left: 7vw !important;
+    &:hover,
+    &:focus-within {
+      img {
+        transform: scale(1.15) !important;
+      }
+    }
+  }
+  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
+  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
+    &:hover,
+    &:focus-within {
+      transform: translate(-15px, 0);
+    }
+  }
 
-@media screen and (max-height: 900px) and (max-width:1200px) {
+  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
+  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
+    transition: transform 0.4s ease;
+  }
+
+  .swiper-slide-active {
+    &:hover {
+      transform: translateX(15px) !important;
+    }
+  }
+
+}
+@media screen and (max-width: 410px) {
+  swiper-container::part(button-next) {
+    height: 104px !important;
+    padding: 0px 1.1vw !important;
+    top: 34px !important;
+  }
+}
+@media screen and (max-height: 900px) and (max-width: 1200px) {
   .wrapper {
     height: 266px !important;
   }
 }
-@media screen and (max-height: 900px) and (max-width:940px) {
+@media screen and (max-height: 900px) and (max-width: 940px) {
   .wrapper {
     height: 236px !important;
   }
 }
-@media screen and (max-height: 900px) and (max-width:768px) {
+@media screen and (max-height: 900px) and (max-width: 768px) {
   .wrapper {
     height: 206px !important;
   }
 }
-@media screen and (max-height: 900px) and (max-width:640px) {
+@media screen and (max-height: 900px) and (max-width: 640px) {
   .wrapper {
     height: 170px !important;
   }
 }
-  @media screen and (max-height: 900px) and  (min-width:1200px){
-    .wrapper{
-      height: 220px!important;
-    }
+@media screen and (max-height: 900px) and (max-width: 470px) {
+  .wrapper {
+    height: 135px !important;
   }
-
+}
+@media screen and (max-height: 900px) and (min-width: 1200px) {
+  .wrapper {
+    height: 220px !important;
+  }
+}

@@ -17,6 +17,7 @@ import { GoogleApiService, UserInfo } from '../services/google-api.service';
 export class HeaderComponent {
   isScrolled: boolean = false;
   showSearch: boolean = false;
+  showLogout: boolean = false;
   searchQuery: string = '';
   isMobileScreen: boolean = false;
   navbarDisplay = true;
@@ -46,7 +47,8 @@ export class HeaderComponent {
 
   @ViewChild('searchInput')
   searchInputElement!: ElementRef;
-
+  @ViewChild('logoutViewChild')
+  logoutElement!: ElementRef;
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (
@@ -55,7 +57,9 @@ export class HeaderComponent {
       !this.searchQuery
     ) {
       this.showSearch = false;
-      console.log('ici');
+    }
+    if(this.showLogout && !this.logoutElement.nativeElement.contains(event.target)){
+      this.showLogout = false;
     }
   }
 
@@ -94,23 +98,6 @@ export class HeaderComponent {
     }
   }
 
-  // @HostListener('window:scroll', [])
-  // onScroll(): void {
-  //   let currentScrollTop = window.scrollY;
-  //   if(window.scrollY > 100){
-  //     this.isScrolled =true;
-  //   }
-  //   if (currentScrollTop > this.lastScrollTop && this.navbarDisplay==true ) {
-  //     // Scroll vers le bas
-  //     this.navbarDisplay = false;
-  //   }
-  //   if(currentScrollTop < this.lastScrollTop && this.navbarDisplay==false){
-  //     // Scroll vers le haut
-  //     this.navbarDisplay = true;
-  //   }
-  //   console.log(this.navbarDisplay)
-  //   this.lastScrollTop = currentScrollTop;
-  // }
 
   toggleSearch(event: Event): void {
     event.stopPropagation(); // Empêche l'événement de se propager au document
@@ -120,6 +107,11 @@ export class HeaderComponent {
     } else {
       this.closeSearch();
     }
+  }
+
+  toggleLogout(event: Event):void {
+    event.stopPropagation(); // Empêche l'événement de se propager au document
+    this.showLogout = !this.showLogout;
   }
 
   closeSearch(): void {

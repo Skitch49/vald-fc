@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiValdService {
-  private apiUrl = 'http://195.110.35.143:40110/'; //Or http://localhost:3000 in localhost
+  private apiUrl = 'http://195.110.35.143:40110'; // In Production
+  // private apiUrl = 'http://localhost:3000'; //In Dev
   
   constructor(private http: HttpClient) {}
 

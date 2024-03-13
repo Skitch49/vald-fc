@@ -5,7 +5,7 @@
     z-index: 0;
     width: 100%; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
     height: calc(
-      (9 / 16) * (100vw - 20px)
+      (9 / 16) * (100vw)
     ); /* Calcul de la hauteur pour maintenir le ratio 16:9 */
 
     top: 0px;
@@ -21,7 +21,7 @@
   }
   .background-iframe {
     width: 100%;
-    height: calc((9 / 16) * (100vw - 20px));
+    height: calc((9 / 16) * (100vw));
     background: linear-gradient(
       180deg,
       hsla(0, 0%, 8%, 0) 0,
@@ -232,5 +232,25 @@
   }
   .last-clip {
     width: 70% !important;
+  }
+}
+@media screen and (max-width: 510px) {
+  .fill-container{
+    height: calc(1*(100vw - 17rem)) !important;
+    margin-bottom: 2em !important;
+  }
+  .wrapper-btn > button{
+    font-size: 16px !important;
+  }
+  .last-clip > h1{
+    font-size: 40px;
+  }
+}
+@media screen and (max-width: 430px) {
+  .fill-container{
+    height: calc(1*(100vw - 14rem)) !important;
+  }
+  .last-clip{
+    width: 100%!important;
   }
 }

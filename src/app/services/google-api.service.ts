@@ -5,8 +5,10 @@ import { Subject } from 'rxjs';
 const oAuthConfig: AuthConfig = {
   issuer: 'https://accounts.google.com',
   strictDiscoveryDocumentValidation: false,
-  redirectUri: 'alexis.delaunay.angers.mds-project.fr',
-  postLogoutRedirectUri: 'alexis.delaunay.angers.mds-project.fr',
+  redirectUri: 'http://alexis.delaunay.angers.mds-project.fr',    // Prod
+  postLogoutRedirectUri: 'http://alexis.delaunay.angers.mds-project.fr', //Prod
+  // redirectUri: 'http://localhost:4200', //Dev
+  // postLogoutRedirectUri: 'http://localhost:4200', //Dev
   clientId:
     '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
   scope: 'openid profile',

@@ -60,6 +60,14 @@ export class SwiperComponent implements OnInit {
     breakpoints: {
       // when window width is >= 320px
       0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+      },
+      471: {
         slidesPerView: 2.5,
         slidesPerGroup: 2,
       },
