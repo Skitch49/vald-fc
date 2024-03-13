@@ -1,24 +1,26 @@
 .background-video {
   position: absolute;
   z-index: 101;
-  width: 100%; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
+  width: 100%;
   height: 100vh;
 
   top: 0px;
   left: 0px;
   overflow: hidden;
   opacity: 1;
-  // user-select: none;
+
   max-width: initial;
+  display: flex;
+  align-items: center;
   .playerBox {
-    position: absolute;
+    position: relative;
     z-index: 0;
-    width: 100vw; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
+    width: 100vw;
     height: calc(
-      (9 / 16) * (100vw - 20px)
+      (9 / 16) * (100vw)
     ); /* Calcul de la hauteur pour maintenir le ratio 16:9 */
 
-    top: 0px;
+    top: -29px;
     left: 0px;
     overflow: hidden;
     opacity: 1;
@@ -29,10 +31,6 @@
     transition-property: opacity;
     transition-duration: 1000ms;
   }
-  // iframe{
-  //     width: 100%;
-  //     height: 100vh;
-  // }
 }
 .back {
   position: absolute;

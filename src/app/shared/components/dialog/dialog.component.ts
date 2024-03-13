@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Artiste } from '../../../interface/artiste.interface';
 import { ApiValdService } from '../../../services/api-vald.service';
@@ -36,7 +36,8 @@ export class DialogComponent implements OnInit {
   setHoverState(category: string, artistName: string, state: boolean) {
     this.hoverStates[`${category}-${artistName}`] = state;
   }
-  
+  @Output() likeUpdated = new EventEmitter<void>();
+
   likeClip(clip: any) {
     if (!this.data.userId) return;
 
@@ -45,6 +46,8 @@ export class DialogComponent implements OnInit {
 
     this.apiVald.toggleLike(clip._id, this.data.userId, !isLiked).subscribe({
       next: () => {
+        this.likeUpdated.emit();
+
         // Gestion de la réponse réussie
       },
       error: () => {

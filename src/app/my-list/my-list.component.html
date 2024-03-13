@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" *ngIf="!isMobileScreen">
   <div class="card" *ngFor="let clip of clips">
     <figure routerLink="/clip/{{ clip.url }}">
       <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
@@ -91,6 +91,14 @@
         <h3>{{ clip.name }}</h3>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="wrapper" *ngIf="isMobileScreen">
+  <div class="card" *ngFor="let clip of clips">
+    <figure (click)="openDialog(this.clip, this.userId)">
+      <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
+    </figure>
   </div>
 </div>
 <p>{{ this.userId }}</p>

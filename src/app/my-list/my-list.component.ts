@@ -19,7 +19,10 @@ export class MyListComponent implements OnInit {
     private googleApiService: GoogleApiService,
     private apiVald: ApiValdService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.checkScreenSize();
+
+  }
 
   ngOnInit() {
     this.userId = this.googleApiService.getUserId();
@@ -36,12 +39,23 @@ export class MyListComponent implements OnInit {
 
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
-      width: this.isMobileScreen ? '100vw' : '48vw',
+      width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '100vh',
       data: { clip: clip, userId: userId },
     };
-    this.dialog.open(DialogComponent, dialogConfig);
+
+    const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.ClipsLiked();
+    });
+
+    // Écouter l'événement likeUpdated
+    dialogRef.componentInstance.likeUpdated.subscribe(() => {
+      this.ClipsLiked();
+    });
+
   }
 
   @HostListener('window:resize', ['$event'])

@@ -25,8 +25,8 @@ export class HomeComponent {
     { title: 'Post CMEC', startDate: '2019-09-13', endDate: '2021-01-15' },
     { title: 'Post Xeu', startDate: '2018-01-05', endDate: '2019-09-12' },
     { title: 'Post Agartha', startDate: '2016-10-21', endDate: '2018-01-05' },
-    { title: 'Post NQNT 2', startDate: '2015-06-03', endDate: '2016-10-21' },
-    { title: 'NQNT', startDate: '2011-06-03', endDate: '2015-06-03' },
+    { title: 'Post NQNT 2', startDate: '2015-06-03', endDate: '2016-10-20' },
+    { title: 'NQNT', startDate: '2011-06-03', endDate: '2015-06-02' },
     // Ajoutez d'autres périodes selon vos besoins
   ];
   periodData: PeriodeData[] = []; // Modifiez le type pour être un tableau
@@ -114,7 +114,7 @@ export class HomeComponent {
 
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
-      width: this.isMobileScreen ? '100vw' : '48vw',
+      width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '100vh',
       data: { clip: clip, userId: userId },

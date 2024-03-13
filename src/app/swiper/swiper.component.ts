@@ -93,7 +93,7 @@ export class SwiperComponent implements OnInit {
   };
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
-      width: this.isMobileScreen ? '100vw' : '48vw',
+      width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '100vh',
       data: { clip: clip, userId: userId },
