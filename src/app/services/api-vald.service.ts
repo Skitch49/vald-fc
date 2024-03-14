@@ -11,7 +11,7 @@ export class ApiValdService {
   
   constructor(private http: HttpClient) {}
 
-  getClips() {
+  getClips(): Observable<any> {
     return this.http.get(`${this.apiUrl}/clip`);
   }
 

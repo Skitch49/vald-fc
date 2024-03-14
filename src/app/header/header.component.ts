@@ -24,19 +24,21 @@ export class HeaderComponent {
   lastScrollTop = 0;
   userInfo?: UserInfo;
 
-
-  constructor(private router: Router,private readonly google: GoogleApiService) {
+  constructor(
+    private router: Router,
+    private readonly google: GoogleApiService
+  ) {
     this.checkScreenSize();
     google.userProfileSubject.subscribe((info) => {
       this.userInfo = info;
-      console.log('info : '+JSON.stringify(info))
+      console.log('info : ' + JSON.stringify(info));
     });
   }
 
   login() {
     this.google.signIn();
   }
-  
+
   isLoggedIn(): boolean {
     return this.google.isLoggedIn();
   }
@@ -58,7 +60,10 @@ export class HeaderComponent {
     ) {
       this.showSearch = false;
     }
-    if(this.showLogout && !this.logoutElement.nativeElement.contains(event.target)){
+    if (
+      this.showLogout &&
+      !this.logoutElement.nativeElement.contains(event.target)
+    ) {
       this.showLogout = false;
     }
   }
@@ -79,10 +84,10 @@ export class HeaderComponent {
 
     // Seuil pour éviter les changements trop fréquents
     const scrollThreshold = 50;
-    if(window.scrollY > 100){
-      this.isScrolled =true;
-    }else{
-      this.isScrolled =false;
+    if (window.scrollY > 100) {
+      this.isScrolled = true;
+    } else {
+      this.isScrolled = false;
     }
     // Vérifie si l'utilisateur a défilé d'un certain seuil
     if (Math.abs(currentScrollTop - this.lastScrollTop) > scrollThreshold) {
@@ -98,18 +103,22 @@ export class HeaderComponent {
     }
   }
 
-
   toggleSearch(event: Event): void {
     event.stopPropagation(); // Empêche l'événement de se propager au document
     this.showSearch = !this.showSearch;
     if (this.showSearch) {
       setTimeout(() => this.searchInputElement.nativeElement.focus(), 0);
     } else {
-      this.closeSearch();
+      if ((this.searchQuery == '')) {
+        this.closeSearch();
+      } else {
+        this.closeSearch();
+        this.router.navigate(['/']);
+      }
     }
   }
 
-  toggleLogout(event: Event):void {
+  toggleLogout(event: Event): void {
     event.stopPropagation(); // Empêche l'événement de se propager au document
     this.showLogout = !this.showLogout;
   }
@@ -117,7 +126,6 @@ export class HeaderComponent {
   closeSearch(): void {
     this.showSearch = false;
     this.searchQuery = '';
-    this.router.navigate(['/']);
   }
 
   @HostListener('window:resize', ['$event'])

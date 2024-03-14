@@ -1,6 +1,5 @@
 .background-video {
   position: absolute;
-  z-index: 101;
   width: 100%;
   height: 100vh;
 
@@ -16,11 +15,9 @@
     position: relative;
     z-index: 0;
     width: 100vw;
-    height: calc(
-      (9 / 16) * (100vw)
-    ); /* Calcul de la hauteur pour maintenir le ratio 16:9 */
+    height: 77.25vw; /* Calcul de la hauteur pour maintenir le ratio 16:9 */
 
-    top: -29px;
+    top: -0;
     left: 0px;
     overflow: hidden;
     opacity: 1;
