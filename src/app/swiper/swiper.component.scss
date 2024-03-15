@@ -5,7 +5,8 @@ swiper-container {
     z-index: 10;
     transition: z-index 0.4s ease;
     position: relative;
-    height: 191px;
+    height: 100%;
+    margin-top: 8px;
     transition: height 0s ease 0.3s;
     figure {
       border-top-left-radius: 4px;
@@ -43,7 +44,7 @@ swiper-container {
       transform: scale(1);
       display: block;
       position: relative;
-      top: -16vh;
+      top: -125px;
       border-bottom-left-radius: 4px;
       border-bottom-right-radius: 4px;
       transition: transform 0.4s ease, top 0.4s ease 0s;
@@ -69,8 +70,7 @@ swiper-container {
 }
 
 .wrapper {
-  height: 28vh;
-
+  height: 390px;
   &:hover,
   &:focus-within {
     swiper-container::part(button-next) {
@@ -170,19 +170,94 @@ swiper-container::part(container) {
     transform: translate(30px, 0);
   }
 }
-@media screen and (max-width: 1800px) {
+@media screen and (min-width: 2100px) {
+  .wrapper {
+    height: 14vw !important;
+  }
+
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 8.7vw !important;
+    top: 56px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0 1vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0 1.8vw!important;
+  }
+  swiper-slide {
+    &:hover,
+    &:focus-within {
+      .footer-slide {
+        top: -1vh !important;
+      }
+    }
+    .footer-slide {
+      top: -150px !important;
+    }
+  }
+}
+@media screen and (max-width: 2100px) {
+  .wrapper {
+    height: 270px !important;
+  }
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
     height: 8.9vw !important;
+    top: 56px !important;
+  }
+  swiper-container::part(button-prev) {
     padding: 0 1.1vw !important;
-    top: 5.5vh !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0 1.3vw !important;
+  }
+}
+@media screen and (max-width: 1900px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 8.7vw !important;
+    top: 57px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0 1.2vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0 1.1vw !important;
+  }
+}
+@media screen and (max-width: 1800px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 8.6vw !important;
+    top: 54px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0 1.3vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0 1vw !important;
+  }
+  .wrapper {
+    height: 250px !important;
   }
 }
 @media screen and (max-width: 1650px) {
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
+    height: 8.7vw !important;
+    top: 52px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0 1.4vw !important;
+  }
+  swiper-container::part(button-next) {
     padding: 0 0.8vw !important;
-    top: 5vh !important;
+  }
+
+  .wrapper {
+    height: 250px !important;
   }
 }
 
@@ -204,8 +279,12 @@ swiper-container::part(container) {
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
     height: 10.2vw !important;
-    padding: 0px 1.9vw !important;
-    top: 5vh !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0 1.6vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0 1.9vw !important;
   }
   .swiper-slide-active ~ swiper-slide:nth-of-type(5),
   .swiper-slide-active ~ swiper-slide:nth-of-type(10) {
@@ -217,12 +296,21 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(5),
   .swiper-slide-active ~ swiper-slide:nth-of-type(10) {
     transition: transform 0.4s ease;
+  }
+  .wrapper {
+    height: 255px !important;
   }
 }
 @media screen and (max-width: 1300px) {
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
-    height: 13.2vw !important;
+    height: 12.3vw !important;
+    top: 54px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 1.8vw !important;
+  }
+  swiper-container::part(button-next) {
     padding: 0px 2.6vw !important;
   }
   .swiper-slide-active ~ swiper-slide:nth-of-type(4),
@@ -236,29 +324,59 @@ swiper-container::part(container) {
   .swiper-slide-active ~ swiper-slide:nth-of-type(4),
   .swiper-slide-active ~ swiper-slide:nth-of-type(8) {
     transition: transform 0.4s ease;
+  }
+  .wrapper {
+    height: 255px !important;
+  }
+}
+@media screen and (max-width: 1150px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 12.6vw !important;
+    top: 50px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 2.2vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0px 2.2vw !important;
+  }
+  .wrapper {
+    height: 225px !important;
   }
 }
 @media screen and (max-width: 1150px) {
   swiper-container::part(button-next) {
-    height: 12.5vw !important;
-    padding: 0px 2.2vw !important;
+    padding: 0px 1.9vw !important;
   }
 }
 @media screen and (max-width: 940px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 12.3vw !important;
+    top: 48px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 2.6vw !important;
+  }
   swiper-container::part(button-next) {
-    height: 13.5vw !important;
     padding: 0px 1.5vw !important;
-    top: 4.5vh !important;
   }
   .wrapper {
-    height: 24vh !important;
+    height: 200px !important;
   }
 }
 @media screen and (max-width: 840px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 15.7vw !important;
+    top: 52px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 2.8vw !important;
+  }
   swiper-container::part(button-next) {
-    height: 16.1vw !important;
     padding: 0px 2.6vw !important;
-    top: 5.2vh !important;
   }
   .swiper-slide-active ~ swiper-slide:nth-of-type(3),
   .swiper-slide-active ~ swiper-slide:nth-of-type(6) {
@@ -273,25 +391,37 @@ swiper-container::part(container) {
     transition: transform 0.4s ease;
   }
   .wrapper {
-    height: 26vh !important;
+    height: 220px !important;
   }
 }
 @media screen and (max-width: 768px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    top: 48px !important;
+    height: 16.1vw !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 3.4vw !important;
+  }
   swiper-container::part(button-next) {
     padding: 0px 2.2vw !important;
-    top: 36px !important;
-    height: 133px !important;
   }
   .wrapper {
-    height: 18vh !important;
+    height: 180px !important;
   }
 }
 
 @media screen and (max-width: 640px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 22.1vw !important;
+    top: 51px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 4vw !important;
+  }
   swiper-container::part(button-next) {
-    height: 150px !important;
-    padding: 0px 4.1vw !important;
-    top: 42px !important;
+    padding: 0px 4vw !important;
   }
   .swiper-slide-active ~ swiper-slide:nth-of-type(2),
   .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
@@ -306,7 +436,7 @@ swiper-container::part(container) {
     transition: transform 0.4s ease;
   }
   .wrapper {
-    height: 20.2vh !important;
+    height: 170px !important;
   }
   .period-title {
     position: relative;
@@ -314,24 +444,36 @@ swiper-container::part(container) {
   }
 }
 @media screen and (max-width: 550px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 22.5vw !important;
+    top: 48px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 4.7vw !important;
+  }
   swiper-container::part(button-next) {
-    height: 140px !important;
     padding: 0px 3.1vw !important;
-    top: 34px !important;
   }
 }
-@media screen and (max-width: 510px) {
-  swiper-container::part(button-next) {
-    height: 118px !important;
-    padding: 0px 2.6vw !important;
-    top: 39px !important;
-  }
-}
+// @media screen and (max-width: 510px) {
+//   swiper-container::part(button-next) {
+//     height: 118px !important;
+//     padding: 0px 2.6vw !important;
+//     top: 39px !important;
+//   }
+// }
 @media screen and (max-width: 470px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 24.5vw !important;
+    top: 47px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 1.6vw !important;
+  }
   swiper-container::part(button-next) {
-    height: 117px !important;
     padding: 0px 1.3vw !important;
-    top: 37px !important;
   }
   swiper-slide {
     left: 7vw !important;
@@ -360,42 +502,50 @@ swiper-container::part(container) {
       transform: translateX(15px) !important;
     }
   }
-
-}
-@media screen and (max-width: 410px) {
-  swiper-container::part(button-next) {
-    height: 104px !important;
-    padding: 0px 1.1vw !important;
-    top: 34px !important;
-  }
-}
-@media screen and (max-height: 900px) and (max-width: 1200px) {
-  .wrapper {
-    height: 266px !important;
-  }
-}
-@media screen and (max-height: 900px) and (max-width: 940px) {
-  .wrapper {
-    height: 236px !important;
-  }
-}
-@media screen and (max-height: 900px) and (max-width: 768px) {
-  .wrapper {
-    height: 206px !important;
-  }
-}
-@media screen and (max-height: 900px) and (max-width: 640px) {
-  .wrapper {
-    height: 170px !important;
-  }
-}
-@media screen and (max-height: 900px) and (max-width: 470px) {
   .wrapper {
     height: 135px !important;
   }
 }
-@media screen and (max-height: 900px) and (min-width: 1200px) {
+@media screen and (max-width: 410px) {
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 24.2vw !important;
+    top: 46px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 1.2vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0px 1.3vw !important;
+  }
+}
+@media screen and (max-width: 360px) {
   .wrapper {
-    height: 220px !important;
+    height: 215px !important;
+  }
+  swiper-container::part(button-next),
+  swiper-container::part(button-prev) {
+    height: 48.2vw !important;
+    top: 52px !important;
+  }
+  swiper-container::part(button-prev) {
+    padding: 0px 1.8vw !important;
+  }
+  swiper-container::part(button-next) {
+    padding: 0px 2.7vw !important;
+  }
+
+  .swiper-slide-active {
+    &:hover {
+      transform: translate(0) !important;
+    }
+  }
+  swiper-slide {
+    &:hover,
+    &:focus-within {
+      img {
+        transform: scale(1) !important;
+      }
+    }
   }
 }

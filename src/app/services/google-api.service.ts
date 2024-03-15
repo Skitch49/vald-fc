@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 const oAuthConfig: AuthConfig = {
   issuer: 'https://accounts.google.com',
   strictDiscoveryDocumentValidation: false,
-  redirectUri: 'http://alexis.delaunay.angers.mds-project.fr',    // Prod
-  postLogoutRedirectUri: 'http://alexis.delaunay.angers.mds-project.fr', //Prod
-  // redirectUri: 'http://localhost:4200', //Dev
-  // postLogoutRedirectUri: 'http://localhost:4200', //Dev
-  clientId:
-    '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
+  redirectUri: 'http://alexis.delaunay.angers.mds-project.fr', // Prod
+  postLogoutRedirectUri: 'http://alexis.delaunay.angers.mds-project.fr', // Prod
+  // redirectUri: 'http://localhost:4200', // Dev
+  // postLogoutRedirectUri: 'http://localhost:4200', // Dev
+  clientId: '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
   scope: 'openid profile',
 };
 
@@ -27,18 +26,25 @@ export interface UserInfo {
 })
 export class GoogleApiService {
   userProfileSubject = new Subject<UserInfo>();
+  private userIdSubject = new BehaviorSubject<string | null>(null);
 
   constructor(private readonly oAuthService: OAuthService) {
-    oAuthService.configure(oAuthConfig);
-    oAuthService.loadDiscoveryDocument().then(() => {
-      oAuthService.tryLoginImplicitFlow().then(() => {
-        if (oAuthService.hasValidAccessToken()) {
-          oAuthService.loadUserProfile().then((userProfile) => {
+    this.oAuthService.configure(oAuthConfig);
+    this.initializeAuth();
+  }
+
+  private initializeAuth() {
+    this.oAuthService.loadDiscoveryDocument().then(() => {
+      this.oAuthService.tryLoginImplicitFlow().then(() => {
+        if (this.oAuthService.hasValidAccessToken()) {
+          this.oAuthService.loadUserProfile().then((userProfile) => {
             this.userProfileSubject.next(userProfile as UserInfo);
+            const userId = this.getUserId();
+            this.userIdSubject.next(userId);
           });
         }
-        //  else {
-        //    oAuthService.initLoginFlow();
+        // else {
+        //   this.oAuthService.initLoginFlow();
         // }
       });
     });
@@ -47,19 +53,25 @@ export class GoogleApiService {
   getUserId(): string | null {
     const userProfile = this.oAuthService.getIdentityClaims();
     if (userProfile) {
-      return userProfile['sub']; // 'sub' est l'ID de l'utilisateur dans OpenID Connect
+      return userProfile['sub'];
     }
     return null;
   }
 
+  getUserIdObservable(): Observable<string | null> {
+    return this.userIdSubject.asObservable();
+  }
+  
   isLoggedIn(): boolean {
     return this.oAuthService.hasValidAccessToken();
   }
+
   signIn() {
     this.oAuthService.initLoginFlow();
   }
 
   signOut() {
     this.oAuthService.revokeTokenAndLogout();
+    this.userIdSubject.next(null);
   }
 }

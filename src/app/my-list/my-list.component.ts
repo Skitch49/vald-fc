@@ -25,7 +25,10 @@ export class MyListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userId = this.googleApiService.getUserId();
+    this.checkScreenSize()
+    this.googleApiService.getUserIdObservable().subscribe((userId) => {
+      this.userId = userId;
+    });
     this.ClipsLiked();
   }
 
@@ -41,7 +44,7 @@ export class MyListComponent implements OnInit {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
-      maxHeight: '100vh',
+      maxHeight: '95vh',
       data: { clip: clip, userId: userId },
     };
 

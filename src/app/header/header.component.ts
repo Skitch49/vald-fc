@@ -107,8 +107,10 @@ export class HeaderComponent {
     event.stopPropagation(); // Empêche l'événement de se propager au document
     this.showSearch = !this.showSearch;
     if (this.showSearch) {
+      this.showLogout = false;
       setTimeout(() => this.searchInputElement.nativeElement.focus(), 0);
     } else {
+
       if ((this.searchQuery == '')) {
         this.closeSearch();
       } else {
@@ -121,6 +123,10 @@ export class HeaderComponent {
   toggleLogout(event: Event): void {
     event.stopPropagation(); // Empêche l'événement de se propager au document
     this.showLogout = !this.showLogout;
+    if(this.showLogout){
+      this.closeSearch();
+
+    }
   }
 
   closeSearch(): void {

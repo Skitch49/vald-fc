@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiValdService } from '../services/api-vald.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,17 +18,18 @@ export class SearchComponent {
   userId: string | null = null;
   isMobileScreen = false;
 
-
   constructor(
     private route: ActivatedRoute,
     private apiValdService: ApiValdService,
     private dialog: MatDialog,
     private readonly google: GoogleApiService
-
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.google.getUserId();
+    this.checkScreenSize()
+    this.google.getUserIdObservable().subscribe((userId) => {
+      this.userId = userId;
+    });
 
     this.route.queryParams.subscribe((params) => {
       this.query = params['q'] || '';
@@ -47,15 +48,15 @@ export class SearchComponent {
   getClip(clip: any): void {
     this.apiValdService.getClipsByUrl(clip.url).subscribe((data) => {
       this.clipWithAllInfo = data;
-      this.openDialog(this.clipWithAllInfo,this.userId); // Déplacez cette ligne ici
+      this.openDialog(this.clipWithAllInfo, this.userId); // Déplacez cette ligne ici
     });
     // Ne pas ouvrir le dialogue ici car clipWithAllInfo n'est pas encore défini
   }
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
-      width: this.isMobileScreen ? '100vw' : '48vw',
+      width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
-      maxHeight: '100vh',
+      maxHeight: '95vh',
       data: { clip: clip, userId: userId },
     };
     this.dialog.open(DialogComponent, dialogConfig);
@@ -97,6 +98,17 @@ export class SearchComponent {
       return false;
     }
   }
-
-  
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+  private checkScreenSize() {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth <= 768) {
+        this.isMobileScreen = true;
+      } else {
+        this.isMobileScreen = false;
+      }
+    }
+   }
 }
