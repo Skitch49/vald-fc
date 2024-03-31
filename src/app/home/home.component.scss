@@ -143,11 +143,7 @@
   position: relative;
 }
 
-@media screen and (min-width: 2100px) {
-  .playerBox {
-    height: 67vw!important;
-  }
-}
+
 @media screen and (max-width: 1480px) {
   .fill-container {
     height: calc(1 * (100vw - 50rem)) !important;
@@ -247,6 +243,11 @@
   }
   .last-clip > h1 {
     font-size: 40px;
+  }
+}
+@media screen and (max-width:470px){
+  .period-title{
+    margin-left: 7vw!important;
   }
 }
 @media screen and (max-width: 430px) {

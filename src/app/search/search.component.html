@@ -106,6 +106,6 @@
   </div>
 
 </div>
-<div class="container-search" *ngIf="!clips">
+<div class="container-search" *ngIf="!clips || clips.length==0">
   <h3>Aucun resultat disponible pour votre recherche: {{ query }}</h3>
 </div>

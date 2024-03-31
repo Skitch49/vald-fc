@@ -412,9 +412,24 @@ swiper-container::part(container) {
 }
 
 @media screen and (max-width: 640px) {
+  swiper-slide {
+    &:hover,
+    &:focus-within {
+      img {
+        transform: scale(1) !important;
+      }
+    }
+  }
+  .swiper-slide-active {
+    &:hover {
+      transform: translate(0, 0)!important;
+    }
+  }
+
+
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
-    height: 22.1vw !important;
+    height: 22.6vw !important;
     top: 51px !important;
   }
   swiper-container::part(button-prev) {
@@ -423,18 +438,15 @@ swiper-container::part(container) {
   swiper-container::part(button-next) {
     padding: 0px 4vw !important;
   }
-  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
-  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
+
+  .swiper-slide-active ~ swiper-slide  {
     &:hover,
     &:focus-within {
-      transform: translate(-30px, 0);
+      transform: translate(0, 0)!important;
     }
   }
 
-  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
-  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
-    transition: transform 0.4s ease;
-  }
+
   .wrapper {
     height: 170px !important;
   }
@@ -456,13 +468,7 @@ swiper-container::part(container) {
     padding: 0px 3.1vw !important;
   }
 }
-// @media screen and (max-width: 510px) {
-//   swiper-container::part(button-next) {
-//     height: 118px !important;
-//     padding: 0px 2.6vw !important;
-//     top: 39px !important;
-//   }
-// }
+
 @media screen and (max-width: 470px) {
   swiper-container::part(button-next),
   swiper-container::part(button-prev) {
@@ -477,31 +483,8 @@ swiper-container::part(container) {
   }
   swiper-slide {
     left: 7vw !important;
-    &:hover,
-    &:focus-within {
-      img {
-        transform: scale(1.15) !important;
-      }
-    }
-  }
-  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
-  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
-    &:hover,
-    &:focus-within {
-      transform: translate(-15px, 0);
-    }
   }
 
-  .swiper-slide-active ~ swiper-slide:nth-of-type(2),
-  .swiper-slide-active ~ swiper-slide:nth-of-type(4) {
-    transition: transform 0.4s ease;
-  }
-
-  .swiper-slide-active {
-    &:hover {
-      transform: translateX(15px) !important;
-    }
-  }
   .wrapper {
     height: 135px !important;
   }
@@ -533,19 +516,5 @@ swiper-container::part(container) {
   }
   swiper-container::part(button-next) {
     padding: 0px 2.7vw !important;
-  }
-
-  .swiper-slide-active {
-    &:hover {
-      transform: translate(0) !important;
-    }
-  }
-  swiper-slide {
-    &:hover,
-    &:focus-within {
-      img {
-        transform: scale(1) !important;
-      }
-    }
   }
 }

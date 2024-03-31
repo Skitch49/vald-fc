@@ -1,21 +1,22 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ApiValdService } from '../services/api-vald.service';
 import { ViewportScroller } from '@angular/common';
-import { Clip } from '../interface/clip.interface';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, AfterViewInit {
+export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
   idClip: any;
   clip: any;
   playlist: any;
-  safeUrl: any;
+  safeUrl: SafeResourceUrl = ''; 
+  private safeUrlSubscription: Subscription = new Subscription();
+
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -30,31 +31,20 @@ export class PlayerComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          this.idClip = params['id'];
-          return this.getPlaylist();
-        }),
-        switchMap(() => {
-          this.shufflePlaylist();
-          return this.apiVald.getClipsByUrl(this.idClip);
-        })
-      )
-      .subscribe({
-        next: (clip) => {
-          this.clip = clip;
-          this.initClip();
-        },
-        error: (error) => {
-          console.error('Erreur lors du chargement de la vidéo', error);
-          // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
-        },
-        complete: () => {
-          // Logique à exécuter lors de la complétion de l'observable, si nécessaire
-          console.log('video bien chargé !')
-        },
-      });
+    this.route.params.subscribe((params) => {
+      this.idClip = params['id'];
+      this.getPlaylist();
+    });
+
+    this.safeUrlSubscription = this.apiVald.getSafeUrl().subscribe((url) => {
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.safeUrlSubscription) {
+      this.safeUrlSubscription.unsubscribe();
+    }
   }
 
   private scrollToTop(): void {
@@ -63,23 +53,36 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
   initClip() {
     if (this.idClip) {
-      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://www.youtube.com/embed/${this.idClip}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=2&showinfo=1&playsinline=0&modestbranding=1&rel=0&iv_load_policy=3&fs=1&loop=1&disablekb=0&playlist=${this.playlist}`
-      );
+      const url = `https://www.youtube.com/embed/${this.idClip}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=2&showinfo=1&playsinline=0&modestbranding=1&rel=0&iv_load_policy=3&fs=1&loop=1&disablekb=0&playlist=${this.playlist}`;
+      this.apiVald.updateSafeUrl(url);
     }
   }
 
-  getPlaylist(): Observable<Clip[]> {
-    return this.apiVald.getClips().pipe(
-      tap((data) => {
-        this.playlist = data
-          .filter(
-            (clip: Clip) =>
-              clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
-          )
-          .map((clip: Clip) => clip.url);
-      })
-    );
+  getPlaylist(): void {
+    this.apiVald.getClips().subscribe((data) => {
+      this.playlist = data
+        .filter(
+          (clip: any) =>
+            clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
+        )
+        .map((clip: any) => clip.url);
+      this.shufflePlaylist();
+      this.apiVald.getClipsByUrl(this.idClip).subscribe({
+        next: (clip) => {
+          this.clip = clip;
+          this.initClip();
+          console.log('Vidéo chargée correctement !');
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de la vidéo', error);
+          // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
+        },
+        complete: () => {
+          // Logique à exécuter lors de la complétion de l'observable, si nécessaire
+          console.log('Vidéo bien chargée !');
+        },
+      });
+    });
   }
 
   private shufflePlaylist() {

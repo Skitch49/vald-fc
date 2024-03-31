@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +8,16 @@ import { Observable } from 'rxjs';
 export class ApiValdService {
   private apiUrl = 'http://195.110.35.143:40110'; // In Production
   // private apiUrl = 'http://localhost:3000'; //In Dev
+
+  private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  getSafeUrl(): Observable<string> {
+    return this.safeUrlSubject.asObservable();
+  }
+
+  updateSafeUrl(url: string): void {
+    this.safeUrlSubject.next(url);
+  }
   
   constructor(private http: HttpClient) {}
 

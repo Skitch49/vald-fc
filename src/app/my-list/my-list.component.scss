@@ -1,9 +1,16 @@
 .wrapper {
+  min-height: 100vh;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0 2vw;
   row-gap: 100px;
+  .not-liked{
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+    gap: 8px;
+  }
   .card {
     padding: 0 0.2vw;
     z-index: 10;
