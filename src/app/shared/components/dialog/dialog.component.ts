@@ -11,17 +11,27 @@ import { ApiValdService } from '../../../services/api-vald.service';
 export class DialogComponent implements OnInit {
   hoverStates: { [key: string]: boolean } = {};
   clip = this.data.clip;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private apiVald: ApiValdService) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private apiVald: ApiValdService
+  ) {}
 
   ngOnInit(): void {
     this.initializeHoverStates();
-    console.log('in dialog '+JSON.stringify(this.data));
-    
+    console.log('in dialog ' + JSON.stringify(this.data));
   }
 
   initializeHoverStates() {
-    const categories = ['produced', 'featuring', 'mix', 'mastering', 'real', 'artiste', 'production'];
-    categories.forEach(category => {
+    const categories = [
+      'produced',
+      'featuring',
+      'mix',
+      'mastering',
+      'real',
+      'artiste',
+      'production',
+    ];
+    categories.forEach((category) => {
       const artists = this.data[category];
       if (Array.isArray(artists)) {
         artists.forEach((artist: Artiste) => {
@@ -43,19 +53,34 @@ export class DialogComponent implements OnInit {
 
     const isLiked = this.isLikedByUser(clip);
     this.updateClipLikeState(clip, !isLiked);
+    if (clip.artiste) {
+      this.apiVald.toggleLike(clip._id, this.data.userId, !isLiked).subscribe({
+        next: () => {
+          this.likeUpdated.emit();
 
-    this.apiVald.toggleLike(clip._id, this.data.userId, !isLiked).subscribe({
-      next: () => {
-        this.likeUpdated.emit();
-
-        // Gestion de la réponse réussie
-      },
-      error: () => {
-        // Revenir à l'état précédent en cas d'erreur
-        this.updateClipLikeState(clip, isLiked);
-        // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
-      },
-    });
+          // Gestion de la réponse réussie
+        },
+        error: () => {
+          // Revenir à l'état précédent en cas d'erreur
+          this.updateClipLikeState(clip, isLiked);
+          // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
+        },
+      });
+    }
+    if (clip.author) {
+      this.apiVald
+        .toggleLikeVideo(clip._id, this.data.userId, !isLiked)
+        .subscribe({
+          next: () => {
+            this.likeUpdated.emit();
+            // Gestion de la réponse réussie
+          },
+          error: () => {
+            // Revenir à l'état précédent en cas d'erreur
+            this.updateClipLikeState(clip, isLiked);
+          },
+        });
+    }
   }
   private updateClipLikeState(clip: any, isLiked: boolean) {
     if (isLiked && this.data.userId) {
@@ -76,5 +101,4 @@ export class DialogComponent implements OnInit {
       return false;
     }
   }
-  
 }

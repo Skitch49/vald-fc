@@ -15,9 +15,8 @@ import { MaterialModule } from './shared/module/material/material.module';
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
-import { PlayerComponent } from './player/player.component';
+import { PlayerComponent } from './player-clip/player.component';
 import { SwiperDirective } from './shared/directives/swiper.directive';
-import { DialogComponent } from './shared/components/dialog/dialog.component';
 // register Swiper custom elements
 register();
 
@@ -32,6 +31,10 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { MyListComponent } from './my-list/my-list.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ClipComponent } from './clip/clip.component';
+import { InterviewComponent } from './interview/interview.component';
+import { DialogComponent } from './shared/components/dialog/dialog.component';
+import { PlayerInterviewComponent } from './player-interview/player-interview.component';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -47,7 +50,10 @@ registerLocaleData(localeFr, 'fr');
     TooltipComponent,
     SearchComponent,
     GalleryComponent,
-    MyListComponent
+    MyListComponent,
+    ClipComponent,
+    InterviewComponent,
+    PlayerInterviewComponent
   ],
   imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),

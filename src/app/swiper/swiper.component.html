@@ -1,14 +1,14 @@
 <div class="wrapper" *ngIf="!isMobileScreen">
-  <swiper-container appSwiper #swiper [config]="swiperConfig">
+  <swiper-container appSwiper #swiper [config]="getSwiperConfig()">
     <swiper-slide *ngFor="let clip of clips">
-      <figure routerLink="/clip/{{ clip.url }}">
+      <figure routerLink="/{{typeVideo.toLowerCase()}}/{{ clip.url }}">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
 
       <div class="footer-slide">
         <div class="container-btn">
           <div class="wrapper-btn">
-            <button class="btn-circle" routerLink="/clip/{{ clip.url }}">
+            <button class="btn-circle" routerLink="/{{typeVideo.toLowerCase()}}/{{ clip.url }}">
               <svg
                 width="24"
                 height="24"
@@ -66,7 +66,7 @@
               </svg>
             </button>
           </div>
-          <button class="btn-circle-secondary" (click)="openDialog(this.clip,this.userId)">
+          <button class="btn-circle-secondary" (click)="openDialog(this.clip,this.userId,this.typeVideo)">
             <svg
               width="24"
               height="24"
@@ -95,9 +95,9 @@
 </div>
 
 <div class="wrapper" *ngIf="isMobileScreen">
-  <swiper-container appSwiper #swiper [config]="swiperConfig">
+  <swiper-container appSwiper #swiper [config]="getSwiperConfig()">
     <swiper-slide *ngFor="let clip of clips">
-      <figure (click)="openDialog(this.clip, this.userId)">
+      <figure (click)="openDialog(this.clip, this.userId,this.typeVideo)">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
     </swiper-slide>

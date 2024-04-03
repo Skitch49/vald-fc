@@ -9,7 +9,8 @@ const oAuthConfig: AuthConfig = {
   postLogoutRedirectUri: 'http://alexis.delaunay.angers.mds-project.fr', // Prod
   // redirectUri: 'http://localhost:4200', // Dev
   // postLogoutRedirectUri: 'http://localhost:4200', // Dev
-  clientId: '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
+  clientId:
+    '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
   scope: 'openid profile',
 };
 
@@ -34,20 +35,22 @@ export class GoogleApiService {
   }
 
   private initializeAuth() {
-    this.oAuthService.loadDiscoveryDocument().then(() => {
-      this.oAuthService.tryLoginImplicitFlow().then(() => {
-        if (this.oAuthService.hasValidAccessToken()) {
-          this.oAuthService.loadUserProfile().then((userProfile) => {
-            this.userProfileSubject.next(userProfile as UserInfo);
-            const userId = this.getUserId();
-            this.userIdSubject.next(userId);
-          });
-        }
-        // else {
-        //   this.oAuthService.initLoginFlow();
-        // }
+    if (typeof window !== 'undefined') {
+      this.oAuthService.loadDiscoveryDocument().then(() => {
+        this.oAuthService.tryLoginImplicitFlow().then(() => {
+          if (this.oAuthService.hasValidAccessToken()) {
+            this.oAuthService.loadUserProfile().then((userProfile) => {
+              this.userProfileSubject.next(userProfile as UserInfo);
+              const userId = this.getUserId();
+              this.userIdSubject.next(userId);
+            });
+          }
+          // else {
+          //   this.oAuthService.initLoginFlow();
+          // }
+        });
       });
-    });
+    }
   }
 
   getUserId(): string | null {
@@ -61,7 +64,7 @@ export class GoogleApiService {
   getUserIdObservable(): Observable<string | null> {
     return this.userIdSubject.asObservable();
   }
-  
+
   isLoggedIn(): boolean {
     return this.oAuthService.hasValidAccessToken();
   }

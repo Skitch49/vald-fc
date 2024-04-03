@@ -17,7 +17,7 @@ export class SearchComponent {
   clipWithAllInfo: any;
   userId: string | null = null;
   isMobileScreen = false;
-
+  typeVideo: string = 'Interview';
   constructor(
     private route: ActivatedRoute,
     private apiValdService: ApiValdService,
@@ -26,7 +26,7 @@ export class SearchComponent {
   ) {}
 
   ngOnInit(): void {
-    this.checkScreenSize()
+    this.checkScreenSize();
     this.google.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
     });
@@ -46,18 +46,33 @@ export class SearchComponent {
   }
 
   getClip(clip: any): void {
-    this.apiValdService.getClipsByUrl(clip.url).subscribe((data) => {
-      this.clipWithAllInfo = data;
-      this.openDialog(this.clipWithAllInfo, this.userId); // Déplacez cette ligne ici
-    });
-    // Ne pas ouvrir le dialogue ici car clipWithAllInfo n'est pas encore défini
+    console.log(JSON.stringify(clip));
+    if (clip && clip.artiste) {
+      this.typeVideo = 'Clip';
+      console.log('type :' + this.typeVideo);
+
+      this.apiValdService.getClipsByUrl(clip.url).subscribe((data) => {
+        this.clipWithAllInfo = data;
+
+        this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo); // Déplacez cette ligne ici
+      });
+    }
+    if (clip && clip.author) {
+      this.typeVideo = 'Interview';
+      console.log('type :' + this.typeVideo);
+      this.apiValdService.getVideoByUrl(clip.url).subscribe((data) => {
+        this.clipWithAllInfo = data;
+
+        this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo); // Déplacez cette ligne ici
+      });
+    }
   }
-  openDialog(clip: any, userId: string | null) {
+  openDialog(clip: any, userId: string | null, typeVideo: string) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
+      data: { clip: clip, userId: userId, typeVideo },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }
@@ -103,12 +118,12 @@ export class SearchComponent {
     this.checkScreenSize();
   }
   private checkScreenSize() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       if (window.innerWidth <= 768) {
         this.isMobileScreen = true;
       } else {
         this.isMobileScreen = false;
       }
     }
-   }
+  }
 }

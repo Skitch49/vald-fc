@@ -32,7 +32,7 @@
         <button
           class="btn-primary"
           mat-dialog-close
-          routerLink="/clip/{{ clip.url }}"
+          routerLink="/{{data.typeVideo.toLowerCase()}}/{{ clip.url }}"
         >
           <svg
             width="24"
@@ -100,7 +100,7 @@
         <p class="date">{{ clip.date | date : "longDate" }}</p>
         <p>{{ clip.description }}</p>
       </div>
-      <div class="artiste-info">
+      <div class="artiste-info" *ngIf="data.typeVideo=='Clip'">
         <p>
           Artiste :
           <span tabindex="0"
@@ -134,8 +134,42 @@
           </span>
         </p>
       </div>
+      <div class="artiste-info" *ngIf="data.typeVideo=='Interview'">
+        <p>
+          Auteur :
+          <span tabindex="0"
+            (mouseenter)="
+              setHoverState('artiste', clip.author.nameArtiste, true)
+              "
+            (mouseleave)="
+              setHoverState('artiste', clip.author.nameArtiste, false)
+              "
+
+            >{{ clip.author.nameArtiste }}
+            <app-tooltip
+              [isVisible]="hoverStates['artiste-' + clip.author.nameArtiste]"
+              [data]="clip.author"
+            ></app-tooltip>
+          </span>
+        </p>
+        <p *ngIf="clip.featuring && clip.featuring.length > 0">
+          Featuring :
+          <span tabindex="0"
+            *ngFor="let feat of clip.featuring; let i = index"
+            (mouseenter)="setHoverState('featuring', feat.nameArtiste, true)"
+            (mouseleave)="setHoverState('featuring', feat.nameArtiste, false)"
+
+            >{{ feat.nameArtiste
+            }}<app-tooltip
+              [isVisible]="hoverStates['featuring-' + feat.nameArtiste]"
+              [data]="feat"
+            ></app-tooltip
+            ><span *ngIf="i < clip.featuring.length - 1">,&nbsp;</span>
+          </span>
+        </p>
+      </div>
     </div>
-    <div class="right-content">
+    <div class="right-content" *ngIf="data.typeVideo=='Clip'">
       <h3 class="title-more-info">Plus d'infos :</h3>
       <div *ngIf="clip.produced && clip.produced.length > 0">
         <p>

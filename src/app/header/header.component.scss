@@ -42,10 +42,10 @@ header {
       li {
         margin-left: 20px;
         user-select: none;
-        color: #fff;
+        color: #b3b3b3;
         cursor: pointer;
         &:hover {
-          color: #b3b3b3;
+          color: #fff;
         }
         &:active {
           font-weight: 500;
@@ -314,4 +314,8 @@ header:has(.notShowMobileMenu) {
     }
   }
 }
+}
+.active {
+  font-weight: 500;
+  color: #fff !important;
 }

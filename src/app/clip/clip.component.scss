@@ -1,0 +1,261 @@
+.homepage {
+    min-height: 100vh;
+    .playerBox {
+      position: absolute;
+      z-index: 0;
+      width: 100%; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
+      height: calc(
+        (9 / 16) * (100vw)
+      ); /* Calcul de la hauteur pour maintenir le ratio 16:9 */
+  
+      top: 0px;
+      left: 0px;
+      overflow: hidden;
+      opacity: 1;
+      user-select: none;
+      margin-top: -59px;
+      margin-left: 0px;
+      max-width: initial;
+      transition-property: opacity;
+      transition-duration: 1000ms;
+    }
+    .background-iframe {
+      width: 100%;
+      height: calc((9 / 16) * (100vw));
+      background: linear-gradient(
+        180deg,
+        hsla(0, 0%, 8%, 0) 0,
+        hsla(0, 0%, 8%, 0.15) 15%,
+        hsla(0, 0%, 8%, 0.35) 29%,
+        hsla(0, 0%, 8%, 0.58) 44%,
+        black 87%,
+        black
+      );
+      position: absolute;
+      top: 0;
+    }
+    .fill-container {
+      height: calc(0.5625 * (100vw - 42rem));
+      width: 100%;
+      z-index: 1;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+  
+      .last-clip {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-left: 2.8vw;
+        margin-bottom: 5em;
+        z-index: 2;
+        width: 40%;
+        p {
+          line-height: 24px;
+          font-size: 18px;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+        }
+        .wrapper-btn {
+          display: flex;
+          margin-top: 1.5vw;
+          flex-wrap: nowrap;
+          button {
+            border: 0px;
+            margin-right: 1rem;
+            padding: 0.6vw;
+            padding-left: 2rem;
+            padding-right: 2.4rem;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            cursor: pointer;
+            font-size: 1.4vw;
+            font-weight: 500;
+            font-family: "Netflix Sans";
+            gap: 15px;
+            svg {
+              width: 1.3em;
+              height: 1.3em;
+            }
+            &:nth-child(2) {
+              margin-right: 0;
+            }
+          }
+          .btn-primary {
+            background-color: white;
+            color: black;
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.75);
+            }
+          }
+          .btn-secondary {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+            &:hover {
+              background-color: rgba(109, 109, 110, 0.4);
+            }
+          }
+        }
+      }
+      .control-mute {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-right: 7.5vw;
+        margin-bottom: 5em;
+        z-index: 2;
+        .circle-btn {
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.7);
+          color: white;
+          background-color: transparent;
+          padding: 0.6vw;
+          cursor: pointer;
+          svg {
+            width: 2em;
+            height: 2em;
+          }
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+          }
+        }
+      }
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      flex-direction: column;
+  
+      z-index: 1;
+      position: relative;
+      .period-title {
+        margin-left: 3em;
+      }
+    }
+  }
+  
+  .homepage-mobile {
+    top: 102px;
+    position: relative;
+  }
+  
+  
+  @media screen and (max-width: 1480px) {
+    .fill-container {
+      height: calc(1 * (100vw - 50rem)) !important;
+    }
+    .wrapper-btn > button {
+      padding: 10px !important;
+      padding-left: 28px !important;
+      padding-right: 32px !important;
+      font-size: 22px !important;
+    }
+  }
+  @media screen and (max-width: 1150px) {
+    .fill-container {
+      height: calc(1 * (100vw - 36rem)) !important;
+    }
+    .last-clip {
+      width: 45% !important;
+    }
+  }
+  @media screen and (max-width: 1000px) {
+    .last-clip,
+    .control-mute {
+      margin-bottom: 3em !important;
+    }
+    .fill-container {
+      height: calc(1 * (100vw - 34rem)) !important;
+      margin-bottom: 2em !important;
+    }
+    .last-clip {
+      width: 50% !important;
+    }
+  }
+  @media screen and (max-width: 940px) {
+    .last-clip > p {
+      font-size: 14px !important;
+    }
+    .last-clip,
+    .control-mute {
+      margin-bottom: 1em !important;
+    }
+    .fill-container {
+      margin-bottom: 4em !important;
+    }
+    .last-clip {
+      width: 55% !important;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .last-clip,
+    .control-mute {
+      margin-bottom: 0px !important;
+    }
+    .fill-container {
+      margin-bottom: 5em !important;
+      height: calc(1 * (100vw - 24rem)) !important;
+    }
+    .last-clip {
+      width: 60% !important;
+    }
+    .last-clip > h1 {
+      font-size: 48px;
+    }
+    .wrapper-btn > button {
+      padding: 8px !important;
+      padding-left: 24px !important;
+      padding-right: 28px !important;
+      font-size: 20px !important;
+    }
+    .last-clip > p {
+      line-height: 22px !important;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .fill-container {
+      margin-bottom: 5em !important;
+      height: calc(1 * (100vw - 22rem)) !important;
+    }
+    .wrapper-btn > button {
+      padding-left: 2vw !important;
+      padding-right: 3vw !important;
+    }
+    .last-clip > p {
+      display: none;
+    }
+    .last-clip {
+      width: 70% !important;
+    }
+  }
+  @media screen and (max-width: 510px) {
+    .fill-container {
+      height: calc(1 * (100vw - 17rem)) !important;
+      margin-bottom: 2em !important;
+    }
+    .wrapper-btn > button {
+      font-size: 16px !important;
+    }
+    .last-clip > h1 {
+      font-size: 40px;
+    }
+  }
+  @media screen and (max-width:470px){
+    .period-title{
+      margin-left: 7vw!important;
+    }
+  }
+  @media screen and (max-width: 430px) {
+    .fill-container {
+      height: calc(1 * (100vw - 14rem)) !important;
+    }
+    .last-clip {
+      width: 100% !important;
+    }
+  }
+  

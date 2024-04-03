@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ApiValdService {
   private apiUrl = 'http://195.110.35.143:40110'; // In Production
-  // private apiUrl = 'http://localhost:3000'; //In Dev
+  //  private apiUrl = 'http://localhost:3000'; //In Dev
 
   private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -21,6 +21,8 @@ export class ApiValdService {
   
   constructor(private http: HttpClient) {}
 
+  // Clip
+
   getClips(): Observable<any> {
     return this.http.get(`${this.apiUrl}/clip`);
   }
@@ -31,10 +33,6 @@ export class ApiValdService {
 
   getLastClip() {
     return this.http.get(`${this.apiUrl}/clip/last-clip`);
-  }
-
-  getClipsArtistesFeaturing(query: string) {
-    return this.http.get(`${this.apiUrl}/clip/search/${query}`);
   }
 
   getClipsByDateRange(startDate: string, endDate: string): Observable<any> {
@@ -59,4 +57,37 @@ export class ApiValdService {
     const action = like ? 'like-clip' : 'dislike-clip';
     return this.http.patch(`${this.apiUrl}/clip/${action}/${clipId}`, { userId });
   }
+
+  // Video
+
+  getVideos(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/video`);
+  }
+
+  getVideoByUrl(url: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/video/${url}`);
+  }
+
+  getLastVideo() {
+    return this.http.get(`${this.apiUrl}/video/last-video`);
+  }
+
+  getVideosByCategory(category: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/video/categories/${category}`);
+  }
+
+  toggleLikeVideo(clipId: string, userId: string, like: boolean): Observable<any> {
+    const action = like ? 'like-video' : 'dislike-video';
+    return this.http.patch(`${this.apiUrl}/video/${action}/${clipId}`, { userId });
+  }
+
+  // Video and Clips
+  getClipsArtistesFeaturing(query: string) {
+    return this.http.get(`${this.apiUrl}/clip/search/${query}`);
+  }
+
+  getAllVideoLiked(userId: string): Observable<any>{
+    return this.http.get(`${this.apiUrl}/clip/all-video-liked/${userId}` )
+  }
+
 }

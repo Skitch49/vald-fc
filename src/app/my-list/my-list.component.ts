@@ -12,7 +12,7 @@ import { Clip } from '../interface/clip.interface';
 })
 export class MyListComponent implements OnInit {
   userId: string | null = null;
-  clips: any |null = null;
+  videos: any | null = null;
   isMobileScreen = false;
 
   constructor(
@@ -21,11 +21,10 @@ export class MyListComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.checkScreenSize();
-
   }
 
   ngOnInit() {
-    this.checkScreenSize()
+    this.checkScreenSize();
     this.googleApiService.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
     });
@@ -34,18 +33,18 @@ export class MyListComponent implements OnInit {
 
   public ClipsLiked() {
     if (this.userId) {
-      this.apiVald.getClipsLiked(this.userId).subscribe((data) => {
-        this.clips = data;
+      this.apiVald.getAllVideoLiked(this.userId).subscribe((data) => {
+        this.videos = data;
       });
     }
   }
 
-  openDialog(clip: any, userId: string | null) {
+  openDialog(video: any, userId: string | null, typeVideo: string) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
+      data: { clip: video, userId: userId, typeVideo: typeVideo },
     };
 
     const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
@@ -58,7 +57,6 @@ export class MyListComponent implements OnInit {
     dialogRef.componentInstance.likeUpdated.subscribe(() => {
       this.ClipsLiked();
     });
-
   }
 
   @HostListener('window:resize', ['$event'])
@@ -67,53 +65,64 @@ export class MyListComponent implements OnInit {
   }
 
   private checkScreenSize() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       if (window.innerWidth <= 768) {
         this.isMobileScreen = true;
       } else {
         this.isMobileScreen = false;
       }
     }
-   }
+  }
 
-   likeClip(clip: Clip) {
+  likeClip(video: any) {
     if (!this.userId) return;
 
-    const isLiked = this.isLikedByUser(clip);
-    this.updateClipLikeState(clip, !isLiked);
-    this.apiVald.toggleLike(clip._id, this.userId, !isLiked).subscribe({
-      next: () => {
-        // Gestion de la réponse réussie
-        this.ClipsLiked()
-      },
-      error: () => {
-        // Revenir à l'état précédent en cas d'erreur
-        this.updateClipLikeState(clip, isLiked);
-        // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
-      },
-    });
+    const isLiked = this.isLikedByUser(video);
+    this.updateClipLikeState(video, !isLiked);
+
+    if (video.artiste) {
+      this.apiVald.toggleLike(video._id, this.userId, !isLiked).subscribe({
+        next: () => {
+          // Gestion de la réponse réussie
+          this.ClipsLiked();
+        },
+        error: () => {
+          // Revenir à l'état précédent en cas d'erreur
+          this.updateClipLikeState(video, isLiked);
+        },
+      });
+    }
+
+    if (video.author) {
+      this.apiVald.toggleLikeVideo(video._id, this.userId, !isLiked).subscribe({
+        next: () => {
+          // Gestion de la réponse réussie
+          this.ClipsLiked();
+        },
+        error: () => {
+          // Revenir à l'état précédent en cas d'erreur
+          this.updateClipLikeState(video, isLiked);
+        },
+      });
+    }
   }
-  private updateClipLikeState(clip: Clip, isLiked: boolean) {
+  private updateClipLikeState(video: Clip, isLiked: boolean) {
     if (isLiked && this.userId) {
-      clip.likers.push(this.userId);
+      video.likers.push(this.userId);
     } else {
       if (this.userId) {
-        const index = clip.likers.indexOf(this.userId);
+        const index = video.likers.indexOf(this.userId);
         if (index > -1) {
-          clip.likers.splice(index, 1);
+          video.likers.splice(index, 1);
         }
       }
     }
   }
-  isLikedByUser(clip: Clip): boolean {
+  isLikedByUser(video: Clip): boolean {
     if (this.userId) {
-      return clip.likers.includes(this.userId);
+      return video.likers.includes(this.userId);
     } else {
       return false;
     }
   }
-    
-
-
 }
-

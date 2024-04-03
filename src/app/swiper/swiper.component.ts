@@ -10,10 +10,10 @@ import {
 import { Clip } from '../interface/clip.interface';
 import { SwiperContainer } from 'swiper/element';
 import { SwiperOptions } from 'swiper/types';
-import { DialogComponent } from '../shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GoogleApiService } from '../services/google-api.service';
 import { ApiValdService } from '../services/api-vald.service';
+import { DialogComponent } from '../shared/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-swiper',
@@ -25,6 +25,7 @@ export class SwiperComponent implements OnInit {
   isMobileScreen = false;
   userId: string | null = null;
   @Input() clips: Clip[] = [];
+  @Input() typeVideo: string = "Clip";
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
 
   constructor(
@@ -40,6 +41,7 @@ export class SwiperComponent implements OnInit {
       this.userId = userId;
     });
   }
+  
   // Swiper
   swiperConfig: SwiperOptions = {
     slidesPerView: 6.4,
@@ -52,11 +54,11 @@ export class SwiperComponent implements OnInit {
     navigation: {
       nextEl: '.swiper-button-next-test',
       prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
     },
 
     loop: true,
     loopAddBlankSlides: false,
-
     slidesPerGroup: 6,
     // Responsive breakpoints
     breakpoints: {
@@ -93,12 +95,67 @@ export class SwiperComponent implements OnInit {
       },
     },
   };
-  openDialog(clip: any, userId: string | null) {
+
+  swiperConfigForFewSlides: SwiperOptions = {
+    slidesPerView: 6.4,
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      disabledClass: 'swiper-button-hidden',
+    },
+
+    loopAddBlankSlides: false,
+    slidesOffsetAfter: 125,
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      // when window width is >= 320px
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      // when window width is >= 480px
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+      // when window width is >= 640px
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        loop: true,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+      },
+    },
+  };
+  openDialog(clip: any, userId: string | null, typeVideo:string) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
+      data: { clip: clip, userId: userId, typeVideo: typeVideo},
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }
@@ -118,22 +175,36 @@ export class SwiperComponent implements OnInit {
     }
   }
 
-  likeClip(clip: Clip) {
+  likeClip(clip: any) {
     if (!this.userId) return;
 
     const isLiked = this.isLikedByUser(clip);
     this.updateClipLikeState(clip, !isLiked);
-
-    this.apiVald.toggleLike(clip._id, this.userId, !isLiked).subscribe({
-      next: () => {
-        // Gestion de la réponse réussie
-      },
-      error: () => {
-        // Revenir à l'état précédent en cas d'erreur
-        this.updateClipLikeState(clip, isLiked);
-        // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
-      },
-    });
+    if(clip.artiste){
+      this.apiVald.toggleLike(clip._id, this.userId, !isLiked).subscribe({
+        next: () => {
+          // Gestion de la réponse réussie
+        },
+        error: () => {
+          // Revenir à l'état précédent en cas d'erreur
+          this.updateClipLikeState(clip, isLiked);
+          // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
+        },
+      });
+    }
+    if(clip.author){
+      this.apiVald.toggleLikeVideo(clip._id, this.userId, !isLiked).subscribe({
+        next: () => {
+          // Gestion de la réponse réussie
+        },
+        error: () => {
+          // Revenir à l'état précédent en cas d'erreur
+          this.updateClipLikeState(clip, isLiked);
+          // Gérer l'erreur (par exemple, afficher un message d'erreur à l'utilisateur)
+        },
+      });
+    }
+    
   }
   private updateClipLikeState(clip: Clip, isLiked: boolean) {
     if (isLiked && this.userId) {
@@ -152,6 +223,14 @@ export class SwiperComponent implements OnInit {
       return clip.likers.includes(this.userId);
     } else {
       return false;
+    }
+  }
+
+  getSwiperConfig() {
+    if (this.clips.length > 6 && this.clips.length < 12) {
+      return this.swiperConfigForFewSlides;
+    } else {
+      return this.swiperConfig;
     }
   }
 }

@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PlayerComponent implements OnInit, OnDestroy {
   idClip: any;
   clip: any;
   playlist: any;
@@ -24,11 +24,7 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
     private viewportScroller: ViewportScroller
   ) {}
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.scrollToTop();
-    }, 500);
-  }
+
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -47,9 +43,6 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private scrollToTop(): void {
-    this.viewportScroller.scrollToPosition([0, 0]);
-  }
 
   initClip() {
     if (this.idClip) {
@@ -66,32 +59,16 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
             clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
         )
         .map((clip: any) => clip.url);
-      this.shufflePlaylist();
       this.apiVald.getClipsByUrl(this.idClip).subscribe({
         next: (clip) => {
           this.clip = clip;
           this.initClip();
-          console.log('Vidéo chargée correctement !');
         },
         error: (error) => {
           console.error('Erreur lors du chargement de la vidéo', error);
-          // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
-        },
-        complete: () => {
-          // Logique à exécuter lors de la complétion de l'observable, si nécessaire
-          console.log('Vidéo bien chargée !');
         },
       });
     });
   }
 
-  private shufflePlaylist() {
-    for (let i = this.playlist.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.playlist[i], this.playlist[j]] = [
-        this.playlist[j],
-        this.playlist[i],
-      ];
-    }
-  }
 }
