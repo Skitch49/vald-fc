@@ -16,20 +16,20 @@ import { GoogleApiService } from '../services/google-api.service';
 export class HomeComponent {
   clips!: Clip;
   lastClip: any;
-  dateRange: Clip[] = [];
   isMobileScreen: boolean = false;
-  likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  periods: Periode[] = [
-    { title: `L'ère V`, startDate: '2021-01-16', endDate: '2024-12-31' },
-    { title: 'Post CMEC', startDate: '2019-09-13', endDate: '2021-01-15' },
-    { title: 'Post Xeu', startDate: '2018-01-05', endDate: '2019-09-12' },
-    { title: 'Post Agartha', startDate: '2016-10-21', endDate: '2018-01-05' },
-    { title: 'Post NQNT 2', startDate: '2015-06-03', endDate: '2016-10-20' },
-    { title: 'NQNT', startDate: '2011-06-03', endDate: '2015-06-02' },
-    // Ajoutez d'autres périodes selon vos besoins
+  categories: any[] = [
+    'Humour',
+    'Concert',
+    'Amin & Hugo',
+    'NQNT - NQNTMQMQMB',
+    'Post NQNT 2',
+    'Post Agartha',
+    'Post Xeu',
+    'Post CMEC',
+    "L'ère V",
   ];
-  periodData: PeriodeData[] = []; // Modifiez le type pour être un tableau
+  VideoByCategories: any[] = [];
 
   isMuted: boolean = true;
 
@@ -51,6 +51,19 @@ export class HomeComponent {
     }
   }
 
+  getAllVideosByCategory() {
+    this.categories.forEach((category) => {
+      this.apiVald.getAllVideoByCategory(category).subscribe((data) => {
+        // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
+        const VideoOnCategorie: PeriodeData = { title: category, clips: data };
+        // Ajoutez periodDatum au tableau periodData
+        this.VideoByCategories.push(VideoOnCategorie);
+        // Faites ce dont vous avez besoin avec periodData
+      });
+    });
+    console.log(this.VideoByCategories);
+  }
+
   ngOnInit() {
     this.userId = this.google.getUserId();
 
@@ -60,11 +73,10 @@ export class HomeComponent {
         this.isMuted = muteValue === 'true'; // Convertissez la chaîne en booléen
         this.updateSafeUrl();
       }
+      this.getAllVideosByCategory();
     }
 
     this.getLastClip();
-
-    this.getClipsByDateRange();
   }
 
   ClipIsLiked() {
@@ -86,20 +98,6 @@ export class HomeComponent {
     });
   }
 
-  getClipsByDateRange() {
-    this.periods.forEach((period) => {
-      this.apiVald
-        .getClipsByDateRange(period.startDate, period.endDate)
-        .subscribe((data) => {
-          // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
-          const periodDatum: PeriodeData = { title: period.title, clips: data };
-          // Ajoutez periodDatum au tableau periodData
-          this.periodData.push(periodDatum);
-          // Faites ce dont vous avez besoin avec periodData
-        });
-    });
-  }
-
   updateSafeUrl() {
     if (this.lastClip) {
       const safeUrl: SafeResourceUrl =
@@ -110,16 +108,28 @@ export class HomeComponent {
     }
   }
 
-
-
   openDialog(clip: any, userId: string | null) {
-    const dialogConfig = {
-      width: this.isMobileScreen ? '99vw' : '48vw',
-      height: 'auto',
-      maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
-    };
-    this.dialog.open(DialogComponent, dialogConfig);
+    if (clip.artiste) {
+      const typeVideo = 'Clip';
+      const dialogConfig = {
+        width: this.isMobileScreen ? '99vw' : '48vw',
+        height: 'auto',
+        maxHeight: '95vh',
+        data: { clip: clip, userId: userId, typeVideo: typeVideo },
+      };
+      this.dialog.open(DialogComponent, dialogConfig);
+    }
+    if (clip.author) {
+      const typeVideo = 'Interview';
+
+      const dialogConfig = {
+        width: this.isMobileScreen ? '99vw' : '48vw',
+        height: 'auto',
+        maxHeight: '95vh',
+        data: { clip: clip, userId: userId, typeVideo: typeVideo },
+      };
+      this.dialog.open(DialogComponent, dialogConfig);
+    }
   }
 
   @HostListener('window:resize', ['$event'])

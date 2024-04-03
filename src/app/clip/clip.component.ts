@@ -117,7 +117,7 @@ export class ClipComponent {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
+      data: { clip: clip, userId: userId,typeVideo: 'Clip' },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }

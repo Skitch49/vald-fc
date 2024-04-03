@@ -111,7 +111,7 @@ export class InterviewComponent {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId },
+      data: { clip: clip, userId: userId,typeVideo: 'Interview' },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }

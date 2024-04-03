@@ -319,3 +319,7 @@ header:has(.notShowMobileMenu) {
   font-weight: 500;
   color: #fff !important;
 }
+.showMobileMenu{
+  .active {
+border: 2px solid #d21c28!important;  }
+}

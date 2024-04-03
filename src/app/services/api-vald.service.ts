@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ApiValdService {
   private apiUrl = 'http://195.110.35.143:40110'; // In Production
-  //  private apiUrl = 'http://localhost:3000'; //In Dev
+  // private apiUrl = 'http://localhost:3000'; //In Dev
 
   private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -88,6 +88,10 @@ export class ApiValdService {
 
   getAllVideoLiked(userId: string): Observable<any>{
     return this.http.get(`${this.apiUrl}/clip/all-video-liked/${userId}` )
+  }
+
+  getAllVideoByCategory(category: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/clip/categories/${category}`);
   }
 
 }

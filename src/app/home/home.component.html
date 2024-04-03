@@ -110,9 +110,13 @@
   </div> -->
 
   <div class="container">
-    <div *ngFor="let period of periodData">
-      <h2 class="period-title">{{ period.title }}</h2>
-      <app-swiper ngSkipHydration [clips]="period.clips" ></app-swiper>
+    <div *ngFor="let videos of VideoByCategories">
+      <h2 class="period-title"><span *ngIf="videos.clips[0].artiste">Clip </span>{{ videos.title }}</h2>
+      <app-swiper ngSkipHydration typeVideo="Clip" [clips]="videos.clips" *ngIf="videos.clips[0].artiste"></app-swiper>
+      <app-swiper ngSkipHydration typeVideo="Interview" [clips]="videos.clips" *ngIf="videos.clips[0].author"></app-swiper>
     </div>
   </div>
+
+  
 </div>
+
