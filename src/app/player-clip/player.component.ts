@@ -21,7 +21,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private apiVald: ApiValdService,
-    private viewportScroller: ViewportScroller
   ) {}
 
 

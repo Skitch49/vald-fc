@@ -20,7 +20,7 @@ export class InterviewComponent {
   isMobileScreen: boolean = false;
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  categories: any[] = ["Humour","Concert", "Amin & Hugo"];
+  categories: any[] = ["Entertainment","Concert", "Amin & Hugo"];
   VideoByCategories: any[] = [];
 
   isMuted: boolean = true;

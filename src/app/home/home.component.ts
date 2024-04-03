@@ -19,15 +19,16 @@ export class HomeComponent {
   isMobileScreen: boolean = false;
   userId: string | null = null;
   categories: any[] = [
-    'Humour',
-    'Concert',
-    'Amin & Hugo',
-    'NQNT - NQNTMQMQMB',
-    'Post NQNT 2',
-    'Post Agartha',
-    'Post Xeu',
-    'Post CMEC',
     "L'ère V",
+    'Post CMEC',
+    'Post Xeu',
+    'Concert',
+    'Post Agartha',
+    'Post NQNT 2',
+    'Entertainment',
+    'NQNT - NQNTMQMQMB',
+    'Amin & Hugo',
+    ,
   ];
   VideoByCategories: any[] = [];
 
@@ -40,6 +41,10 @@ export class HomeComponent {
     private readonly google: GoogleApiService
   ) {
     this.checkScreenSize();
+  }
+
+   randomSort() {
+    return Math.random() - 0.5;
   }
 
   toggleMute() {
@@ -65,6 +70,7 @@ export class HomeComponent {
   }
 
   ngOnInit() {
+    this.categories.sort(this.randomSort);
     this.userId = this.google.getUserId();
 
     if (typeof window !== 'undefined' && window.document) {

@@ -1,5 +1,5 @@
 <div class="wrapper" *ngIf="!isMobileScreen">
-  <div class="not-liked" *ngIf="!videos">
+  <div class="not-liked" *ngIf="!videos || videos.lenght==0">
     <h3>Retrouver vos vidéos favorites ici !</h3>
     <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
   </div>
@@ -143,7 +143,7 @@
 </div>
 
 <div class="wrapper" *ngIf="isMobileScreen">
-  <div class="not-liked" *ngIf="!videos">
+  <div class="not-liked" *ngIf="!videos || videos.lenght==0">
     <h3>Retrouver vos vidéos favorites ici !</h3>
     <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
   </div>
