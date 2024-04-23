@@ -35,6 +35,7 @@ import { ClipComponent } from './clip/clip.component';
 import { InterviewComponent } from './interview/interview.component';
 import { DialogComponent } from './shared/components/dialog/dialog.component';
 import { PlayerInterviewComponent } from './player-interview/player-interview.component';
+import { TierlistComponent } from './tierlist/tierlist.component';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -53,7 +54,8 @@ registerLocaleData(localeFr, 'fr');
     MyListComponent,
     ClipComponent,
     InterviewComponent,
-    PlayerInterviewComponent
+    PlayerInterviewComponent,
+    TierlistComponent
   ],
   imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),

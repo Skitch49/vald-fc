@@ -10,6 +10,7 @@ import { authGuard } from './shared/auth.guard';
 import { ClipComponent } from './clip/clip.component';
 import { InterviewComponent } from './interview/interview.component';
 import { PlayerInterviewComponent } from './player-interview/player-interview.component';
+import { TierlistComponent } from './tierlist/tierlist.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'search', component: SearchComponent }, // Assurez-vous d'avoir une route correspondante
   { path: 'gallery', component: GalleryComponent }, // Assurez-vous d'avoir une route correspondante
   { path: 'my-list', component: MyListComponent, canActivate: [authGuard] }, // Assurez-vous d'avoir une route correspondante
+  { path: 'tier-list', component: TierlistComponent,}, // Assurez-vous d'avoir une route correspondante
 ];
 
 @NgModule({

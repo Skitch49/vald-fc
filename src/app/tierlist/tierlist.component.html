@@ -1,0 +1,134 @@
+<div class="container-tierlist">
+  <div class="start" *ngIf="menu">
+    <h1>Album ultime de VALD</h1>
+    <div class="wrapper-regles">
+      <div class="pictures">
+        <figure>
+          <img src="../../assets/covers/nqntmqmqmb.webp" alt="nqntmqmqmb" />
+        </figure>
+        <figure>
+          <img src="../../assets/covers/nqnt 2.webp" alt="nqnt 2" />
+        </figure>
+        <figure>
+          <img src="../../assets/covers/xeu.webp" alt="Xeu" />
+        </figure>
+        <figure>
+          <img src="../../assets/covers/vv5.webp" alt="vv5" />
+        </figure>
+      </div>
+      <div class="regles">
+        <h3>Les règles</h3>
+        <p>Les règles à suivre pour concevoir l'album</p>
+        <ul>
+          <li>16 sons + 1 bonus</li>
+          <li>Choisi un son par ordre des tracks dans l'album</li>
+          <li>On ne compte pas les interludes</li>
+          <li>
+            Pas de feats extérieurs, uniquement ceux présent sur les albums de
+            VALD. (Exemple : pas le droit de prendre "Qui dit mieux" car dispo
+            sur « Enfant Lune » )
+          </li>
+          <li>
+            S/o Viens on discute pour le concept à retrouver
+            <a
+              href="https://www.youtube.com/watch?v=pkMSPPJ9yiI"
+              target="_blank"
+              >ici</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrapper-btn"><button (click)="StartQuizz()">Start</button></div>
+  </div>
+
+  <div class="question" *ngIf="quizz && currentTrack < 18">
+    <h1>
+      CONCEPTION :
+      <span *ngIf="currentTrack < 16">TRACK {{ currentTrack }}</span
+      ><span *ngIf="currentTrack == 16">Outro</span>
+      <span *ngIf="currentTrack == 17">Bonus</span>
+    </h1>
+
+    <div class="container-tracks">
+      <div
+        class="track-item"
+        *ngFor="let track of filteredTracks()"
+        (click)="chooseTrack(track)"
+      >
+        <figure>
+          <img
+            src="./../../assets/covers/{{ track.album.toLowerCase() }}.webp"
+            alt="{{ track.album }}"
+          />
+        </figure>
+        <div class="info">
+          <h2>{{ track.title }}</h2>
+          <p>{{ track.album.toLowerCase() }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="answer" *ngIf="answer">
+    <h1>Ton album parfait</h1>
+    <div class="container-tracks">
+      <div class="best-album">
+        <img src="{{ backgroundImg }}" alt="" />
+        <div class="tracklist">
+          <h1>{{ titreAlbum }}</h1>
+          <div
+            class="track-item"
+            *ngFor="let track of YourBestAlbum; index as i"
+          >
+            <h2>{{ i + 1 }} {{ track.title }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="all-background">
+        <figure>
+          <img
+            (click)="changeBackgroundImg('../../assets/img/189.jpg')"
+            src="../../assets/img/189.jpg"
+            alt=""
+          />
+        </figure>
+        <figure>
+          <img
+            (click)="changeBackgroundImg('../../assets/img/68.jpg')"
+            src="../../assets/img/68.jpg"
+            alt=""
+          />
+        </figure>
+        <figure>
+          <img
+            (click)="changeBackgroundImg('../../assets/img/11.jpg')"
+            src="../../assets/img/11.jpg"
+            alt=""
+          />
+        </figure>
+        <figure>
+          <img
+            (click)="changeBackgroundImg('../../assets/img/13.jpg')"
+            src="../../assets/img/13.jpg"
+            alt=""
+          />
+        </figure>
+        <figure>
+          <img
+            (click)="changeBackgroundImg('../../assets/img/38.jpg')"
+            src="../../assets/img/38.jpg"
+            alt=""
+          />
+        </figure>
+      </div>
+      <div class="container-input">
+        <h3>Donne un titre à ce chef d'oeuvre !</h3>
+        <input type="text" [(ngModel)]="titreAlbum" />
+        <div class="wrapper-btn">
+          <button (click)="generateImage()">Télécharger</button>
+          <button (click)="generateAndShareImage()">Partager</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
