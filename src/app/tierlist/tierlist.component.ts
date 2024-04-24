@@ -10,7 +10,7 @@ export class TierlistComponent {
   backgroundImg: string = '../../assets/img/68.jpg';
   titreAlbum: string = '';
   imageBlob: Blob | null = null;
-
+  message: string = '';
   albums = [
     {
       track: 1,
@@ -1012,35 +1012,51 @@ export class TierlistComponent {
     this.backgroundImg = src;
   }
 
-  generateAndShareImage() {
+  async generateAndShareImage() {
     const bestAlbum = document.querySelector('.best-album');
   
-    if (bestAlbum) {
-      html2canvas(bestAlbum as HTMLElement).then(canvas => {
-        // Convertir le canvas en Blob
-        canvas.toBlob(blob => {
-          if (blob) {
-            // Créer un objet File à partir du Blob
-            const file = new File([blob], 'best_album_VALD.png', { type: 'image/png' });
+    if (!bestAlbum) {
+      console.error('Element .best-album not found');
+      this.message = 'Element .best-album not found';
+      return;
+    }
   
-            // Partager l'image
-            if (navigator.share) {
-              navigator.share({
-                title: 'L\'album parfait de VALD',
-                text: 'Voici mon album parfait de VALD!',
-                files: [file]
-              }).then(() => console.log('Image partagée avec succès'))
-                .catch(error => console.error('Erreur lors du partage :', error));
-            } else {
-              console.error('L\'API Web Share n\'est pas prise en charge dans ce navigateur.');
-            }
-          } else {
-            console.error('Échec de la génération de l\'image.');
-          }
-        }, 'image/png');
+    try {
+      const canvas = await html2canvas(bestAlbum as HTMLElement);
+  
+      // Convertir le canvas en Blob
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, 'image/png');
       });
-    } else {
-      console.error('Best album not found');
+  
+      if (!blob) {
+        console.error('Échec de la génération de l\'image.');
+        this.message = 'Échec de la génération de l\'image';
+        return;
+      }
+  
+      // Créer un objet File à partir du Blob
+      const file = new File([blob], 'perfect_album_VALD.png', { type: 'image/png' });
+  
+      // Partager l'image
+      if (navigator.share) {
+        await navigator.share({
+          title: 'L\'album parfait de VALD',
+          text: 'Découvrez mon album parfait de VALD!',
+          files: [file]
+        });
+        console.log('Image partagée avec succès');
+        this.message = 'Merci d\'avoir partagée !';
+
+      } else {
+        console.error('L\'API Web Share n\'est pas prise en charge dans ce navigateur.');
+        this.message = 'L\'API Web Share n\'est pas prise en charge dans ce navigateur.';
+
+      }
+    } catch (error) {
+      console.error('Une erreur est survenue :', error);
+      this.message = 'Une erreur est survenue : '+error;
+
     }
   }
 

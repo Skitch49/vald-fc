@@ -114,6 +114,7 @@ figure {
     padding: 0 2rem;
     gap: 20px 0;
     align-items: center;
+    margin-bottom: 2rem;
     .best-album {
       position: relative;
       img {
@@ -153,6 +154,10 @@ figure {
       input {
         width: 100%;
         padding: 1px 5px;
+      }
+      p {
+        text-align: center;
+        padding-top: 4px;
       }
     }
   }
@@ -198,31 +203,31 @@ figure {
   .container-tierlist {
     min-height: calc(100vh - 106px) !important;
     margin-top: 106px !important;
-
+    margin-bottom: 2rem;
   }
-  .answer{
-    .container-tracks{
-      padding: 0!important;
-      .best-album{
-        img{
-          width: 98vw!important;
-          height: 100%!important;
+  .answer {
+    .container-tracks {
+      padding: 0 !important;
+      .best-album {
+        img {
+          width: 98vw !important;
+          height: 100% !important;
         }
-        .tracklist{
-          h1{
+        .tracklist {
+          h1 {
             font-size: 6.6vw !important;
-            margin-bottom: 0.3rem!important;
+            margin-bottom: 0.3rem !important;
           }
-          h2{
+          h2 {
             font-size: 3.9vw !important;
           }
         }
       }
-      .all-background{
-        width: 100%!important;
-        figure{
-          height: 19vw!important;
-          width: 19vw!important;
+      .all-background {
+        width: 100% !important;
+        figure {
+          height: 19vw !important;
+          width: 19vw !important;
         }
       }
     }
@@ -236,22 +241,23 @@ figure {
       }
     }
   }
-  .answer{
-    .container-tracks{
-      .best-album{
-        img{
-          width: 100%!important;
+  .answer {
+    .container-tracks {
+      .best-album {
+        img {
+          width: 100% !important;
         }
       }
     }
   }
-  
 }
 
 @media screen and (max-width: 400px) {
-  .question,.start,.answer {
-    h1{
-      font-size: 21px!important;
+  .question,
+  .start,
+  .answer {
+    h1 {
+      font-size: 21px !important;
     }
     .container-tracks {
       .track-item {
@@ -266,10 +272,10 @@ figure {
       }
     }
   }
-  .answer{
-    .container-input{
-      .wrapper-btn{
-        flex-direction: column!important;
+  .answer {
+    .container-input {
+      .wrapper-btn {
+        flex-direction: column !important;
       }
     }
   }
@@ -288,11 +294,11 @@ figure {
       }
     }
   }
-  .answer{
-    .container-tracks{
-      .container-input{
-        width: 100%!important;
-        h3{
+  .answer {
+    .container-tracks {
+      .container-input {
+        width: 100% !important;
+        h3 {
           text-align: center;
         }
       }
