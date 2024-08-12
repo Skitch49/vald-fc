@@ -11,7 +11,7 @@ import { Clip } from '../interface/clip.interface';
 @Component({
   selector: 'app-interview',
   templateUrl: './interview.component.html',
-  styleUrl: './interview.component.scss'
+  styleUrl: './interview.component.scss',
 })
 export class InterviewComponent {
   clips!: Clip;
@@ -20,7 +20,19 @@ export class InterviewComponent {
   isMobileScreen: boolean = false;
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  categories: any[] = ["Entertainment","Concert", "Amin & Hugo"];
+  categories: any[] = [
+    'Entertainment',
+    'Concert',
+    'Amin & Hugo',
+    'Interview V',
+    'VALD sur Twitch',
+    'Documentaires | Courts métrages',
+    'Documentaires | Fan made',
+    'Interview Ce Monde Est Cruel',
+    'Interview Horizon Vertical',
+    'Interview Échelon',
+    'Interview Xeu',
+  ];
   VideoByCategories: any[] = [];
 
   isMuted: boolean = true;
@@ -57,8 +69,8 @@ export class InterviewComponent {
     this.getLastVideo();
 
     this.getVideosByCategory();
-    console.log('categorie:'+this.categories)
-    console.log('VideoByCategories:'+this.VideoByCategories)
+    console.log('categorie:' + this.categories);
+    console.log('VideoByCategories:' + JSON.stringify(this.VideoByCategories));
   }
 
   ClipIsLiked() {
@@ -70,7 +82,7 @@ export class InterviewComponent {
   }
 
   getLastVideo() {
-    this.apiVald.getVideoByUrl('KPAVBJy3XA0').subscribe((data) => {
+    this.apiVald.getLastVideo().subscribe((data) => {
       this.lastVideo = data;
       const safeUrl: SafeResourceUrl =
         this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -82,15 +94,13 @@ export class InterviewComponent {
 
   getVideosByCategory() {
     this.categories.forEach((category) => {
-      this.apiVald
-        .getVideosByCategory(category)
-        .subscribe((data) => {
-          // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
-          const VideoOnCategorie: PeriodeData = { title: category, clips: data };
-          // Ajoutez periodDatum au tableau periodData
-          this.VideoByCategories.push(VideoOnCategorie);
-          // Faites ce dont vous avez besoin avec periodData
-        });
+      this.apiVald.getVideosByCategory(category).subscribe((data) => {
+        // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
+        const VideoOnCategorie: PeriodeData = { title: category, clips: data };
+        // Ajoutez periodDatum au tableau periodData
+        this.VideoByCategories.push(VideoOnCategorie);
+        // Faites ce dont vous avez besoin avec periodData
+      });
     });
   }
 
@@ -104,14 +114,12 @@ export class InterviewComponent {
     }
   }
 
-
-
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId,typeVideo: 'Interview' },
+      data: { clip: clip, userId: userId, typeVideo: 'Interview' },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }

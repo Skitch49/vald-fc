@@ -1,0 +1,150 @@
+<div class="header-topbar">
+  <div class="topbar">
+    <div class="choice">
+      <button
+        (click)="SelectVideo('clip')"
+        [ngClass]="{ 'btn-active': selectVideo == 'clip' }"
+      >
+        Clips
+      </button>
+      <button
+        (click)="SelectVideo('interview')"
+        [ngClass]="{ 'btn-active': selectVideo == 'interview' }"
+      >
+        Interviews
+      </button>
+    </div>
+    <div class="choice">
+      <button (click)="this.toFromAddData()">Add data</button>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard">
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Nom
+          <svg
+            (click)="toggleSort('name')"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            class="triangle"
+            [ngClass]="{
+              'triangle-bottom': sortColumn === 'name' && sortDirection == 1,
+              'triangle-top': sortColumn === 'name' && sortDirection == -1
+            }"
+            data-name="Play"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </th>
+        <th>
+          Date
+
+          <svg
+            (click)="toggleSort('date')"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            class="triangle"
+            [ngClass]="{
+              'triangle-bottom': sortColumn === 'date' && sortDirection == 1,
+              'triangle-top': sortColumn === 'date' && sortDirection == -1
+            }"
+            data-name="Play"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </th>
+        <th *ngIf="this.selectVideo == 'clip'">Artiste</th>
+        <th *ngIf="this.selectVideo == 'clip'">Feat</th>
+        <th *ngIf="this.selectVideo == 'interview'">Autheur</th>
+        <th>
+          Catégorie<svg
+            (click)="toggleSort('categorie')"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            class="triangle"
+            [ngClass]="{
+              'triangle-bottom':
+                sortColumn === 'categorie' && sortDirection == 1,
+              'triangle-top': sortColumn === 'categorie' && sortDirection == -1
+            }"
+            data-name="Play"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </th>
+        <th>
+          Like<svg
+            (click)="toggleSort('likers')"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            class="triangle"
+            [ngClass]="{
+              'triangle-bottom': sortColumn === 'likers' && sortDirection == 1,
+              'triangle-top': sortColumn === 'likers' && sortDirection == -1
+            }"
+            data-name="Play"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </th>
+        <th>Modifier</th>
+        <th>Suprimer</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="this.selectVideo == 'clip'">
+      <tr *ngFor="let clip of clips">
+        <td>{{ clip.name }}</td>
+        <td>{{ clip.date | date : "longDate" }}</td>
+        <td>{{ clip.artiste.nameArtiste }}</td>
+        <td>
+          <ng-container *ngFor="let feat of clip.featuring">
+            <div *ngIf="feat.nameArtiste">{{ feat.nameArtiste }}</div>
+          </ng-container>
+        </td>
+        <td>{{ clip.categorie }}</td>
+        <td>{{ clip.likers | count }}</td>
+        <td><button>Modifié</button></td>
+        <td><button>Supprimé</button></td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="this.selectVideo == 'interview'">
+      <tr *ngFor="let interview of interviews">
+        <td>{{ interview.name }}</td>
+        <td>{{ interview.date | date : "longDate" }}</td>
+        <td>{{ interview.author.nameArtiste }}</td>
+        <td>{{ interview.categorie }}</td>
+        <td>{{ interview.likers | count }}</td>
+        <td><button>Modifié</button></td>
+        <td><button>Supprimé</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

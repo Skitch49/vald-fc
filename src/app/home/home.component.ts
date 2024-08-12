@@ -28,7 +28,14 @@ export class HomeComponent {
     'Entertainment',
     'NQNT - NQNTMQMQMB',
     'Amin & Hugo',
-    ,
+    'Interview V',
+    'VALD sur Twitch',
+    'Documentaires | Courts métrages',
+    'Documentaires | Fan made',
+    'Interview Ce Monde Est Cruel',
+    'Interview Horizon Vertical',
+    'Interview Échelon',
+    'Interview Xeu'
   ];
   VideoByCategories: any[] = [];
 
@@ -43,7 +50,7 @@ export class HomeComponent {
     this.checkScreenSize();
   }
 
-   randomSort() {
+  randomSort() {
     return Math.random() - 0.5;
   }
 

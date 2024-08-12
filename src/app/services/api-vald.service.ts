@@ -9,7 +9,9 @@ export class ApiValdService {
   private apiUrl = 'http://195.110.35.143:40110'; // In Production
   // private apiUrl = 'http://localhost:3000'; //In Dev
 
-  private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
 
   getSafeUrl(): Observable<string> {
     return this.safeUrlSubject.asObservable();
@@ -18,7 +20,7 @@ export class ApiValdService {
   updateSafeUrl(url: string): void {
     this.safeUrlSubject.next(url);
   }
-  
+
   constructor(private http: HttpClient) {}
 
   // Clip
@@ -41,23 +43,32 @@ export class ApiValdService {
     );
   }
 
-  getClipsLiked(userId: string): Observable<any>{
-    return this.http.get(`${this.apiUrl}/clip/clip-liked/${userId}` )
+  getClipsLiked(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/clip/clip-liked/${userId}`);
   }
 
   likeClip(clipId: string, userId: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/clip/like-clip/${clipId}`, { userId });
+    return this.http.patch(`${this.apiUrl}/clip/like-clip/${clipId}`, {
+      userId,
+    });
   }
 
   dislikeClip(clipId: string, userId: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/clip/dislike-clip/${clipId}`, {userId});
-  }
-  
-  toggleLike(clipId: string, userId: string, like: boolean): Observable<any> {
-    const action = like ? 'like-clip' : 'dislike-clip';
-    return this.http.patch(`${this.apiUrl}/clip/${action}/${clipId}`, { userId });
+    return this.http.patch(`${this.apiUrl}/clip/dislike-clip/${clipId}`, {
+      userId,
+    });
   }
 
+  toggleLike(clipId: string, userId: string, like: boolean): Observable<any> {
+    const action = like ? 'like-clip' : 'dislike-clip';
+    return this.http.patch(`${this.apiUrl}/clip/${action}/${clipId}`, {
+      userId,
+    });
+  }
+
+  postClip(clip: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clip`, clip);
+  }
   // Video
 
   getVideos(): Observable<any> {
@@ -76,22 +87,39 @@ export class ApiValdService {
     return this.http.get(`${this.apiUrl}/video/categories/${category}`);
   }
 
-  toggleLikeVideo(clipId: string, userId: string, like: boolean): Observable<any> {
+  toggleLikeVideo(
+    clipId: string,
+    userId: string,
+    like: boolean
+  ): Observable<any> {
     const action = like ? 'like-video' : 'dislike-video';
-    return this.http.patch(`${this.apiUrl}/video/${action}/${clipId}`, { userId });
+    return this.http.patch(`${this.apiUrl}/video/${action}/${clipId}`, {
+      userId,
+    });
   }
 
+  postVideo(video: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/video`, video);
+  }
   // Video and Clips
   getClipsArtistesFeaturing(query: string) {
     return this.http.get(`${this.apiUrl}/clip/search/${query}`);
   }
 
-  getAllVideoLiked(userId: string): Observable<any>{
-    return this.http.get(`${this.apiUrl}/clip/all-video-liked/${userId}` )
+  getAllVideoLiked(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/clip/all-video-liked/${userId}`);
   }
 
   getAllVideoByCategory(category: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/clip/categories/${category}`);
   }
 
+  // Artistes
+  getArtistes(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/artiste`);
+  }
+
+  postArtiste(artiste: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/artiste`, artiste);
+  }
 }

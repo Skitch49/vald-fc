@@ -11,6 +11,7 @@ import { ApiValdService } from '../../../services/api-vald.service';
 export class DialogComponent implements OnInit {
   hoverStates: { [key: string]: boolean } = {};
   clip = this.data.clip;
+  backgroundUrl: String = '';
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiVald: ApiValdService
@@ -18,7 +19,7 @@ export class DialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeHoverStates();
-    console.log('in dialog ' + JSON.stringify(this.data));
+    this.setImageUrl();
   }
 
   initializeHoverStates() {
@@ -99,6 +100,40 @@ export class DialogComponent implements OnInit {
       return clip.likers.includes(this.data.userId);
     } else {
       return false;
+    }
+  }
+
+  // Méthode pour vérifier si l'URL d'une image existe
+  checkImageExists(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width <= 120 && img.height <= 90) {
+          resolve(false); // Considère cette image comme invalide
+        } else {
+          resolve(true);
+        }
+      };
+      img.onerror = () => resolve(false);
+      console.log(resolve);
+      img.src = url;
+    });
+  }
+
+  // Méthode pour définir l'URL de l'image
+  async setImageUrl() {
+    const urls = [
+      `https://i.ytimg.com/vi/${this.clip.url}/maxresdefault.jpg`,
+      `http://img.youtube.com/vi/${this.clip.url}/hqdefault.jpg`,
+      `http://img.youtube.com/vi/${this.clip.url}/sddefault.jpg`,
+    ];
+
+    for (const url of urls) {
+      const exists = await this.checkImageExists(url);
+      if (exists) {
+        this.backgroundUrl = url;
+        break;
+      }
     }
   }
 }

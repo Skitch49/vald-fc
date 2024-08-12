@@ -1,0 +1,37 @@
+.container {
+  min-height: calc(100vh - 70px);
+  background-color: #141414;
+  border-bottom: 1px solid #d3d3d3;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #d3d3d3;
+    .item {
+      margin-bottom: 1rem;
+      width: 95%;
+      max-width: 700px;
+      button {
+        width: 100%;
+      }
+      textarea {
+        resize: none;
+        height: 5.5rem;
+      }
+      input,
+      textarea,select {
+        padding: 4px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    min-height: calc(100vh - 102px) !important ;
+  }
+}

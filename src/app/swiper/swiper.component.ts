@@ -25,7 +25,7 @@ export class SwiperComponent implements OnInit {
   isMobileScreen = false;
   userId: string | null = null;
   @Input() clips: Clip[] = [];
-  @Input() typeVideo: string = "Clip";
+  @Input() typeVideo: string = 'Clip';
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
 
   constructor(
@@ -40,8 +40,23 @@ export class SwiperComponent implements OnInit {
     this.googleApiService.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
     });
+
+    this.clips = this.clips.sort((a: Clip, b: Clip) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      if (a.name == 'Plus haut') {
+        console.log('Plus Haut ' + a.date);
+      }
+      if (a.name == "Je t'aime (Part.2)") {
+        console.log("Je t'aime " + a.date);
+      }
+      if (a.name == 'Strip (Part.1)') {
+        console.log('Strip ' + a.date);
+      }
+      return dateB - dateA;
+    });
   }
-  
+
   // Swiper
   swiperConfig: SwiperOptions = {
     slidesPerView: 6.4,
@@ -150,12 +165,12 @@ export class SwiperComponent implements OnInit {
       },
     },
   };
-  openDialog(clip: any, userId: string | null, typeVideo:string) {
+  openDialog(clip: any, userId: string | null, typeVideo: string) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId, typeVideo: typeVideo},
+      data: { clip: clip, userId: userId, typeVideo: typeVideo },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }
@@ -180,7 +195,7 @@ export class SwiperComponent implements OnInit {
 
     const isLiked = this.isLikedByUser(clip);
     this.updateClipLikeState(clip, !isLiked);
-    if(clip.artiste){
+    if (clip.artiste) {
       this.apiVald.toggleLike(clip._id, this.userId, !isLiked).subscribe({
         next: () => {
           // Gestion de la réponse réussie
@@ -192,7 +207,7 @@ export class SwiperComponent implements OnInit {
         },
       });
     }
-    if(clip.author){
+    if (clip.author) {
       this.apiVald.toggleLikeVideo(clip._id, this.userId, !isLiked).subscribe({
         next: () => {
           // Gestion de la réponse réussie
@@ -204,7 +219,6 @@ export class SwiperComponent implements OnInit {
         },
       });
     }
-    
   }
   private updateClipLikeState(clip: Clip, isLiked: boolean) {
     if (isLiked && this.userId) {
@@ -227,7 +241,7 @@ export class SwiperComponent implements OnInit {
   }
 
   getSwiperConfig() {
-    if (this.clips.length > 6 && this.clips.length < 12) {
+    if (this.clips.length > 6 && this.clips.length <= 12) {
       return this.swiperConfigForFewSlides;
     } else {
       return this.swiperConfig;

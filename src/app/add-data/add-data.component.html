@@ -1,0 +1,373 @@
+<div class="container">
+  <div class="top-header">
+    <div class="topbar">
+      <div class="choice">
+        <button
+          (click)="SelectVideo('clip')"
+          [ngClass]="{ 'btn-active': selectVideo == 'clip' }"
+        >
+          Clips
+        </button>
+        <button
+          (click)="SelectVideo('interview')"
+          [ngClass]="{ 'btn-active': selectVideo == 'interview' }"
+        >
+          Interviews
+        </button>
+        <button
+          (click)="SelectVideo('artiste')"
+          [ngClass]="{ 'btn-active': selectVideo == 'artiste' }"
+        >
+          Artiste
+        </button>
+      </div>
+    </div>
+  </div>
+  <form
+    (ngSubmit)="submit()"
+    [formGroup]="formInterview"
+    *ngIf="selectVideo == 'interview'"
+  >
+    <h2>Ajoute une interview</h2>
+    <div class="item">
+      <label
+        for="name"
+        [ngClass]="{ 'error-form': name!.errors && name!.touched }"
+        >Nom <input type="text" name="name" id="name" formControlName="name"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="date"
+        [ngClass]="{ 'error-form': date!.errors && date!.touched }"
+        >Date <input type="date" name="date" id="date" formControlName="date"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="description"
+        [ngClass]="{
+          'error-form': description!.errors && description!.touched
+        }"
+        >Description
+        <textarea
+          name="description"
+          id="description"
+          formControlName="description"
+        ></textarea>
+      </label>
+    </div>
+    <div class="item">
+      <label for="url" [ngClass]="{ 'error-form': url!.errors && url!.touched }"
+        >Url <input type="text" name="url" id="url" formControlName="url"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="author"
+        [ngClass]="{ 'error-form': author!.errors && author!.touched }"
+        >Autheur
+        <select name="author" id="author" formControlName="author">
+          <option [value]="author._id" *ngFor="let author of artistes">
+            {{ author.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div formGroupName="AddArtiste" *ngIf="author?.value === 'autres'">
+      <div class="item">
+        <label
+          for="nameArtiste"
+          [ngClass]="{ 'error-form': categorie!.errors && categorie!.touched }"
+          >Nom de l'artiste
+          <input
+            type="text"
+            name="nameArtiste"
+            id="nameArtiste"
+            formControlName="nameArtiste"
+        /></label>
+      </div>
+    </div>
+    <div class="item">
+      <label
+        for="categorie"
+        [ngClass]="{ 'error-form': categorie!.errors && categorie!.touched }"
+        >Categorie
+        <select name="categorie" id="categorie" formControlName="categorie" (change)="onCategorieChange($event)">
+          <option [value]="categorie" *ngFor="let categorie of categories">
+            {{ categorie }}
+          </option>
+          <option value="other">Autres</option>
+        </select>
+        <input type="text" placeholder="Ajouter une catégorie..." *ngIf="otherIsSelected" name="newCategorie" formControlName="newCategorie">
+       </label>
+    </div>
+    <div class="item">
+      <button type="submit">Ajouter</button>
+    </div>
+  </form>
+  <form
+    (ngSubmit)="submit()"
+    [formGroup]="formClip"
+    *ngIf="selectVideo == 'clip'"
+  >
+    <h2>Ajoute un Clip</h2>
+    <div class="item">
+      <label
+        for="name"
+        [ngClass]="{ 'error-form': name!.errors && name!.touched }"
+        >Nom <input type="text" name="name" id="name" formControlName="name"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="date"
+        [ngClass]="{ 'error-form': date!.errors && date!.touched }"
+        >Date <input type="date" name="date" id="date" formControlName="date"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="description"
+        [ngClass]="{
+          'error-form': description!.errors && description!.touched
+        }"
+        >Description
+        <textarea
+          name="description"
+          id="description"
+          formControlName="description"
+        ></textarea>
+      </label>
+    </div>
+    <div class="item">
+      <label for="url" [ngClass]="{ 'error-form': url!.errors && url!.touched }"
+        >Url <input type="text" name="url" id="url" formControlName="url"
+      /></label>
+    </div>
+    <div class="item">
+      <label
+        for="categorie"
+        [ngClass]="{ 'error-form': categorie!.errors && categorie!.touched }"
+        >Categorie
+        <select name="categorie" id="categorie" formControlName="categorie" (change)="onCategorieChange($event)">
+          <option [value]="categorie" *ngFor="let categorie of categories">
+            {{ categorie }}
+          </option>
+          <option value="other">Autres</option>
+        </select>
+        <input type="text" placeholder="Ajouter une catégorie..." *ngIf="otherIsSelected" name="newCategorie" formControlName="newCategorie">
+       </label>
+    </div>
+    <div class="item">
+      <label
+        for="produced"
+        [ngClass]="{ 'error-form': produced!.errors && produced!.touched }"
+        >Producteur
+        <select name="produced" id="produced" formControlName="produced">
+          <option value="">Aucun / Inconnu</option>
+          <option [value]="produced._id" *ngFor="let produced of artistes">
+            {{ produced.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div class="item">
+      <label for="mix" [ngClass]="{ 'error-form': mix!.errors && mix!.touched }"
+        >Mix
+        <select name="mix" id="mix" formControlName="mix">
+          <option value="">Aucun / Inconnu</option>
+          <option [value]="mix._id" *ngFor="let mix of artistes">
+            {{ mix.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div class="item">
+      <label
+        for="mastering"
+        [ngClass]="{ 'error-form': mastering!.errors && mastering!.touched }"
+        >Mastering
+        <select name="mastering" id="mastering" formControlName="mastering">
+          <option value="">Aucun / Inconnu</option>
+          <option [value]="mastering._id" *ngFor="let mastering of artistes">
+            {{ mastering.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div class="item">
+      <label
+        for="production"
+        [ngClass]="{ 'error-form': production!.errors && production!.touched }"
+        >Production
+        <select name="production" id="production" formControlName="production">
+          <option value="">Aucun / Inconnu</option>
+          <option [value]="production._id" *ngFor="let production of artistes">
+            {{ production.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div class="item">
+      <label
+        for="real"
+        [ngClass]="{ 'error-form': real!.errors && real!.touched }"
+        >Réal
+        <select name="real" id="real" formControlName="real">
+          <option value="">Aucun / Inconnu</option>
+          <option [value]="real._id" *ngFor="let real of artistes">
+            {{ real.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div class="item">
+      <label
+        for="artiste"
+        [ngClass]="{ 'error-form': artiste!.errors && artiste!.touched }"
+        >Artiste
+        <select name="artiste" id="artiste" formControlName="artiste">
+          <option [value]="artiste._id" *ngFor="let artiste of artistes">
+            {{ artiste.nameArtiste }}
+          </option>
+          <option value="autres">Autres</option>
+        </select></label
+      >
+    </div>
+    <div formArrayName="featuring">
+      <div *ngFor="let feature of featuring.controls; let i = index">
+        <div class="item">
+          <label
+            for="featuring-{{ i }}"
+            [ngClass]="{ 'error-form': feature.errors && feature.touched }"
+          >
+            Featuring
+            <select id="featuring-{{ i }}" [formControlName]="i">
+              <option value="">Aucun</option>
+              <option *ngFor="let artist of artistes" [value]="artist._id">
+                {{ artist.nameArtiste }}
+              </option>
+              <option value="autres">Autres</option>
+            </select>
+            <button type="button" (click)="removeFeaturing(i)" *ngIf="i > 0">
+              Supprimer
+            </button>
+          </label>
+        </div>
+      </div>
+      <button type="button" (click)="addFeaturing()">
+        Ajouter un Featuring
+      </button>
+    </div>
+    <div class="item">
+      <button type="submit">Ajouter</button>
+    </div>
+  </form>
+  <form
+    (ngSubmit)="submit()"
+    [formGroup]="formArtiste"
+    *ngIf="selectVideo == 'artiste'"
+  >
+    <h2>Ajoute un Artiste</h2>
+    <div class="item">
+      <label
+        for="nameArtiste"
+        [ngClass]="{
+          'error-form': nameArtiste!.errors && nameArtiste!.touched
+        }"
+        >Nom
+        <input
+          type="text"
+          name="nameArtiste"
+          id="nameArtiste"
+          formControlName="nameArtiste"
+      /></label>
+    </div>
+    <div formGroupName="socialMedia">
+      <div class="item">
+        <label
+          for="instagram"
+          [ngClass]="{ 'error-form': instagram!.errors && instagram!.touched }"
+          >Instagram
+          <input
+            type="text"
+            name="instagram"
+            id="instagram"
+            formControlName="instagram"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="twitter"
+          [ngClass]="{ 'error-form': twitter!.errors && twitter!.touched }"
+          >Twitter
+          <input
+            type="text"
+            name="twitter"
+            id="twitter"
+            formControlName="twitter"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="snap"
+          [ngClass]="{ 'error-form': snap!.errors && snap!.touched }"
+          >Snapchat
+          <input type="text" name="snap" id="snap" formControlName="snap"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="tiktok"
+          [ngClass]="{ 'error-form': tiktok!.errors && tiktok!.touched }"
+          >tiktok
+          <input type="text" name="tiktok" id="tiktok" formControlName="tiktok"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="facebook"
+          [ngClass]="{ 'error-form': facebook!.errors && facebook!.touched }"
+          >Facebook
+          <input
+            type="text"
+            name="facebook"
+            id="facebook"
+            formControlName="facebook"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="youtube"
+          [ngClass]="{ 'error-form': youtube!.errors && youtube!.touched }"
+          >Youtube
+          <input
+            type="text"
+            name="youtube"
+            id="youtube"
+            formControlName="youtube"
+        /></label>
+      </div>
+      <div class="item">
+        <label
+          for="twitch"
+          [ngClass]="{ 'error-form': twitch!.errors && twitch!.touched }"
+          >Twitch
+          <input type="text" name="twitch" id="twitch" formControlName="twitch"
+        /></label>
+      </div>
+    </div>
+    <div class="item">
+      <button type="submit">Ajouter</button>
+    </div>
+  </form>
+  <img *ngIf="url" src="https://i.ytimg.com/vi/{{ url.value }}/hqdefault.jpg" />
+  <p>{{ data | json }}</p>
+</div>

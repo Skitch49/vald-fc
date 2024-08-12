@@ -24,7 +24,7 @@ register();
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { TooltipComponent } from './tooltip/tooltip.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GalleryComponent } from './gallery/gallery.component';
@@ -36,6 +36,9 @@ import { InterviewComponent } from './interview/interview.component';
 import { DialogComponent } from './shared/components/dialog/dialog.component';
 import { PlayerInterviewComponent } from './player-interview/player-interview.component';
 import { TierlistComponent } from './tierlist/tierlist.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CountPipe } from './shared/pipes/count.pipe';
+import { AddDataComponent } from './add-data/add-data.component';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -55,9 +58,13 @@ registerLocaleData(localeFr, 'fr');
     ClipComponent,
     InterviewComponent,
     PlayerInterviewComponent,
-    TierlistComponent
+    TierlistComponent,
+    DashboardComponent,
+    CountPipe,
+    AddDataComponent
+
   ],
-  imports: [BrowserModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
+  imports: [BrowserModule,ReactiveFormsModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
   // Register the ServiceWorker as soon as the application is stable
   // or after 30 seconds (whichever comes first).

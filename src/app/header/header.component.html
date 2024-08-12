@@ -12,6 +12,7 @@
       <li routerLink="/clip" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Clip</li>
       <li routerLink="/interview" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Interview</li>
       <li routerLink="/my-list" routerLinkActive="active">Ma liste</li>
+      <li *ngIf="isLoggedIn() && userInfo?.info?.sub == '116959800651110315212'" routerLink="/dashboard" routerLinkActive="active">Dashboard</li>
     </ul>
   </div>
   <div class="right-header">

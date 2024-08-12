@@ -1,4 +1,7 @@
-.wrapper {
+.container-search{
+  min-height: calc(100vh - 70px);
+  .wrapper {
+    margin-bottom: 10rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -70,7 +73,7 @@
     }
   }
 }
-
+}
 // button
 
 .btn-circle {
@@ -121,10 +124,13 @@
     row-gap: 90px;
   }
 }
+
 @media screen and (max-width: 768px) {
   .container-search {
     position: relative;
     top: 110px;
+    min-height: calc(100vh - 102px) !important ;
+
   }
   .wrapper {
     row-gap: 0;

@@ -1,0 +1,78 @@
+.header-topbar {
+  display: flex;
+  justify-content: center;
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    .choice {
+      width: max-content;
+      border: 1px solid #b3b3b3;
+      border-radius: 18px;
+      overflow: hidden;
+      button {
+        color: #fff;
+        background-color: #2b2b2b;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        &:hover {
+          color: #2b2b2b;
+          background-color: #fff;
+        }
+        &.btn-active {
+          background-color: #d21c28;
+          &:hover {
+            color: #fff !important;
+          }
+        }
+      }
+    }
+  }
+}
+.dashboard {
+  display: flex;
+  justify-content: center;
+
+  table {
+    border-collapse: collapse;
+    border: 2px solid #b3b3b3;
+    margin: 1rem auto;
+    min-width: 400px;
+    width: auto;
+    box-shadow: 0 5px 50px rgba(0, 0, 0, 0.15);
+    thead tr {
+      background-color: #d21c28;
+      text-shadow: 1px 1px 3px #2b2b2b;
+      color: #fff;
+      text-align: left;
+      svg {
+        float: right;
+      }
+    }
+    th,
+    td {
+      padding: 15px 20px;
+    }
+    tbody,
+    tr,
+    td,
+    th {
+      border: 1px solid #ddd;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #2b2b2b;
+    }
+  }
+}
+.triangle {
+  color: #fff;
+  transition: all 0.2s;
+  cursor: pointer;
+  &.triangle-bottom {
+    transform: rotate(90deg);
+  }
+  &.triangle-top {
+    transform: rotate(-90deg);
+  }
+}
