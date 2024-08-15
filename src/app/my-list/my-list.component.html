@@ -1,19 +1,110 @@
-<div class="wrapper" *ngIf="!isMobileScreen">
-  <div class="not-liked" *ngIf="!videos || videos.lenght==0">
-    <h3>Retrouver vos vidéos favorites ici !</h3>
-    <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
-  </div>
-  <div class="card" *ngFor="let video of videos">
-    <figure routerLink="/clip/{{ video.url }}" *ngIf="video.artiste">
-      <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
-    </figure>
-    <figure routerLink="/interview/{{ video.url }}" *ngIf="video.author">
-      <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
-    </figure>
-    <div class="footer-slide">
-      <div class="container-btn">
-        <div class="wrapper-btn">
-          <button class="btn-circle" routerLink="/clip/{{ video.url }}" *ngIf="video.artiste">
+<div class="container">
+  <h3 *ngIf="videos || videos.length > 0">
+    Vous avez {{ videos.length }} vidéos en favoris !
+  </h3>
+  <div class="wrapper" *ngIf="!isMobileScreen">
+    <div class="not-liked" *ngIf="!videos || videos.lenght == 0">
+      <h3>Retrouver vos vidéos favorites ici !</h3>
+      <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
+    </div>
+
+    <div class="card" *ngFor="let video of videos">
+      <figure routerLink="/clip/{{ video.url }}" *ngIf="video.artiste">
+        <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
+      </figure>
+      <figure routerLink="/interview/{{ video.url }}" *ngIf="video.author">
+        <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
+      </figure>
+      <div class="footer-slide">
+        <div class="container-btn">
+          <div class="wrapper-btn">
+            <button
+              class="btn-circle"
+              routerLink="/clip/{{ video.url }}"
+              *ngIf="video.artiste"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="ltr-4z3qvp e1svuwfo1"
+                data-name="Play"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+            <button
+              class="btn-circle"
+              routerLink="/interview/{{ video.url }}"
+              *ngIf="video.author"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="ltr-4z3qvp e1svuwfo1"
+                data-name="Play"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+            <button
+              *ngIf="this.userId"
+              class="btn-circle-secondary"
+              (click)="likeClip(this.video)"
+            >
+              <svg
+                *ngIf="!isLikedByUser(video)"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                data-name="non favoris"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+              <svg
+                *ngIf="isLikedByUser(video)"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                data-name="favoris"
+                aria-labelledby=":r4a:"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <button
+            *ngIf="video.artiste"
+            class="btn-circle-secondary"
+            (click)="openDialog(this.video, this.userId, 'Clip')"
+          >
             <svg
               width="24"
               height="24"
@@ -21,137 +112,66 @@
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               class="ltr-4z3qvp e1svuwfo1"
-              data-name="Play"
+              data-name="ChevronDown"
               aria-hidden="true"
             >
               <path
-                d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </button>
-          <button class="btn-circle" routerLink="/interview/{{ video.url }}" *ngIf="video.author">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              class="ltr-4z3qvp e1svuwfo1"
-              data-name="Play"
-              aria-hidden="true"
-            >
-              <path
-                d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 15.5859L19.2928 8.29297L20.7071 9.70718L12.7071 17.7072C12.5195 17.8947 12.2652 18.0001 12 18.0001C11.7347 18.0001 11.4804 17.8947 11.2928 17.7072L3.29285 9.70718L4.70706 8.29297L12 15.5859Z"
                 fill="currentColor"
               ></path>
             </svg>
           </button>
           <button
-            *ngIf="this.userId"
+            *ngIf="video.author"
             class="btn-circle-secondary"
-            (click)="likeClip(this.video)"
+            (click)="openDialog(this.video, this.userId, 'Interview')"
           >
             <svg
-              *ngIf="!isLikedByUser(video)"
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              data-name="non favoris"
+              xmlns="http://www.w3.org/2000/svg"
+              class="ltr-4z3qvp e1svuwfo1"
+              data-name="ChevronDown"
               aria-hidden="true"
             >
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
-                d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-            <svg
-              *ngIf="isLikedByUser(video)"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              data-name="favoris"
-              aria-labelledby=":r4a:"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
+                d="M12 15.5859L19.2928 8.29297L20.7071 9.70718L12.7071 17.7072C12.5195 17.8947 12.2652 18.0001 12 18.0001C11.7347 18.0001 11.4804 17.8947 11.2928 17.7072L3.29285 9.70718L4.70706 8.29297L12 15.5859Z"
                 fill="currentColor"
               ></path>
             </svg>
           </button>
         </div>
-        <button
-        *ngIf="video.artiste"
-
-          class="btn-circle-secondary"
-          (click)="openDialog(this.video, this.userId,'Clip')"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="ltr-4z3qvp e1svuwfo1"
-            data-name="ChevronDown"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M12 15.5859L19.2928 8.29297L20.7071 9.70718L12.7071 17.7072C12.5195 17.8947 12.2652 18.0001 12 18.0001C11.7347 18.0001 11.4804 17.8947 11.2928 17.7072L3.29285 9.70718L4.70706 8.29297L12 15.5859Z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        </button>
-        <button
-        *ngIf="video.author"
-        class="btn-circle-secondary"
-        (click)="openDialog(this.video, this.userId,'Interview')"
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="ltr-4z3qvp e1svuwfo1"
-          data-name="ChevronDown"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M12 15.5859L19.2928 8.29297L20.7071 9.70718L12.7071 17.7072C12.5195 17.8947 12.2652 18.0001 12 18.0001C11.7347 18.0001 11.4804 17.8947 11.2928 17.7072L3.29285 9.70718L4.70706 8.29297L12 15.5859Z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </button>
-      </div>
-      <div class="content">
-        <h3>{{ video.name }}</h3>
+        <div class="content">
+          <h3>{{ video.name }}</h3>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="wrapper" *ngIf="isMobileScreen">
-  <div class="not-liked" *ngIf="!videos || videos.lenght==0">
-    <h3>Retrouver vos vidéos favorites ici !</h3>
-    <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
-  </div>
-  <div class="card" *ngFor="let video of videos">
-    <figure (click)="openDialog(this.video, this.userId,'Clip')" *ngIf="video.artiste">
-      <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
-    </figure>
-    <figure (click)="openDialog(this.video, this.userId,'Interview')" *ngIf="video.author">
-      <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
-    </figure>
+  <div class="wrapper" *ngIf="isMobileScreen">
+    <div class="not-liked" *ngIf="!videos || videos.length == 0">
+      <h3>Retrouver vos vidéos favorites ici !</h3>
+      <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
+    </div>
+
+    <div class="card" *ngFor="let video of videos">
+      <figure
+        (click)="openDialog(this.video, this.userId, 'Clip')"
+        *ngIf="video.artiste"
+      >
+        <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
+      </figure>
+      <figure
+        (click)="openDialog(this.video, this.userId, 'Interview')"
+        *ngIf="video.author"
+      >
+        <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
+      </figure>
+    </div>
   </div>
 </div>

@@ -120,7 +120,7 @@
       </tr>
     </thead>
     <tbody *ngIf="this.selectVideo == 'clip'">
-      <tr *ngFor="let clip of clips">
+      <tr *ngFor="let clip of clips;let i = index">
         <td>{{ clip.name }}</td>
         <td>{{ clip.date | date : "longDate" }}</td>
         <td>{{ clip.artiste.nameArtiste }}</td>
@@ -131,18 +131,18 @@
         </td>
         <td>{{ clip.categorie }}</td>
         <td>{{ clip.likers | count }}</td>
-        <td><button>Modifié</button></td>
+        <td><button (click)="getData(i)">Modifié</button></td>
         <td><button>Supprimé</button></td>
       </tr>
     </tbody>
     <tbody *ngIf="this.selectVideo == 'interview'">
-      <tr *ngFor="let interview of interviews">
+      <tr *ngFor="let interview of interviews;let i = index">
         <td>{{ interview.name }}</td>
         <td>{{ interview.date | date : "longDate" }}</td>
         <td>{{ interview.author.nameArtiste }}</td>
         <td>{{ interview.categorie }}</td>
         <td>{{ interview.likers | count }}</td>
-        <td><button>Modifié</button></td>
+        <td><button (click)="getData(i)">Modifié</button></td>
         <td><button>Supprimé</button></td>
       </tr>
     </tbody>

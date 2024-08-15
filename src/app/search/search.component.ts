@@ -37,11 +37,26 @@ export class SearchComponent {
         this.performSearch(this.query);
       }
     });
+
+  }
+
+  getTypeClip() {
+    if (this.clips) {
+      this.clips.map((clip: any) => {
+        if (clip.author) {
+          clip.type = 'interview';
+        } else {
+          clip.type = 'clip';
+        }
+      });
+      console.log(this.clips);
+    }
   }
 
   performSearch(query: string): void {
     this.apiValdService.getClipsArtistesFeaturing(query).subscribe((data) => {
       this.clips = data; // assigner les données reçues à la propriété clips
+      this.getTypeClip();
     });
   }
 

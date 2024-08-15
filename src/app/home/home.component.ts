@@ -35,10 +35,14 @@ export class HomeComponent {
     'Interview Ce Monde Est Cruel',
     'Interview Horizon Vertical',
     'Interview Échelon',
-    'Interview Xeu'
+    'Interview Xeu',
+    'Interview Agartha',
+    'Interview NQNT 2',
+    'Interview NQNT',
   ];
-  VideoByCategories: any[] = [];
-
+  videoByCategories: any[] = [];
+  displayVideo: any[] = [];
+  categoriesLoaded: number = 2;
   isMuted: boolean = true;
 
   constructor(
@@ -54,6 +58,23 @@ export class HomeComponent {
     return Math.random() - 0.5;
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    if (
+      window.innerHeight + window.scrollY + 120 >=
+      document.body.offsetHeight
+    ) {
+      this.addVideo();
+    }
+  }
+
+  addVideo() {
+    const newVideoDisplay = this.videoByCategories.slice(
+      this.displayVideo.length,
+      this.displayVideo.length + this.categoriesLoaded
+    );
+    this.displayVideo.push(...newVideoDisplay);
+  }
   toggleMute() {
     this.isMuted = !this.isMuted;
     this.updateSafeUrl();
@@ -64,16 +85,16 @@ export class HomeComponent {
   }
 
   getAllVideosByCategory() {
-    this.categories.forEach((category) => {
+    this.categories.forEach((category, index) => {
       this.apiVald.getAllVideoByCategory(category).subscribe((data) => {
-        // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
-        const VideoOnCategorie: PeriodeData = { title: category, clips: data };
-        // Ajoutez periodDatum au tableau periodData
-        this.VideoByCategories.push(VideoOnCategorie);
-        // Faites ce dont vous avez besoin avec periodData
+        const videoOnCategorie: PeriodeData = { title: category, clips: data };
+        this.videoByCategories.push(videoOnCategorie);
+        if (index < this.categoriesLoaded) {
+          this.displayVideo.push(videoOnCategorie);
+        }
       });
     });
-    console.log(this.VideoByCategories);
+    console.log(this.videoByCategories);
   }
 
   ngOnInit() {

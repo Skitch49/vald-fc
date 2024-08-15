@@ -37,12 +37,6 @@ export class ApiValdService {
     return this.http.get(`${this.apiUrl}/clip/last-clip`);
   }
 
-  getClipsByDateRange(startDate: string, endDate: string): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/clip/date-range/${startDate}/${endDate}`
-    );
-  }
-
   getClipsLiked(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/clip/clip-liked/${userId}`);
   }
@@ -68,6 +62,10 @@ export class ApiValdService {
 
   postClip(clip: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/clip`, clip);
+  }
+
+  editClip(clip: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/clip/${clip._id}`, clip);
   }
   // Video
 
@@ -101,6 +99,11 @@ export class ApiValdService {
   postVideo(video: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/video`, video);
   }
+
+  editVideo(video: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/video/${video._id}`, video);
+  }
+
   // Video and Clips
   getClipsArtistesFeaturing(query: string) {
     return this.http.get(`${this.apiUrl}/clip/search/${query}`);

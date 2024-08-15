@@ -66,7 +66,7 @@
       <label
         for="author"
         [ngClass]="{ 'error-form': author!.errors && author!.touched }"
-        >Autheur
+        >Auteur
         <select name="author" id="author" formControlName="author">
           <option [value]="author._id" *ngFor="let author of artistes">
             {{ author.nameArtiste }}
@@ -94,14 +94,25 @@
         for="categorie"
         [ngClass]="{ 'error-form': categorie!.errors && categorie!.touched }"
         >Categorie
-        <select name="categorie" id="categorie" formControlName="categorie" (change)="onCategorieChange($event)">
+        <select
+          name="categorie"
+          id="categorie"
+          formControlName="categorie"
+          (change)="onCategorieChange($event)"
+        >
           <option [value]="categorie" *ngFor="let categorie of categories">
             {{ categorie }}
           </option>
           <option value="other">Autres</option>
         </select>
-        <input type="text" placeholder="Ajouter une catégorie..." *ngIf="otherIsSelected" name="newCategorie" formControlName="newCategorie">
-       </label>
+        <input
+          type="text"
+          placeholder="Ajouter une catégorie..."
+          *ngIf="otherIsSelected"
+          name="newCategorie"
+          formControlName="newCategorie"
+        />
+      </label>
     </div>
     <div class="item">
       <button type="submit">Ajouter</button>
@@ -151,40 +162,71 @@
         for="categorie"
         [ngClass]="{ 'error-form': categorie!.errors && categorie!.touched }"
         >Categorie
-        <select name="categorie" id="categorie" formControlName="categorie" (change)="onCategorieChange($event)">
+        <select
+          name="categorie"
+          id="categorie"
+          formControlName="categorie"
+          (change)="onCategorieChange($event)"
+        >
           <option [value]="categorie" *ngFor="let categorie of categories">
             {{ categorie }}
           </option>
           <option value="other">Autres</option>
         </select>
-        <input type="text" placeholder="Ajouter une catégorie..." *ngIf="otherIsSelected" name="newCategorie" formControlName="newCategorie">
-       </label>
+        <input
+          type="text"
+          placeholder="Ajouter une catégorie..."
+          *ngIf="otherIsSelected"
+          name="newCategorie"
+          formControlName="newCategorie"
+        />
+      </label>
     </div>
-    <div class="item">
-      <label
-        for="produced"
-        [ngClass]="{ 'error-form': produced!.errors && produced!.touched }"
-        >Producteur
-        <select name="produced" id="produced" formControlName="produced">
-          <option value="">Aucun / Inconnu</option>
-          <option [value]="produced._id" *ngFor="let produced of artistes">
-            {{ produced.nameArtiste }}
-          </option>
-          <option value="autres">Autres</option>
-        </select></label
-      >
+
+    <div formArrayName="produced">
+      <div *ngFor="let prod of produced.controls; let i = index">
+        <div class="item">
+          <label
+            for="produced-{{ i }}"
+            [ngClass]="{ 'error-form': prod!.errors && prod!.touched }"
+            >Producteur
+            <select name="produced" id="produced-{{ i }}" [formControlName]="i">
+              <option value="">Aucun / Inconnu</option>
+              <option [value]="produced._id" *ngFor="let produced of artistes">
+                {{ produced.nameArtiste }}
+              </option>
+              <option value="autres">Autres</option>
+            </select>
+            <button type="button" (click)="removeProduced(i)" *ngIf="i > 0">
+              Supprimer
+            </button></label
+          >
+        </div>
+      </div>
+      <button type="button" (click)="addProduced()">
+        Ajouter un Producteur
+      </button>
     </div>
-    <div class="item">
-      <label for="mix" [ngClass]="{ 'error-form': mix!.errors && mix!.touched }"
-        >Mix
-        <select name="mix" id="mix" formControlName="mix">
-          <option value="">Aucun / Inconnu</option>
-          <option [value]="mix._id" *ngFor="let mix of artistes">
-            {{ mix.nameArtiste }}
-          </option>
-          <option value="autres">Autres</option>
-        </select></label
-      >
+    <div formArrayName="mix">
+      <div *ngFor="let m of mix.controls; let i = index">
+        <div class="item">
+          <label
+            for="mix-{{ i }}"
+            [ngClass]="{ 'error-form': m!.errors && m!.touched }"
+            >Mix
+            <select name="mix" id="mix" [formControlName]="i">
+              <option value="">Aucun / Inconnu</option>
+              <option [value]="mix._id" *ngFor="let mix of artistes">
+                {{ mix.nameArtiste }}
+              </option>
+              <option value="autres">Autres</option></select
+            ><button type="button" (click)="removeMix(i)" *ngIf="i > 0">
+              Supprimer
+            </button></label
+          >
+        </div>
+      </div>
+      <button type="button" (click)="addMix()">Ajouter un Mix</button>
     </div>
     <div class="item">
       <label
@@ -200,19 +242,38 @@
         </select></label
       >
     </div>
-    <div class="item">
-      <label
-        for="production"
-        [ngClass]="{ 'error-form': production!.errors && production!.touched }"
-        >Production
-        <select name="production" id="production" formControlName="production">
-          <option value="">Aucun / Inconnu</option>
-          <option [value]="production._id" *ngFor="let production of artistes">
-            {{ production.nameArtiste }}
-          </option>
-          <option value="autres">Autres</option>
-        </select></label
-      >
+    <div formArrayName="production">
+      <div *ngFor="let product of production.controls; let i = index">
+        <div class="item">
+          <label
+            for="production-{{ i }}"
+            [ngClass]="{
+              'error-form': product!.errors && product!.touched
+            }"
+            >Production
+            <select
+              name="production"
+              id="production-{{ i }}"
+              [formControlName]="i"
+            >
+              <option >Aucun / Inconnu</option>
+              <option
+                [value]="production._id"
+                *ngFor="let production of artistes"
+              >
+                {{ production.nameArtiste }}
+              </option>
+              <option value="autres">Autres</option>
+            </select>
+            <button type="button" (click)="removeProduction(i)" *ngIf="i > 0">
+              Supprimer
+            </button></label
+          >
+        </div>
+      </div>
+      <button type="button" (click)="addProduction()">
+        Ajouter un Production
+      </button>
     </div>
     <div class="item">
       <label

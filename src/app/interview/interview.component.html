@@ -99,18 +99,8 @@
       </div>
     </div>
   
-    <!-- <div class="test">
-      <div class="content" *ngFor="let clip of clips">
-        <img
-          src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg"
-          alt="{{ clip.name }}"
-        />
-        <p>{{ clip.name }}</p>
-      </div>
-    </div> -->
-  
     <div class="container">
-      <div *ngFor="let videos of VideoByCategories">
+      <div *ngFor="let videos of displayedCategories">
         <h2 class="period-title">{{ videos.title }}</h2>
         <app-swiper ngSkipHydration typeVideo="Interview" [clips]="videos.clips" ></app-swiper>
       </div>

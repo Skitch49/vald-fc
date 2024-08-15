@@ -110,9 +110,9 @@
     </div> -->
   
     <div class="container">
-      <div *ngFor="let period of periodData">
-        <h2 class="period-title">{{ period.title }}</h2>
-        <app-swiper ngSkipHydration [clips]="period.clips" ></app-swiper>
+      <div *ngFor="let categorie of displayedCategories">
+        <h2 class="period-title">{{ categorie.title }}</h2>
+        <app-swiper ngSkipHydration [clips]="categorie.clips" ></app-swiper>
       </div>
     </div>
   </div>

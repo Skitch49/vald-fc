@@ -32,6 +32,16 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.SelectVideo(this.selectVideo);
   }
 
+  getData(i: any) {
+    if (this.selectVideo == 'interview') {
+      const data = [this.interviews[i], this.selectVideo];
+      this.router.navigate(['/add-data', JSON.stringify(data)]);
+    } else if (this.selectVideo == 'clip') {
+      const data = [this.clips[i], this.selectVideo];
+      this.router.navigate(['/add-data', JSON.stringify(data)]);
+    }
+  }
+
   ngAfterViewInit(): void {
     this.table = document.querySelector('thead');
     this.topbar = document.querySelector('.topbar');

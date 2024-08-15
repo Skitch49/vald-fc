@@ -26,6 +26,7 @@ const routes: Routes = [
   { path: 'my-list', component: MyListComponent, canActivate: [authGuard] },
   { path: 'tier-list', component: TierlistComponent,},
   { path: 'add-data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
+  { path: 'add-data/:data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
   { path: 'dashboard', component: DashboardComponent, canActivate: [adminAuthGuard]},
 
 ];

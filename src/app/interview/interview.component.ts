@@ -32,10 +32,14 @@ export class InterviewComponent {
     'Interview Horizon Vertical',
     'Interview Échelon',
     'Interview Xeu',
+    'Interview Agartha',
+    'Interview NQNT 2',
+    'Interview NQNT',
   ];
   VideoByCategories: any[] = [];
-
   isMuted: boolean = true;
+  displayedCategories: any[] = [];
+  categoriesLoaded: number = 2; // Nombre initial de catégories à charger
 
   constructor(
     private apiVald: ApiValdService,
@@ -93,13 +97,16 @@ export class InterviewComponent {
   }
 
   getVideosByCategory() {
-    this.categories.forEach((category) => {
+    this.categories.forEach((category, index) => {
       this.apiVald.getVideosByCategory(category).subscribe((data) => {
         // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
         const VideoOnCategorie: PeriodeData = { title: category, clips: data };
         // Ajoutez periodDatum au tableau periodData
         this.VideoByCategories.push(VideoOnCategorie);
         // Faites ce dont vous avez besoin avec periodData
+        if (index < this.categoriesLoaded) {
+          this.displayedCategories.push(VideoOnCategorie);
+        }
       });
     });
   }
@@ -112,6 +119,24 @@ export class InterviewComponent {
         );
       this.lastVideo.safeUrl = safeUrl;
     }
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: any) {
+    if (
+      window.innerHeight + window.scrollY + 120 >=
+      document.body.offsetHeight
+    ) {
+      this.loadMoreCategories();
+    }
+  }
+
+  loadMoreCategories() {
+    const remainingCategories = this.VideoByCategories.slice(
+      this.displayedCategories.length,
+      this.displayedCategories.length + this.categoriesLoaded
+    );
+    this.displayedCategories.push(...remainingCategories);
   }
 
   openDialog(clip: any, userId: string | null) {

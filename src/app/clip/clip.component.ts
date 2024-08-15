@@ -11,7 +11,7 @@ import { Clip } from '../interface/clip.interface';
 @Component({
   selector: 'app-clip',
   templateUrl: './clip.component.html',
-  styleUrl: './clip.component.scss'
+  styleUrl: './clip.component.scss',
 })
 export class ClipComponent {
   clips!: Clip;
@@ -20,18 +20,19 @@ export class ClipComponent {
   isMobileScreen: boolean = false;
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  periods: Periode[] = [
-    { title: `L'ère V`, startDate: '2021-01-16', endDate: '2024-12-31' },
-    { title: 'Post CMEC', startDate: '2019-09-13', endDate: '2021-01-15' },
-    { title: 'Post Xeu', startDate: '2018-01-05', endDate: '2019-09-12' },
-    { title: 'Post Agartha', startDate: '2016-10-21', endDate: '2018-01-05' },
-    { title: 'Post NQNT 2', startDate: '2015-06-03', endDate: '2016-10-20' },
-    { title: 'NQNT', startDate: '2011-06-03', endDate: '2015-06-02' },
-    // Ajoutez d'autres périodes selon vos besoins
+  categories: any[] = [
+    'L\'ère V',
+    'Post CMEC',
+    'Post Xeu',
+    'Post Agartha',
+    'Post NQNT 2',
+    'NQNT - NQNTMQMQMB',
   ];
-  periodData: PeriodeData[] = []; // Modifiez le type pour être un tableau
+  VideoByCategories: any[] = [];
 
   isMuted: boolean = true;
+  displayedCategories: any[] = [];
+  categoriesLoaded: number = 2; // Nombre initial de catégories à charger
 
   constructor(
     private apiVald: ApiValdService,
@@ -42,6 +43,23 @@ export class ClipComponent {
     this.checkScreenSize();
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: any) {
+    if (
+      window.scrollY + window.innerHeight + 120 >=
+      document.body.offsetHeight
+    ) {
+      this.loadMoreClips();
+    }
+  }
+
+  loadMoreClips() {
+    const newClips = this.VideoByCategories.splice(
+      this.displayedCategories.length,
+      this.displayedCategories.length + this.categoriesLoaded
+    );
+    this.displayedCategories.push(...newClips);
+  }
   toggleMute() {
     this.isMuted = !this.isMuted;
     this.updateSafeUrl();
@@ -63,8 +81,21 @@ export class ClipComponent {
     }
 
     this.getLastClip();
+    this.getClipsByCategory();
+  }
 
-    this.getClipsByDateRange();
+  getClipsByCategory(){
+    this.categories.forEach((category,index) =>{
+      this.apiVald.getAllVideoByCategory(category).subscribe( (data) =>{
+        const ClipOnCategorie: PeriodeData = { title: category, clips: data };
+        this.VideoByCategories.push(ClipOnCategorie);
+
+        if(index < this.categoriesLoaded){
+          this.displayedCategories.push(ClipOnCategorie);
+        }
+
+      })
+    })
   }
 
   ClipIsLiked() {
@@ -86,19 +117,7 @@ export class ClipComponent {
     });
   }
 
-  getClipsByDateRange() {
-    this.periods.forEach((period) => {
-      this.apiVald
-        .getClipsByDateRange(period.startDate, period.endDate)
-        .subscribe((data) => {
-          // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
-          const periodDatum: PeriodeData = { title: period.title, clips: data };
-          // Ajoutez periodDatum au tableau periodData
-          this.periodData.push(periodDatum);
-          // Faites ce dont vous avez besoin avec periodData
-        });
-    });
-  }
+ 
 
   updateSafeUrl() {
     if (this.lastClip) {
@@ -110,14 +129,12 @@ export class ClipComponent {
     }
   }
 
-
-
   openDialog(clip: any, userId: string | null) {
     const dialogConfig = {
       width: this.isMobileScreen ? '99vw' : '48vw',
       height: 'auto',
       maxHeight: '95vh',
-      data: { clip: clip, userId: userId,typeVideo: 'Clip' },
+      data: { clip: clip, userId: userId, typeVideo: 'Clip' },
     };
     this.dialog.open(DialogComponent, dialogConfig);
   }

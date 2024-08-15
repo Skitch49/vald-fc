@@ -1,17 +1,20 @@
-<div class="container-search" *ngIf="clips && clips.length!=0">
+<div class="container-search" *ngIf="clips && clips.length != 0">
   <h3>
     Votre recherche <span>{{ query }}</span> ({{ clips.length }})
   </h3>
   <div class="wrapper" *ngIf="!isMobileScreen">
     <div class="card" *ngFor="let clip of clips">
-      <figure routerLink="/clip/{{ clip.url }}">
+      <figure routerLink="/{{ clip.type }}/{{ clip.url }}">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
-  
+
       <div class="footer-slide">
         <div class="container-btn">
           <div class="wrapper-btn">
-            <button class="btn-circle" routerLink="/clip/{{ clip.url }}">
+            <button
+              class="btn-circle"
+              routerLink="/{{ clip.type }}/{{ clip.url }}"
+            >
               <svg
                 width="24"
                 height="24"
@@ -68,10 +71,7 @@
               </svg>
             </button>
           </div>
-          <button
-            class="btn-circle-secondary"
-            (click)="getClip(this.clip)"
-          >
+          <button class="btn-circle-secondary" (click)="getClip(this.clip)">
             <svg
               width="24"
               height="24"
@@ -104,8 +104,7 @@
       </figure>
     </div>
   </div>
-
 </div>
-<div class="container-search" *ngIf="!clips || clips.length==0">
+<div class="container-search" *ngIf="!clips || clips.length == 0">
   <h3>Aucun resultat disponible pour votre recherche: {{ query }}</h3>
 </div>

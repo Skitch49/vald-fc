@@ -34,7 +34,6 @@ swiper-container {
         transform: scale(1.22);
       }
       .footer-slide {
-        display: block;
         top: -1vh;
         transform: scale(1.22);
         transition: top 0.2s ease 0.4s, transform 0.4s ease 0.4s,
@@ -47,7 +46,6 @@ swiper-container {
       width: 100%;
       padding: 10px;
       display: block !important;
-      display: flex; // To display the bottom of box-shadow
       transform: scale(1);
       position: relative;
       top: -165px;

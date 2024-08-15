@@ -31,7 +31,6 @@ export class HeaderComponent {
     this.checkScreenSize();
     google.userProfileSubject.subscribe((info) => {
       this.userInfo = info;
-      console.log('info : ' + JSON.stringify(info));
     });
   }
 
@@ -98,7 +97,6 @@ export class HeaderComponent {
         // L'utilisateur fait défiler vers le haut
         this.navbarDisplay = true;
       }
-      console.log(this.navbarDisplay);
       this.lastScrollTop = currentScrollTop; // Mettre à jour le dernier scroll top
     }
   }
