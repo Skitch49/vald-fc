@@ -67,6 +67,10 @@ export class ApiValdService {
   editClip(clip: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/clip/${clip._id}`, clip);
   }
+
+  deleteClip(clip: any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/clip/${clip._id}`,clip)
+  }
   // Video
 
   getVideos(): Observable<any> {
@@ -102,6 +106,10 @@ export class ApiValdService {
 
   editVideo(video: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/video/${video._id}`, video);
+  }
+
+  deleteVideo(video: any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/video/${video._id}`,video)
   }
 
   // Video and Clips

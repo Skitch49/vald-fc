@@ -14,7 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { GoogleApiService } from '../services/google-api.service';
 import { ApiValdService } from '../services/api-vald.service';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
-
 @Component({
   selector: 'app-swiper',
   templateUrl: './swiper.component.html',
@@ -44,15 +43,6 @@ export class SwiperComponent implements OnInit {
     this.clips = this.clips.sort((a: Clip, b: Clip) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
-      if (a.name == 'Plus haut') {
-        console.log('Plus Haut ' + a.date);
-      }
-      if (a.name == "Je t'aime (Part.2)") {
-        console.log("Je t'aime " + a.date);
-      }
-      if (a.name == 'Strip (Part.1)') {
-        console.log('Strip ' + a.date);
-      }
       return dateB - dateA;
     });
   }
@@ -77,7 +67,6 @@ export class SwiperComponent implements OnInit {
     slidesPerGroup: 6,
     // Responsive breakpoints
     breakpoints: {
-      // when window width is >= 320px
       0: {
         slidesPerView: 1.2,
         slidesPerGroup: 1,
@@ -90,12 +79,11 @@ export class SwiperComponent implements OnInit {
         slidesPerView: 2.5,
         slidesPerGroup: 2,
       },
-      // when window width is >= 480px
       641: {
         slidesPerView: 3.5,
         slidesPerGroup: 3,
       },
-      // when window width is >= 640px
+
       841: {
         slidesPerView: 4.5,
         slidesPerGroup: 4,
@@ -127,7 +115,6 @@ export class SwiperComponent implements OnInit {
     slidesPerGroup: 6,
     // Responsive breakpoints
     breakpoints: {
-      // when window width is >= 320px
       0: {
         slidesPerView: 1.2,
         slidesPerGroup: 1,
@@ -143,13 +130,12 @@ export class SwiperComponent implements OnInit {
         slidesPerGroup: 2,
         loop: true,
       },
-      // when window width is >= 480px
       641: {
         slidesPerView: 3.5,
         slidesPerGroup: 3,
         loop: true,
       },
-      // when window width is >= 640px
+
       841: {
         slidesPerView: 4.5,
         slidesPerGroup: 4,
@@ -162,6 +148,332 @@ export class SwiperComponent implements OnInit {
       1481: {
         slidesPerView: 6.4,
         slidesPerGroup: 6,
+      },
+    },
+  };
+  swiperConfigFor6Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3.5,
+        slidesOffsetAfter: 97,
+        loop: false,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3.5,
+        slidesOffsetAfter: 114,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 100,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 118,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 125,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 136,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+        slidesOffsetAfter: 125,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6.4,
+      },
+    },
+  };
+  swiperConfigFor8Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+    loop: false,
+    loopAddBlankSlides: false,
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 100,
+        loop: false,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 118,
+        loop: false,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4.5,
+        slidesOffsetAfter: 136,
+        loop: false,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5.5,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+    },
+  };
+  swiperConfigFor9Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+    loop: false,
+    loopAddBlankSlides: false,
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 100,
+        loop: true,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 118,
+        loop: true,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 136,
+        loop: true,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+        slidesOffsetAfter: 125,
+
+        loop: false,
+      },
+    },
+  };
+  swiperConfigFor11Slides: SwiperOptions = {
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+    slidesPerView: 6.4,
+    slidesPerGroup: 6,
+    slidesOffsetAfter: 125,
+
+    loop: false,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        loop: true,
+      },
+      // when window width is >=
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        loop: true,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 100,
+        loop: true,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 118,
+        loop: true,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 136,
+        loop: true,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+        slidesOffsetAfter: 125,
+        loop: false,
       },
     },
   };
@@ -241,10 +553,32 @@ export class SwiperComponent implements OnInit {
   }
 
   getSwiperConfig() {
-    if (this.clips.length > 6 && this.clips.length <= 12) {
-      return this.swiperConfigForFewSlides;
-    } else {
-      return this.swiperConfig;
+    // Todo for 3 4 and 5 slides
+    switch (this.clips.length) {
+      case 6:
+        return this.swiperConfigFor6Slides;
+        break;
+      case 7:
+        return this.swiperConfigFor8Slides;
+        break;
+      case 8:
+        return this.swiperConfigFor8Slides;
+        break;
+      case 9:
+        return this.swiperConfigFor9Slides;
+        break;
+      case 10:
+        return this.swiperConfigFor9Slides;
+        break;
+      case 11:
+        return this.swiperConfigFor11Slides;
+        break;
+      case 12:
+        return this.swiperConfigForFewSlides;
+        break;
+      default:
+        return this.swiperConfig;
+        break;
     }
   }
 }

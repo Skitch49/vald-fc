@@ -14,16 +14,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
   idClip: any;
   clip: any;
   playlist: any;
-  safeUrl: SafeResourceUrl = ''; 
+  safeUrl: SafeResourceUrl = '';
   private safeUrlSubscription: Subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private apiVald: ApiValdService,
+    private apiVald: ApiValdService
   ) {}
-
-
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -42,7 +40,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
   }
 
-
   initClip() {
     if (this.idClip) {
       const url = `https://www.youtube.com/embed/${this.idClip}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=2&showinfo=1&playsinline=0&modestbranding=1&rel=0&iv_load_policy=3&fs=1&loop=1&disablekb=0&playlist=${this.playlist}`;
@@ -57,6 +54,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
           (clip: any) =>
             clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
         )
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        })
         .map((clip: any) => clip.url);
       this.apiVald.getClipsByUrl(this.idClip).subscribe({
         next: (clip) => {
@@ -69,5 +71,4 @@ export class PlayerComponent implements OnInit, OnDestroy {
       });
     });
   }
-
 }

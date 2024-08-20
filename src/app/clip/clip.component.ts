@@ -1,19 +1,19 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PeriodeData } from '../interface/periodeData.interface';
 import { ApiValdService } from '../services/api-vald.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GoogleApiService } from '../services/google-api.service';
-import { Periode } from '../interface/periode.interface';
 import { Clip } from '../interface/clip.interface';
+import { forkJoin, map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-clip',
   templateUrl: './clip.component.html',
   styleUrl: './clip.component.scss',
 })
-export class ClipComponent {
+export class ClipComponent implements OnInit, OnDestroy {
   clips!: Clip;
   lastClip: any;
   dateRange: Clip[] = [];
@@ -21,14 +21,15 @@ export class ClipComponent {
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
   categories: any[] = [
-    'L\'ère V',
+    "L'ère V",
     'Post CMEC',
     'Post Xeu',
     'Post Agartha',
     'Post NQNT 2',
     'NQNT - NQNTMQMQMB',
   ];
-  VideoByCategories: any[] = [];
+  VideoByCategories: PeriodeData[] = [];
+  private subscriptions: Subscription = new Subscription();
 
   isMuted: boolean = true;
   displayedCategories: any[] = [];
@@ -45,20 +46,53 @@ export class ClipComponent {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: any) {
-    if (
-      window.scrollY + window.innerHeight + 120 >=
-      document.body.offsetHeight
-    ) {
-      this.loadMoreClips();
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        if (
+          window.innerHeight + window.scrollY + 350 >=
+            document.body.offsetHeight &&
+          this.displayedCategories.length < this.VideoByCategories.length
+        ) {
+          this.loadMoreClips();
+        }
+      } else if (
+        window.scrollY + window.innerHeight + 120 >=
+          document.body.offsetHeight &&
+        this.displayedCategories.length < this.VideoByCategories.length
+      ) {
+        console.log(`--------------------------------------`);
+        console.log(`diplay: ${this.displayedCategories.length}`);
+        console.log(`cat: ${this.VideoByCategories.length}`);
+        this.loadMoreClips();
+      }
     }
   }
 
   loadMoreClips() {
-    const newClips = this.VideoByCategories.splice(
-      this.displayedCategories.length,
-      this.displayedCategories.length + this.categoriesLoaded
+    const startIndex = this.displayedCategories.length;
+    console.log(`lengthDisplay: ${this.displayedCategories.length}`);
+
+    const newClips: any[] = this.VideoByCategories.slice(
+      startIndex,
+      startIndex + this.categoriesLoaded
     );
-    this.displayedCategories.push(...newClips);
+    console.log(`newClips 1: ${JSON.stringify(newClips[0].title)}`);
+    console.log(`newClips 2: ${JSON.stringify(newClips[1].title)}`);
+
+    newClips.forEach((newClip) => {
+      const alreadyExists = this.displayedCategories.some(
+        (displayedClip) => displayedClip.title === newClip.title
+      );
+
+      if (!alreadyExists) {
+        this.displayedCategories.push(newClip);
+      }
+    });
+    let i = 0;
+    this.displayedCategories.forEach((displayCategory) => {
+      i++;
+      console.log(`display${i}: ${JSON.stringify(displayCategory.title)}`);
+    });
   }
   toggleMute() {
     this.isMuted = !this.isMuted;
@@ -66,6 +100,14 @@ export class ClipComponent {
 
     if (typeof window !== 'undefined' && window.document) {
       localStorage.setItem('mute', this.isMuted.toString());
+    }
+  }
+
+  checkCategorieLoadded() {
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        this.categoriesLoaded = 3;
+      }
     }
   }
 
@@ -79,35 +121,47 @@ export class ClipComponent {
         this.updateSafeUrl();
       }
     }
+    this.checkCategorieLoadded();
 
     this.getLastClip();
     this.getClipsByCategory();
   }
 
-  getClipsByCategory(){
-    this.categories.forEach((category,index) =>{
-      this.apiVald.getAllVideoByCategory(category).subscribe( (data) =>{
-        const ClipOnCategorie: PeriodeData = { title: category, clips: data };
-        this.VideoByCategories.push(ClipOnCategorie);
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+  getClipsByCategory() {
+    const categoryRequests = this.categories.map((category) =>
+      this.apiVald
+        .getAllVideoByCategory(category)
+        .pipe(map((data) => ({ title: category, clips: data })))
+    );
 
-        if(index < this.categoriesLoaded){
-          this.displayedCategories.push(ClipOnCategorie);
-        }
-
-      })
-    })
+    forkJoin(categoryRequests).subscribe(
+      (results: PeriodeData[]) => {
+        this.VideoByCategories = results;
+        this.displayedCategories = this.VideoByCategories.slice(
+          0,
+          this.categoriesLoaded
+        );
+      },
+      (error) => {
+        console.error('Erreur chargement des clips par categorie:', error);
+      }
+    );
   }
 
   ClipIsLiked() {
     // récupère id de l'utilisateur
     if (this.userId) {
       //récupère les clips like par l'utilisateur
-      this.apiVald.getClipsLiked(this.userId).subscribe();
+      const sub = this.apiVald.getClipsLiked(this.userId).subscribe();
+      this.subscriptions.add(sub);
     }
   }
 
   getLastClip() {
-    this.apiVald.getLastClip().subscribe((data) => {
+    const sub = this.apiVald.getLastClip().subscribe((data) => {
       this.lastClip = data;
       const safeUrl: SafeResourceUrl =
         this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -115,9 +169,8 @@ export class ClipComponent {
         );
       this.lastClip.safeUrl = safeUrl;
     });
+    this.subscriptions.add(sub);
   }
-
- 
 
   updateSafeUrl() {
     if (this.lastClip) {
@@ -151,7 +204,6 @@ export class ClipComponent {
       } else {
         this.isMobileScreen = false;
       }
-      console.log(this.isMobileScreen);
     }
   }
 }

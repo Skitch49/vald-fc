@@ -7,6 +7,8 @@ import { PeriodeData } from '../interface/periodeData.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
 import { GoogleApiService } from '../services/google-api.service';
+import { map } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -40,7 +42,7 @@ export class HomeComponent {
     'Interview NQNT 2',
     'Interview NQNT',
   ];
-  videoByCategories: any[] = [];
+  videoByCategories: PeriodeData[] = [];
   displayVideo: any[] = [];
   categoriesLoaded: number = 2;
   isMuted: boolean = true;
@@ -58,13 +60,35 @@ export class HomeComponent {
     return Math.random() - 0.5;
   }
 
+  checkCategorieLoadded() {
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        this.categoriesLoaded = 3;
+      }
+    }
+  }
+
   @HostListener('window:scroll', ['$event'])
   onScroll() {
-    if (
-      window.innerHeight + window.scrollY + 120 >=
-      document.body.offsetHeight
-    ) {
-      this.addVideo();
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        if (
+          window.innerHeight + window.scrollY + 350 >=
+            document.body.offsetHeight &&
+          this.displayVideo.length < this.videoByCategories.length
+        ) {
+          this.addVideo();
+        }
+      } else if (
+        window.innerHeight + window.scrollY + 120 >=
+          document.body.offsetHeight &&
+        this.displayVideo.length < this.videoByCategories.length
+      ) {
+        console.log(
+          `diplay: ${this.displayVideo.length}  Categorie : ${this.videoByCategories.length}`
+        );
+        this.addVideo();
+      }
     }
   }
 
@@ -73,7 +97,21 @@ export class HomeComponent {
       this.displayVideo.length,
       this.displayVideo.length + this.categoriesLoaded
     );
-    this.displayVideo.push(...newVideoDisplay);
+
+    newVideoDisplay.forEach((newVideo) => {
+      // Vérifiez si une vidéo avec le même titre existe déjà
+      const alreadyExists = this.displayVideo.some(
+        (displayedClip) =>
+          displayedClip.title.trim().toLowerCase() ===
+          newVideo.title.trim().toLowerCase()
+      );
+
+      if (!alreadyExists) {
+        this.displayVideo.push(newVideo);
+      } else {
+        console.log(`La catégorie "${newVideo.title}" existe déjà. Ignorée.`);
+      }
+    });
   }
   toggleMute() {
     this.isMuted = !this.isMuted;
@@ -85,22 +123,30 @@ export class HomeComponent {
   }
 
   getAllVideosByCategory() {
-    this.categories.forEach((category, index) => {
-      this.apiVald.getAllVideoByCategory(category).subscribe((data) => {
-        const videoOnCategorie: PeriodeData = { title: category, clips: data };
-        this.videoByCategories.push(videoOnCategorie);
-        if (index < this.categoriesLoaded) {
-          this.displayVideo.push(videoOnCategorie);
-        }
-      });
-    });
-    console.log(this.videoByCategories);
+    const categoryRequests = this.categories.map((category) =>
+      this.apiVald
+        .getAllVideoByCategory(category)
+        .pipe(map((data) => ({ title: category, clips: data })))
+    );
+
+    forkJoin(categoryRequests).subscribe(
+      (results: PeriodeData[]) => {
+        this.videoByCategories = results;
+        this.displayVideo = this.videoByCategories.slice(
+          0,
+          this.categoriesLoaded
+        );
+      },
+      (error) => {
+        console.error('Erreur chargement des clips par categorie:', error);
+      }
+    );
   }
 
   ngOnInit() {
     this.categories.sort(this.randomSort);
     this.userId = this.google.getUserId();
-
+    this.checkCategorieLoadded();
     if (typeof window !== 'undefined' && window.document) {
       const muteValue = localStorage.getItem('mute');
       if (muteValue) {

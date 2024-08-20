@@ -41,7 +41,28 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.router.navigate(['/add-data', JSON.stringify(data)]);
     }
   }
-
+  deleteData(i: any) {
+    if (this.selectVideo == 'interview') {
+      this.apiVald.deleteVideo(this.interviews[i]).subscribe({
+        next: (value) => {
+          this.interviews = [];
+          this.originalInterviews = [];
+          this.getAllInterviews();
+          console.log(`${JSON.stringify(value)}`);
+        },
+      });
+    }
+    if (this.selectVideo == 'clip') {
+      this.apiVald.deleteClip(this.clips[i]).subscribe({
+        next: (value) => {
+          this.clips = [];
+          this.originalClips = [];
+          this.getAllClips();
+          console.log(`${JSON.stringify(value)}`);
+        },
+      });
+    }
+  }
   ngAfterViewInit(): void {
     this.table = document.querySelector('thead');
     this.topbar = document.querySelector('.topbar');

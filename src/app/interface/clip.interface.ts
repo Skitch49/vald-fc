@@ -5,6 +5,7 @@ export interface Clip {
   description: string;
   url: string;
   artiste: string;
+  categorie: string;
   featuring: string[];
   likers:string[];
   isLiked: boolean

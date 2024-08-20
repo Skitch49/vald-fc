@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiValdService } from '../services/api-vald.service';
 import { Periode } from '../interface/periode.interface';
 import { Clip } from '../interface/clip.interface';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-interview',
@@ -22,21 +24,21 @@ export class InterviewComponent {
   userId: string | null = null;
   categories: any[] = [
     'Entertainment',
+    'Interview V',
     'Concert',
     'Amin & Hugo',
-    'Interview V',
-    'VALD sur Twitch',
     'Documentaires | Courts métrages',
     'Documentaires | Fan made',
-    'Interview Ce Monde Est Cruel',
-    'Interview Horizon Vertical',
     'Interview Échelon',
+    'Interview Horizon Vertical',
+    'VALD sur Twitch',
+    'Interview Ce Monde Est Cruel',
     'Interview Xeu',
     'Interview Agartha',
     'Interview NQNT 2',
     'Interview NQNT',
   ];
-  VideoByCategories: any[] = [];
+  VideoByCategories: PeriodeData[] = [];
   isMuted: boolean = true;
   displayedCategories: any[] = [];
   categoriesLoaded: number = 2; // Nombre initial de catégories à charger
@@ -59,7 +61,20 @@ export class InterviewComponent {
     }
   }
 
+  checkCategorieLoadded() {
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        this.categoriesLoaded = 3;
+      }
+    }
+  }
+  randomSort() {
+    return Math.random() - 0.5;
+  }
+
   ngOnInit() {
+    this.categories.sort(this.randomSort);
+
     this.userId = this.google.getUserId();
 
     if (typeof window !== 'undefined' && window.document) {
@@ -69,12 +84,10 @@ export class InterviewComponent {
         this.updateSafeUrl();
       }
     }
-
+    this.checkCategorieLoadded();
     this.getLastVideo();
 
     this.getVideosByCategory();
-    console.log('categorie:' + this.categories);
-    console.log('VideoByCategories:' + JSON.stringify(this.VideoByCategories));
   }
 
   ClipIsLiked() {
@@ -97,18 +110,24 @@ export class InterviewComponent {
   }
 
   getVideosByCategory() {
-    this.categories.forEach((category, index) => {
-      this.apiVald.getVideosByCategory(category).subscribe((data) => {
-        // Utilisez les données comme nécessaire, par exemple, stockez-les dans un objet avec le titre de la période
-        const VideoOnCategorie: PeriodeData = { title: category, clips: data };
-        // Ajoutez periodDatum au tableau periodData
-        this.VideoByCategories.push(VideoOnCategorie);
-        // Faites ce dont vous avez besoin avec periodData
-        if (index < this.categoriesLoaded) {
-          this.displayedCategories.push(VideoOnCategorie);
-        }
-      });
-    });
+    const categoryRequests = this.categories.map((category) =>
+      this.apiVald
+        .getVideosByCategory(category)
+        .pipe(map((data) => ({ title: category, clips: data })))
+    );
+
+    forkJoin(categoryRequests).subscribe(
+      (results: PeriodeData[]) => {
+        this.VideoByCategories = results;
+        this.displayedCategories = this.VideoByCategories.slice(
+          0,
+          this.categoriesLoaded
+        );
+      },
+      (error) => {
+        console.error('Erreur chargement des clips par categorie:', error);
+      }
+    );
   }
 
   updateSafeUrl() {
@@ -123,20 +142,40 @@ export class InterviewComponent {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: any) {
-    if (
-      window.innerHeight + window.scrollY + 120 >=
-      document.body.offsetHeight
-    ) {
-      this.loadMoreCategories();
+    if (typeof window !== 'undefined' && window.document) {
+      if (window.innerWidth < 715) {
+        if (
+          window.innerHeight + window.scrollY + 350 >=
+            document.body.offsetHeight &&
+          this.displayedCategories.length < this.VideoByCategories.length
+        ) {
+          this.loadMoreCategories();
+        }
+      } else if (
+        window.innerHeight + window.scrollY + 120 >=
+          document.body.offsetHeight &&
+        this.displayedCategories.length < this.VideoByCategories.length
+      ) {
+        this.loadMoreCategories();
+      }
     }
   }
 
   loadMoreCategories() {
-    const remainingCategories = this.VideoByCategories.slice(
+    const newInterviews: any[] = this.VideoByCategories.slice(
       this.displayedCategories.length,
       this.displayedCategories.length + this.categoriesLoaded
     );
-    this.displayedCategories.push(...remainingCategories);
+
+    newInterviews.forEach((newInterview) => {
+      const alreadyExists = this.displayedCategories.some(
+        (displayCategorie) => displayCategorie.title === newInterview.title
+      );
+
+      if (!alreadyExists) {
+        this.displayedCategories.push(newInterview);
+      }
+    });
   }
 
   openDialog(clip: any, userId: string | null) {
