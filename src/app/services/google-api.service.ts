@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 const oAuthConfig: AuthConfig = {
   issuer: 'https://accounts.google.com',
   strictDiscoveryDocumentValidation: false,
-  redirectUri: 'http://alexis.delaunay.angers.mds-project.fr', // Prod
-  postLogoutRedirectUri: 'http://alexis.delaunay.angers.mds-project.fr', // Prod
-  // redirectUri: 'http://localhost:4200', // Dev
-  // postLogoutRedirectUri: 'http://localhost:4200', // Dev
+  redirectUri: environment.redirectUri,
+  postLogoutRedirectUri: environment.postLogoutRedirectUri,
+
   clientId:
     '848215415699-dpqbjtio7t282mrukl65di7pqdbu9628.apps.googleusercontent.com',
   scope: 'openid profile',

@@ -193,6 +193,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .container{
+    margin-bottom: 8rem!important;
+    padding-bottom: 0!important;
+  }
   .last-clip,
   .control-mute {
     margin-bottom: 0px !important;

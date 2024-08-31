@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiValdService {
-  private apiUrl = 'http://195.110.35.143:40110'; // In Production
-  // private apiUrl = 'http://localhost:3000'; //In Dev
+
+  private apiUrl = environment.apiValdUrl;
 
   private safeUrlSubject: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
@@ -132,5 +133,10 @@ export class ApiValdService {
 
   postArtiste(artiste: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/artiste`, artiste);
+  }
+
+  // Mail
+  postMail(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mail`, data);
   }
 }

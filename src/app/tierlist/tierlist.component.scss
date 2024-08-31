@@ -8,6 +8,23 @@ figure {
     object-fit: cover;
   }
 }
+.cover-intro {
+  cursor: pointer;
+  &.animate {
+    animation: fadeIn 0.5s forwards;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(0, 1, 0, 90deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+}
 .wrapper-btn {
   display: flex;
   justify-content: center;
@@ -52,6 +69,32 @@ figure {
         flex-wrap: wrap;
         gap: 20px;
         width: 280px;
+        & img {
+          transition: transform 0.5s;
+        }
+        & .invocation-1 {
+          transform: translate(10px, 10px);
+        }
+        & .invocation-2 {
+          transform: translate(-10px, 10px);
+        }
+        & .invocation-3 {
+          transform: translate(10px, -10px);
+        }
+        & .invocation-4 {
+          transform: translate(-10px, -10px);
+        }
+        & .figure-lezarman{
+          width: 280px;
+          height: 280px;
+          & .lezarman {
+            width: 280px;
+            height: 280px;
+            padding: 15px;
+            cursor: default;
+           
+          }
+        }
       }
       .regles {
         h3 {

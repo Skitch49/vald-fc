@@ -1,0 +1,75 @@
+<div class="container-form">
+  <div class="wrapper">
+    <div class="title">
+      <h1>Me contacter</h1>
+      <p>
+        Tu souhaites ajouter des vidéos inédites de VALD, compléter les
+        informations d'un artiste ou d'une vidéo ou as tu des suggestions
+        d'amélioration pour le site web alors contact moi !
+      </p>
+    </div>
+    <form (ngSubmit)="submit()" [formGroup]="formContact">
+      <div class="wrapper-name">
+        <div class="item">
+          <label
+            for="firstName"
+            [ngClass]="{ 'error-form': FirstName!.errors && FirstName!.touched }"
+            >Prénom</label
+          >
+          <input
+            type="text"
+            formControlName="firstName"
+            id="firstName"
+            placeholder="Jean"
+          />
+        </div>
+        <div class="item">
+          <label
+            for="name"
+            [ngClass]="{ 'error-form': Name!.errors && Name!.touched }"
+            >Nom</label
+          >
+          <input
+            type="text"
+            formControlName="name"
+            id="name"
+            placeholder="Dubois"
+          />
+        </div>
+      </div>
+      <div class="item">
+        <label
+          for="email"
+          [ngClass]="{ 'error-form': Email!.errors && Email!.touched }"
+          >Email</label
+        >
+        <input
+          type="email"
+          formControlName="email"
+          id="email"
+          placeholder="Saisir un email"
+        />
+      </div>
+      <div class="item">
+        <label
+          for="messsage"
+          [ngClass]="{ 'error-form': Message!.errors && Message!.touched }"
+          >Message</label
+        >
+        <textarea
+          id="messsage"
+          formControlName="message"
+          placeholder="Écris ton message ici..."
+        ></textarea>
+      </div>
+      <div class="item">
+        <button
+          type="submit"
+          [ngClass]="{ active: formContact!.valid && Message!.touched }"
+        >
+          Envoyer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

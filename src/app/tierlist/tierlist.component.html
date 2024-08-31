@@ -2,18 +2,33 @@
   <div class="start" *ngIf="menu">
     <h1>Album ultime de VALD</h1>
     <div class="wrapper-regles">
-      <div class="pictures">
-        <figure>
-          <img src="../../assets/covers/nqntmqmqmb.webp" alt="nqntmqmqmb" />
+      <div class="pictures" *ngIf="!lezarman">
+        <figure (click)="changeImg(1)">
+          <img
+            #coverIntro
+            [src]="img1"
+            alt="nqntmqmqmb"
+            class="cover-intro"
+            [ngClass]=""
+          />
         </figure>
-        <figure>
-          <img src="../../assets/covers/nqnt 2.webp" alt="nqnt 2" />
+        <figure (click)="changeImg(2)">
+          <img #coverIntro [src]="img2" alt="nqnt 2" class="cover-intro" />
         </figure>
-        <figure>
-          <img src="../../assets/covers/xeu.webp" alt="Xeu" />
+        <figure (click)="changeImg(3)">
+          <img #coverIntro [src]="img3" alt="Xeu" class="cover-intro" />
         </figure>
-        <figure>
-          <img src="../../assets/covers/vv5.webp" alt="vv5" />
+        <figure (click)="changeImg(4)">
+          <img #coverIntro [src]="img4" alt="vv5" class="cover-intro" />
+        </figure>
+      </div>
+      <div class="pictures" *ngIf="lezarman">
+        <figure class="figure-lezarman">
+          <img
+            src="../../assets/covers/lezarman/giphy.webp"
+            alt="Lezarman"
+            class="cover-intro lezarman"
+          />
         </figure>
       </div>
       <div class="regles">
@@ -128,7 +143,7 @@
           <button (click)="generateImage()">Télécharger</button>
           <button (click)="generateAndShareImage()">Partager</button>
         </div>
-        <p>{{message}}</p>
+        <p>{{ message }}</p>
       </div>
     </div>
   </div>

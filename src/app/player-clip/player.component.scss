@@ -1,6 +1,5 @@
 .container-player {
-  min-height: 100vh;
-  height: 100vh;
+  min-height: calc(100vh - 70px);
   .background-video {
     position: absolute;
     width: 100%;
@@ -19,7 +18,7 @@
       z-index: 0;
       width: 100vw;
       height: 77.25vw; /* Calcul de la hauteur pour maintenir le ratio 16:9 */
-      top: 0;
+      top: 30px;
       left: 0px;
       overflow: hidden;
       opacity: 1;
@@ -30,5 +29,10 @@
       transition-property: opacity;
       transition-duration: 1000ms;
     }
+  }
+}
+@media screen and (max-width: 768px) {
+  .container-player {
+    min-height: calc(100vh - 102px);
   }
 }

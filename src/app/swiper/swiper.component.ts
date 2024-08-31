@@ -151,6 +151,232 @@ export class SwiperComponent implements OnInit {
       },
     },
   };
+  swiperConfigFor3Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+    loopAddBlankSlides: false,
+
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: false,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+      },
+    },
+  };
+  swiperConfigFor4Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+    loop: false,
+
+    loopAddBlankSlides: false,
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        slidesOffsetAfter: 97,
+        loop: false,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+        slidesOffsetAfter: 114,
+        loop: false,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+      },
+    },
+  };
+  swiperConfigFor5Slides: SwiperOptions = {
+    slidesPerView: 6.4,
+
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-test',
+      prevEl: '.swiper-button-prev-test',
+      disabledClass: 'swiper-button-hidden',
+    },
+
+    loop: false,
+    loopAddBlankSlides: false,
+    slidesPerGroup: 6,
+    // Responsive breakpoints
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      361: {
+        slidesPerView: 2.3,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      471: {
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        slidesOffsetAfter: 125,
+        loop: true,
+      },
+      641: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3.5,
+        slidesOffsetAfter: 97,
+        loop: false,
+      },
+      769: {
+        slidesPerView: 3.5,
+        slidesPerGroup: 3.5,
+        slidesOffsetAfter: 114,
+      },
+
+      841: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 100,
+      },
+      950: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 118,
+      },
+      1100: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 125,
+      },
+      1200: {
+        slidesPerView: 4.5,
+        slidesPerGroup: 4,
+        slidesOffsetAfter: 136,
+      },
+      1301: {
+        slidesPerView: 5.5,
+        slidesPerGroup: 5,
+      },
+      1481: {
+        slidesPerView: 6.4,
+        slidesPerGroup: 6,
+      },
+    },
+  };
   swiperConfigFor6Slides: SwiperOptions = {
     slidesPerView: 6.4,
 
@@ -410,6 +636,7 @@ export class SwiperComponent implements OnInit {
     slidesOffsetAfter: 125,
 
     loop: false,
+    loopAddBlankSlides: false,
     // Responsive breakpoints
     breakpoints: {
       0: {
@@ -555,6 +782,15 @@ export class SwiperComponent implements OnInit {
   getSwiperConfig() {
     // Todo for 3 4 and 5 slides
     switch (this.clips.length) {
+      case 3:
+        return this.swiperConfigFor3Slides;
+        break;
+      case 4:
+        return this.swiperConfigFor4Slides;
+        break;
+      case 5:
+        return this.swiperConfigFor5Slides;
+        break;
       case 6:
         return this.swiperConfigFor6Slides;
         break;

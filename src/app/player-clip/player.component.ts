@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, OnDestroy {
+export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   idClip: any;
   clip: any;
   playlist: any;
@@ -20,13 +20,19 @@ export class PlayerComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private apiVald: ApiValdService
+    private apiVald: ApiValdService,
+    private viewportScroller: ViewportScroller 
+
   ) {}
+  ngAfterViewInit(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.idClip = params['id'];
       this.getPlaylist();
+
     });
 
     this.safeUrlSubscription = this.apiVald.getSafeUrl().subscribe((url) => {

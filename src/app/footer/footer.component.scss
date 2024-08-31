@@ -1,5 +1,5 @@
 .container-footer {
-    padding: 1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -9,7 +9,7 @@
   .footer-item {
     ul {
       margin-top: 4px;
-      li{
+      li {
         color: #b3b3b3;
         cursor: pointer;
         &:hover {
@@ -25,6 +25,7 @@
   figure {
     width: 150px;
     height: 100%;
+    user-select: none;
     img {
       width: 100%;
       height: 100%;
@@ -33,20 +34,21 @@
   }
 }
 .active {
-    font-weight: 500;
-    color: #fff !important;
-  }
-@media screen and (max-width:500px) {
-    .container-footer{
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        .footer-item{
-            margin-bottom: 1rem;
-            text-align: center;
-            li{
-                margin-bottom:4px ;
-            }
-        }
+  font-weight: 500;
+  color: #fff !important;
+}
+@media screen and (max-width: 500px) {
+  .container-footer {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .footer-item {
+      margin-bottom: 1rem;
+      text-align: center;
+      li {
+        margin-bottom: 4px;
+      }
     }
+  }
 }

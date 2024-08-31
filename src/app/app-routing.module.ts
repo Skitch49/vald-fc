@@ -14,6 +14,7 @@ import { TierlistComponent } from './tierlist/tierlist.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { adminAuthGuard } from './shared/admin-auth.guard';
 import { AddDataComponent } from './add-data/add-data.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'gallery', component: GalleryComponent },
   { path: 'my-list', component: MyListComponent, canActivate: [authGuard] },
   { path: 'tier-list', component: TierlistComponent,},
+  { path: 'contact', component: ContactComponent,},
   { path: 'add-data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
   { path: 'add-data/:data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
   { path: 'dashboard', component: DashboardComponent, canActivate: [adminAuthGuard]},

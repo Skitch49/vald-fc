@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -6,7 +12,7 @@ import html2canvas from 'html2canvas';
   templateUrl: './tierlist.component.html',
   styleUrl: './tierlist.component.scss',
 })
-export class TierlistComponent {
+export class TierlistComponent implements OnDestroy {
   backgroundImg: string = '../../assets/img/68.jpg';
   titreAlbum: string = '';
   imageBlob: Blob | null = null;
@@ -974,7 +980,17 @@ export class TierlistComponent {
   quizz: boolean = false;
   answer: boolean = false;
   currentTrack: number = 1;
+
+  img1: string = '../../assets/covers/nqntmqmqmb.webp';
+  img2: string = '../../assets/covers/nqnt 2.webp';
+  img3: string = '../../assets/covers/xeu.webp';
+  img4: string = '../../assets/covers/vv5.webp';
+  lezarman: boolean = false;
+  @ViewChildren('coverIntro') coverIntroElements?: QueryList<ElementRef>;
+  private musiclezarman?: HTMLAudioElement; // Propriété pour stocker la référence à l'audio
+
   public StartQuizz() {
+    this.musiclezarman?.pause();
     this.menu = false;
     this.quizz = true;
   }
@@ -1012,66 +1028,132 @@ export class TierlistComponent {
     this.backgroundImg = src;
   }
 
+  public changeImg(index: number) {
+    const clickedImage = this.coverIntroElements?.toArray()[index - 1];
+    if (clickedImage) {
+      clickedImage.nativeElement.classList.add('animate');
+      setTimeout(() => {
+        clickedImage.nativeElement.classList.remove('animate');
+      }, 500);
+    }
+
+    setTimeout(() => {
+      if (
+        this.img1 == '../../assets/covers/lezarman/lezarman-1.webp' &&
+        this.img2 == '../../assets/covers/lezarman/lezarman-2.webp' &&
+        this.img3 == '../../assets/covers/lezarman/lezarman-3.webp' &&
+        this.img4 == '../../assets/covers/lezarman/lezarman-4.webp'
+      ) {
+        return;
+      }
+      console.log(index);
+      switch (index) {
+        case 1:
+          this.img1 == '../../assets/covers/nqntmqmqmb.webp'
+            ? (this.img1 = '../../assets/covers/lezarman/lezarman-1.webp')
+            : (this.img1 = '../../assets/covers/nqntmqmqmb.webp');
+          break;
+        case 2:
+          this.img2 == '../../assets/covers/nqnt 2.webp'
+            ? (this.img2 = '../../assets/covers/lezarman/lezarman-2.webp')
+            : (this.img2 = '../../assets/covers/nqnt 2.webp');
+          break;
+        case 3:
+          this.img3 == '../../assets/covers/xeu.webp'
+            ? (this.img3 = '../../assets/covers/lezarman/lezarman-3.webp')
+            : (this.img3 = '../../assets/covers/xeu.webp');
+          break;
+        case 4:
+          this.img4 == '../../assets/covers/vv5.webp'
+            ? (this.img4 = '../../assets/covers/lezarman/lezarman-4.webp')
+            : (this.img4 = '../../assets/covers/vv5.webp');
+          break;
+      }
+      if (
+        this.img1 == '../../assets/covers/lezarman/lezarman-1.webp' &&
+        this.img2 == '../../assets/covers/lezarman/lezarman-2.webp' &&
+        this.img3 == '../../assets/covers/lezarman/lezarman-3.webp' &&
+        this.img4 == '../../assets/covers/lezarman/lezarman-4.webp'
+      ) {
+        setTimeout(() => {
+          let i = 1;
+          this.coverIntroElements?.forEach((element) => {
+            element.nativeElement.classList.add('invocation-' + i);
+            i++;
+          });
+          setTimeout(() => (this.lezarman = true), 500);
+        }, 500);
+        this.musiclezarman = new Audio('../../assets/music/lezarman.mp3');
+        this.musiclezarman.play();
+        this.musiclezarman.volume = 0.5;
+      }
+    }, 250);
+  }
+  ngOnDestroy(): void {
+    this.musiclezarman?.pause();
+  }
   async generateAndShareImage() {
     const bestAlbum = document.querySelector('.best-album');
-  
+
     if (!bestAlbum) {
       console.error('Element .best-album not found');
       this.message = 'Element .best-album not found';
       return;
     }
-  
+
     try {
       const canvas = await html2canvas(bestAlbum as HTMLElement);
-  
+
       // Convertir le canvas en Blob
       const blob = await new Promise<Blob | null>((resolve) => {
         canvas.toBlob(resolve, 'image/png');
       });
-  
+
       if (!blob) {
-        console.error('Échec de la génération de l\'image.');
-        this.message = 'Échec de la génération de l\'image';
+        console.error("Échec de la génération de l'image.");
+        this.message = "Échec de la génération de l'image";
         return;
       }
-  
+
       // Créer un objet File à partir du Blob
-      const file = new File([blob], 'perfect_album_VALD.png', { type: 'image/png' });
-  
+      const file = new File([blob], 'perfect_album_VALD.png', {
+        type: 'image/png',
+      });
+
       // Partager l'image
       if (navigator.share) {
         await navigator.share({
-          title: 'L\'album parfait de VALD',
+          title: "L'album parfait de VALD",
           text: 'Découvrez mon album parfait de VALD!',
-          files: [file]
+          files: [file],
         });
         console.log('Image partagée avec succès');
-        this.message = 'Merci d\'avoir partagée !';
-
+        this.message = "Merci d'avoir partagée !";
       } else {
-        console.error('L\'API Web Share n\'est pas prise en charge dans ce navigateur.');
-        this.message = 'L\'API Web Share n\'est pas prise en charge dans ce navigateur.';
-
+        console.error(
+          "L'API Web Share n'est pas prise en charge dans ce navigateur."
+        );
+        this.message =
+          "L'API Web Share n'est pas prise en charge dans ce navigateur.";
       }
     } catch (error) {
       console.error('Une erreur est survenue :', error);
-      this.message = 'Une erreur est survenue : '+error;
-
+      this.message = 'Une erreur est survenue : ' + error;
     }
   }
 
   generateImage() {
     const bestAlbum = document.querySelector('.best-album');
-  
-    html2canvas(bestAlbum as HTMLElement).then(canvas => {
+
+    html2canvas(bestAlbum as HTMLElement).then((canvas) => {
       // Convertir le canvas en URL de données
       const dataURL = canvas.toDataURL('image/png');
-  
+
       // Créer un élément <a> pour télécharger l'image
       const link = document.createElement('a');
       link.download = 'best_album_vald.png';
       link.href = dataURL;
-  
+
       // Cliquez sur le lien pour télécharger l'image
       link.click();
     });

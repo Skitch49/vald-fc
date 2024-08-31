@@ -39,7 +39,11 @@ import { TierlistComponent } from './tierlist/tierlist.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CountPipe } from './shared/pipes/count.pipe';
 import { AddDataComponent } from './add-data/add-data.component';
+import { ContactComponent } from './contact/contact.component';
 registerLocaleData(localeFr, 'fr');
+
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -61,16 +65,20 @@ registerLocaleData(localeFr, 'fr');
     TierlistComponent,
     DashboardComponent,
     CountPipe,
-    AddDataComponent
+    AddDataComponent,
+    ContactComponent
 
   ],
-  imports: [BrowserModule,ReactiveFormsModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
+  imports: [BrowserModule,ReactiveFormsModule,RecaptchaV3Module, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
   // Register the ServiceWorker as soon as the application is stable
   // or after 30 seconds (whichever comes first).
   registrationStrategy: 'registerWhenStable:30000'
 })],
-  providers: [provideClientHydration(), provideHttpClient(withFetch()), { provide: LOCALE_ID, useValue: "fr-FR" }],
+  providers: [provideClientHydration(), provideHttpClient(withFetch()), { provide: LOCALE_ID, useValue: "fr-FR" }, {
+    provide: RECAPTCHA_V3_SITE_KEY,
+    useValue: environment.recaptcha.siteKey,
+  },],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
