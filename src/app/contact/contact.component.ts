@@ -1,19 +1,44 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiValdService } from '../services/api-vald.service';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { Subscription } from 'rxjs';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
+
   constructor(
     private fb: FormBuilder,
     private apiVald: ApiValdService,
-    private recaptchaV3Service: ReCaptchaV3Service
+    private recaptchaV3Service: ReCaptchaV3Service,
+    @Inject(DOCUMENT) private _document: any,
+    @Inject(PLATFORM_ID) private _platformId: any
   ) {}
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this._platformId)) {
+      this._document.body.classList.add('recaptcha');
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    if (isPlatformBrowser(this._platformId)) {
+      this._document.body.classList.remove('recaptcha');
+    }
+  }
 
   get Name() {
     return this.formContact.get('name');
@@ -51,7 +76,7 @@ export class ContactComponent {
   });
 
   public submit() {
-    this.recaptchaV3Service
+    const recaptchaSubscription = this.recaptchaV3Service
       .execute('importantAction')
       .subscribe((token: string) => {
         if (this.formContact.valid) {
@@ -70,5 +95,7 @@ export class ContactComponent {
           );
         }
       });
+
+    this.subscription.add(recaptchaSubscription);
   }
 }

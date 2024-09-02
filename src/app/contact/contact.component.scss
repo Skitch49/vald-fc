@@ -5,6 +5,7 @@
   align-items: center;
 
   .wrapper {
+    transition: 0.2s ease;
     width: 50%;
     border: 1px solid #fff;
     border-radius: 5px;
@@ -42,7 +43,6 @@
           ~ textarea {
             border: 2px solid #c90202;
             outline-color: #c90202;
-
           }
         }
         input,
@@ -74,10 +74,23 @@
     }
   }
 }
+.grecaptcha-badge {
+  visibility: visible !important;
+}
 
 @media screen and (max-width: 768px) {
   .container-form {
     min-height: calc(100vh - 102px);
     margin-top: 102px;
+    display: flex;
+    justify-content: center;
+    .wrapper {
+      width: 80%;
+    }
+  }
+}
+@media screen and (max-width: 550px){
+  .wrapper {
+    width: 100%!important;
   }
 }

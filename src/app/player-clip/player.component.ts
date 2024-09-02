@@ -25,7 +25,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ) {}
   ngAfterViewInit(): void {
-    this.viewportScroller.scrollToPosition([0, 0]);
+      this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   ngOnInit(): void {

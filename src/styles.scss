@@ -83,3 +83,13 @@ body {
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+// Bug display captcha with ng-recaptcha url : https://github.com/DethAriel/ng-recaptcha/issues/153
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+body.recaptcha {
+  .grecaptcha-badge {
+    visibility: visible;
+  }
+}
