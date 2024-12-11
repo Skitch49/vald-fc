@@ -77,7 +77,7 @@ import { environment } from '../environments/environment';
 })],
   providers: [provideClientHydration(), provideHttpClient(withFetch()), { provide: LOCALE_ID, useValue: "fr-FR" }, {
     provide: RECAPTCHA_V3_SITE_KEY,
-    useValue: environment.recaptcha.siteKey,
+    useValue: environment.recaptcha,
   },],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

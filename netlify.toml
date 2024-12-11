@@ -1,0 +1,8 @@
+[build]
+  command = "ng build"
+  publish = "dist/vald-fc/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
