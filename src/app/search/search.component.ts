@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiValdService } from '../services/api-vald.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,12 +18,53 @@ export class SearchComponent {
   userId: string | null = null;
   isMobileScreen = false;
   typeVideo: string = 'Interview';
+  sortDirection = false;
+  @ViewChild('selectSort') selectSort!: any;
+
   constructor(
     private route: ActivatedRoute,
     private apiValdService: ApiValdService,
     private dialog: MatDialog,
     private readonly google: GoogleApiService
   ) {}
+
+  changesortDirection() {
+    this.sortDirection = !this.sortDirection;
+    this.clips.reverse();
+  }
+
+  onSortChange() {
+    this.sortDirection = false;
+    const selectedValue = this.selectSort.nativeElement.value;
+    switch (selectedValue) {
+      case 'name':
+        this.clips.sort((a: any, b: any) => {
+          return a.name.localeCompare(b.name);
+        });
+
+        break;
+      case 'date':
+        this.clips.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+        break;
+      case 'cat':
+        console.log(this.clips);
+        this.clips.sort((a: any, b: any) => {
+          return a.categorie.localeCompare(b.categorie);
+        });
+        break;
+      case 'pop':
+        console.log(this.clips);
+        this.clips.sort((a: any, b: any) => {
+          const aLikersCount = Array.isArray(a.likers) ? a.likers.length : 0;
+          const bLikersCount = Array.isArray(b.likers) ? b.likers.length : 0;
+          return bLikersCount - aLikersCount;
+        });
+        break;
+    }
+  }
 
   ngOnInit(): void {
     this.checkScreenSize();
@@ -37,7 +78,6 @@ export class SearchComponent {
         this.performSearch(this.query);
       }
     });
-
   }
 
   getTypeClip() {
@@ -55,7 +95,10 @@ export class SearchComponent {
 
   performSearch(query: string): void {
     this.apiValdService.getClipsArtistesFeaturing(query).subscribe((data) => {
-      this.clips = data; // assigner les données reçues à la propriété clips
+      this.clips = data;
+      this.clips.sort((a: any, b: any) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
       this.getTypeClip();
     });
   }

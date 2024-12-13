@@ -1,0 +1,57 @@
+.cart-toast {
+  position: fixed;
+  bottom: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40vw;
+  max-width: 420px;
+  min-width: 340px;
+  background-color: #f1f1f1;
+  padding: 26px 20px;
+  border-radius: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid #cbcbcb;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  z-index: 999;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .toast__text {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .cart-toast__button {
+    border-radius: 8px;
+    padding: 4px 8px;
+    border-color: #d21c28;
+    cursor: pointer;
+    transition: backgroundColor 0.2s ease-in, color 0.2s ease-in;
+    background-color: #f1f1f1;
+    &:hover{
+      background-color: #d21c28;
+      color: #f1f1f1;
+
+    }
+  }
+  .cart-toast__progress-bar {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 4px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #d21c28;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  &.cart-toast--show {
+    opacity: 1;
+    visibility: visible;
+  }
+}

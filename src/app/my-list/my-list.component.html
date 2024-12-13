@@ -1,14 +1,51 @@
 <div class="container">
-  <h3 *ngIf="videos || videos.length > 0">
-    Vous avez {{ videos.length }} vidéos en favoris !
-  </h3>
+
+  <app-toast
+  (onActionConfirmed)="onToastConfirmed()"
+  (onUndoAction)="onToastUndo()"
+
+></app-toast>
+<div #toastContainer></div>
+
+
+  <div class="top-container" *ngIf="videos && videos.length > 0">
+    <h3>Vous avez {{ videos.length }} vidéos en favoris !</h3>
+    <div class="sort">
+      <p>Trié par</p>
+      <select name="" id="" #selectSort (change)="onSortChange()">
+        <option value="date">Date</option>
+        <option value="name">Nom</option>
+        <option value="pop">Popularité</option>
+      </select>
+      <svg
+        (click)="changesortDirection()"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        class="triangle"
+        [ngClass]="{
+          'triangle-bottom': sortDirection == false,
+          'triangle-top': sortDirection == true
+        }"
+        data-name="Play"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </div>
+  </div>
+
   <div class="wrapper" *ngIf="!isMobileScreen">
-    <div class="not-liked" *ngIf="!videos || videos.lenght == 0">
+    <div class="not-liked" *ngIf='this.videos == ""'>
       <h3>Retrouver vos vidéos favorites ici !</h3>
       <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
     </div>
 
-    <div class="card" *ngFor="let video of videos">
+    <div class="card card-remove" *ngFor="let video of videosDisplay" [ngClass]="{ 'card-remove': cardStates[video._id] }">
       <figure routerLink="/clip/{{ video.url }}" *ngIf="video.artiste">
         <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
       </figure>
@@ -63,7 +100,7 @@
             <button
               *ngIf="this.userId"
               class="btn-circle-secondary"
-              (click)="likeClip(this.video)"
+              (click)="showToast(video, $event)"
             >
               <svg
                 *ngIf="!isLikedByUser(video)"
@@ -103,7 +140,7 @@
           <button
             *ngIf="video.artiste"
             class="btn-circle-secondary"
-            (click)="openDialog(this.video, this.userId, 'Clip')"
+            (click)="openDialog(video, this.userId, 'Clip')"
           >
             <svg
               width="24"
@@ -126,7 +163,7 @@
           <button
             *ngIf="video.author"
             class="btn-circle-secondary"
-            (click)="openDialog(this.video, this.userId, 'Interview')"
+            (click)="openDialog(video, this.userId, 'Interview')"
           >
             <svg
               width="24"
@@ -159,15 +196,15 @@
       <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
     </div>
 
-    <div class="card" *ngFor="let video of videos">
+    <div class="card" *ngFor="let video of videosDisplay">
       <figure
-        (click)="openDialog(this.video, this.userId, 'Clip')"
+        (click)="openDialog(video, this.userId, 'Clip')"
         *ngIf="video.artiste"
       >
         <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
       </figure>
       <figure
-        (click)="openDialog(this.video, this.userId, 'Interview')"
+        (click)="openDialog(video, this.userId, 'Interview')"
         *ngIf="video.author"
       >
         <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />

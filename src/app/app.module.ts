@@ -44,6 +44,7 @@ registerLocaleData(localeFr, 'fr');
 
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from '../environments/environment';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { environment } from '../environments/environment';
     DashboardComponent,
     CountPipe,
     AddDataComponent,
-    ContactComponent
+    ContactComponent,
+    ToastComponent,
 
   ],
   imports: [BrowserModule,ReactiveFormsModule,RecaptchaV3Module, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {

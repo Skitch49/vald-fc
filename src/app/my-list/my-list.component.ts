@@ -1,9 +1,16 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { GoogleApiService } from '../services/google-api.service';
 import { ApiValdService } from '../services/api-vald.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
 import { Clip } from '../interface/clip.interface';
+import { ToastComponent } from '../shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-my-list',
@@ -13,8 +20,17 @@ import { Clip } from '../interface/clip.interface';
 export class MyListComponent implements OnInit {
   userId: string | null = null;
   videos: any | null = null;
+  videosDisplay: any | null = null;
   isMobileScreen = false;
+  sortDirection = false;
+  videoDelete: any | null = null;
+  cardElement: HTMLElement | null = null;
+  @ViewChild('selectSort') selectSort!: any;
+  @ViewChild(ToastComponent) toastComponent!: ToastComponent;
 
+  cardStates: { [key: string]: boolean } = {}; // Un objet pour suivre l'état de suppression des cartes
+
+  toastTimeout: any;
   constructor(
     private googleApiService: GoogleApiService,
     private apiVald: ApiValdService,
@@ -23,18 +39,53 @@ export class MyListComponent implements OnInit {
     this.checkScreenSize();
   }
 
+  changesortDirection() {
+    this.sortDirection = !this.sortDirection;
+    this.videosDisplay.reverse();
+  }
+  onSortChange() {
+    this.sortDirection = false;
+    const selectedValue = this.selectSort.nativeElement.value;
+    console.log(selectedValue);
+    switch (selectedValue) {
+      case 'name':
+        this.videosDisplay.sort((a: any, b: any) => {
+          return a.name.localeCompare(b.name);
+        });
+
+        break;
+      case 'date':
+        this.videosDisplay.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+        break;
+      case 'pop':
+        this.videosDisplay.sort((a: any, b: any) => {
+          const aLikersCount = Array.isArray(a.likers) ? a.likers.length : 0;
+          const bLikersCount = Array.isArray(b.likers) ? b.likers.length : 0;
+          return bLikersCount - aLikersCount;
+        });
+        break;
+    }
+  }
+
   ngOnInit() {
     this.checkScreenSize();
     this.googleApiService.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
+      this.ClipsLiked();
     });
-    this.ClipsLiked();
   }
 
   public ClipsLiked() {
     if (this.userId) {
       this.apiVald.getAllVideoLiked(this.userId).subscribe((data) => {
         this.videos = data;
+        this.videosDisplay = data;
+        this.videosDisplay.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
       });
     }
   }
@@ -72,6 +123,30 @@ export class MyListComponent implements OnInit {
         this.isMobileScreen = false;
       }
     }
+  }
+
+  verifDeleteVideo(video: any) {}
+  showToast(video: any, event: Event) {
+    if (this.videoDelete) {
+      this.likeClip(this.videoDelete);
+    }
+    this.videoDelete = video;
+
+    const videoId = video._id; // Utilisez un identifiant unique
+    this.cardStates[videoId] = true; // Marquer
+    this.toastComponent.showToast(video);
+  }
+
+  onToastConfirmed() {
+    this.likeClip(this.videoDelete);
+    this.videoDelete = null;
+  }
+  onToastUndo() {
+    if (this.videoDelete) {
+      const videoId = this.videoDelete._id;
+      this.cardStates[videoId] = false; // Réinitialiser l'état de suppression
+    }
+    this.videoDelete = null;
   }
 
   likeClip(video: any) {
