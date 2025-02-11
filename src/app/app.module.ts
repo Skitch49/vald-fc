@@ -20,6 +20,7 @@ import { SwiperDirective } from './shared/directives/swiper.directive';
 // register Swiper custom elements
 register();
 
+
 //Local
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -45,6 +46,8 @@ registerLocaleData(localeFr, 'fr');
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from '../environments/environment';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+import { ToggleComponent } from './shared/components/toggle/toggle.component';
 
 @NgModule({
   declarations: [
@@ -69,9 +72,10 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     AddDataComponent,
     ContactComponent,
     ToastComponent,
+    ToggleComponent,
 
   ],
-  imports: [BrowserModule,ReactiveFormsModule,RecaptchaV3Module, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
+  imports: [BrowserModule,ReactiveFormsModule,RecaptchaV3Module,YouTubePlayerModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
   // Register the ServiceWorker as soon as the application is stable
   // or after 30 seconds (whichever comes first).

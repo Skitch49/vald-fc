@@ -32,7 +32,7 @@
         <button
           class="btn-primary"
           mat-dialog-close
-          routerLink="/{{data.typeVideo.toLowerCase()}}/{{ clip.url }}"
+          routerLink="/{{ data.typeVideo.toLowerCase() }}/{{ clip.url }}"
         >
           <svg
             width="24"
@@ -51,66 +51,66 @@
           </svg>
           Lecture
         </button>
-        <button class="btn-circle" *ngIf="data.userId"
-        (click)="likeClip(this.data.clip)"
-  
+        <button
+          class="btn-circle"
+          *ngIf="data.userId"
+          (click)="likeClip(this.data.clip)"
         >
-        <svg
-        *ngIf="!isLikedByUser(clip)"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        data-name="non favoris"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
-          fill="currentColor"
-        ></path>
-      </svg>
-      <svg
-      *ngIf="isLikedByUser(clip)"
-  
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        data-name="favoris"
-        aria-labelledby=":r4a:"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
-          fill="currentColor"
-        ></path>
-      </svg>
+          <svg
+            *ngIf="!isLikedByUser(clip)"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            data-name="non favoris"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M11 11V2H13V11H22V13H13V22H11V13H2V11H11Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          <svg
+            *ngIf="isLikedByUser(clip)"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            data-name="favoris"
+            aria-labelledby=":r4a:"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
+              fill="currentColor"
+            ></path>
+          </svg>
         </button>
       </div>
     </div>
   </figure>
-  
+
   <div class="content-dialog">
     <div class="left-content">
       <div class="clip-info">
         <p class="date">{{ clip.date | date : "longDate" }}</p>
         <p>{{ clip.description }}</p>
       </div>
-      <div class="artiste-info" *ngIf="data.typeVideo=='Clip'">
+      <div class="artiste-info" *ngIf="data.typeVideo == 'Clip'">
         <p>
           Artiste :
-          <span tabindex="0"
+          <span
+            tabindex="0"
             (mouseenter)="
               setHoverState('artiste', clip.artiste.nameArtiste, true)
-              "
+            "
             (mouseleave)="
               setHoverState('artiste', clip.artiste.nameArtiste, false)
-              "
-
+            "
             >{{ clip.artiste.nameArtiste }}
             <app-tooltip
               [isVisible]="hoverStates['artiste-' + clip.artiste.nameArtiste]"
@@ -120,11 +120,11 @@
         </p>
         <p *ngIf="clip.featuring && clip.featuring.length > 0">
           Featuring :
-          <span tabindex="0"
+          <span
+            tabindex="0"
             *ngFor="let feat of clip.featuring; let i = index"
             (mouseenter)="setHoverState('featuring', feat.nameArtiste, true)"
             (mouseleave)="setHoverState('featuring', feat.nameArtiste, false)"
-
             >{{ feat.nameArtiste
             }}<app-tooltip
               [isVisible]="hoverStates['featuring-' + feat.nameArtiste]"
@@ -134,17 +134,17 @@
           </span>
         </p>
       </div>
-      <div class="artiste-info" *ngIf="data.typeVideo=='Interview'">
+      <div class="artiste-info" *ngIf="data.typeVideo == 'Interview'">
         <p>
           Auteur :
-          <span tabindex="0"
+          <span
+            tabindex="0"
             (mouseenter)="
               setHoverState('artiste', clip.author.nameArtiste, true)
-              "
+            "
             (mouseleave)="
               setHoverState('artiste', clip.author.nameArtiste, false)
-              "
-
+            "
             >{{ clip.author.nameArtiste }}
             <app-tooltip
               [isVisible]="hoverStates['artiste-' + clip.author.nameArtiste]"
@@ -152,24 +152,9 @@
             ></app-tooltip>
           </span>
         </p>
-        <p *ngIf="clip.featuring && clip.featuring.length > 0">
-          Featuring :
-          <span tabindex="0"
-            *ngFor="let feat of clip.featuring; let i = index"
-            (mouseenter)="setHoverState('featuring', feat.nameArtiste, true)"
-            (mouseleave)="setHoverState('featuring', feat.nameArtiste, false)"
-
-            >{{ feat.nameArtiste
-            }}<app-tooltip
-              [isVisible]="hoverStates['featuring-' + feat.nameArtiste]"
-              [data]="feat"
-            ></app-tooltip
-            ><span *ngIf="i < clip.featuring.length - 1">,&nbsp;</span>
-          </span>
-        </p>
       </div>
     </div>
-    <div class="right-content" *ngIf="data.typeVideo=='Clip'">
+    <div class="right-content" *ngIf="data.typeVideo == 'Clip'">
       <h3 class="title-more-info">Plus d'infos :</h3>
       <div *ngIf="clip.produced && clip.produced.length > 0">
         <p>
@@ -187,10 +172,10 @@
           </span>
         </p>
       </div>
-      <p *ngIf="clip.mix  && clip.mix.length > 0">
+      <p *ngIf="clip.mix && clip.mix.length > 0">
         Mix :
         <span
-        *ngFor="let mixer of clip.mix; let i=index"
+          *ngFor="let mixer of clip.mix; let i = index"
           (mouseenter)="setHoverState('mix', mixer.nameArtiste, true)"
           (mouseleave)="setHoverState('mix', mixer.nameArtiste, false)"
           >{{ mixer.nameArtiste }}

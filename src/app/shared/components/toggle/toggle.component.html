@@ -1,0 +1,6 @@
+<div>
+  <label for="toggle">{{
+    checked ? nameLabelForTrue : nameLabelForFalse
+  }}</label>
+  <input type="checkbox" name="toggle" id="toggle" #input (click)="switchToggle()" />
+</div>

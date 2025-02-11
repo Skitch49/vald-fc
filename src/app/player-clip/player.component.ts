@@ -1,61 +1,131 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  AfterContentChecked,
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiValdService } from '../services/api-vald.service';
 import { ViewportScroller } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { YouTubePlayer } from '@angular/youtube-player';
+import { Artiste } from '../interface/artiste.interface';
+import { GoogleApiService } from '../services/google-api.service';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlayerComponent
+  implements OnInit, AfterViewInit, AfterContentChecked
+{
+  @ViewChild('youtubePlayer') youtubePlayer!: YouTubePlayer;
+  @ViewChild('loader') loader!: any;
+  playerConfig = {
+    controls: 2,
+    autoplay: 1,
+    rel: 0,
+    playsinline: 1,
+  };
   idClip: any;
   clip: any;
   playlist: any;
-  safeUrl: SafeResourceUrl = '';
-  private safeUrlSubscription: Subscription = new Subscription();
+  selectedIndexClip: any;
 
+  userId: string | null = null;
+  hoverStates: { [key: string]: boolean } = {}; //for tooltip
+
+  isChecked: boolean = false; // toggle for sort Next Video
   constructor(
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
     private apiVald: ApiValdService,
-    private viewportScroller: ViewportScroller 
-
+    private viewportScroller: ViewportScroller,
+    private googleApiService: GoogleApiService
   ) {}
+  ngAfterContentChecked(): void {
+    const iframe = document.querySelector('iframe');
+    if (iframe) {
+      iframe.style.width = '100vw';
+      iframe.style.height = '77.25vw'; // Calcul de la hauteur pour maintenir le ratio 16:9
+    }
+  }
+
   ngAfterViewInit(): void {
-      this.viewportScroller.scrollToPosition([0, 0]);
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
+  afterloaded() {
+    if (this.loader) {
+      this.loader.nativeElement.classList.add('loading-out');
+      setTimeout(() => {
+        this.loader.nativeElement.remove();
+      }, 200);
+    }
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    if (
+      !document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]'
+      )
+    ) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.body.appendChild(tag);
+    }
+    this.route.params.subscribe((params: any) => {
       this.idClip = params['id'];
+      this.getDataClip(this.idClip);
       this.getPlaylist();
-
     });
-
-    this.safeUrlSubscription = this.apiVald.getSafeUrl().subscribe((url) => {
-      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.googleApiService.getUserIdObservable().subscribe((userId) => {
+      this.userId = userId;
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.safeUrlSubscription) {
-      this.safeUrlSubscription.unsubscribe();
+  isLikedByUser() {
+    if (this.clip.likers && this.clip.likers.length > 0) {
+      const liked = this.clip.likers.find(
+        (userId: string) => userId === this.userId
+      );
+      if (liked) {
+        return true;
+      }
     }
+    return false;
+  }
+  likeClip() {
+    if (!this.userId) return;
+
+    const isLiked = this.isLikedByUser();
+
+    this.apiVald.toggleLike(this.clip._id, this.userId, !isLiked).subscribe({
+      next: (data) => {
+        // Gestion de la réponse réussie
+        // this.updateClipLikeState(this.clip, isLiked);
+        this.clip.likers = data.likers;
+      },
+    });
   }
 
-  initClip() {
-    if (this.idClip) {
-      const url = `https://www.youtube.com/embed/${this.idClip}?si=bIxfegmGGYSRY5Wm&autoplay=1&controls=2&showinfo=1&playsinline=0&modestbranding=1&rel=0&iv_load_policy=3&fs=1&loop=1&disablekb=0&playlist=${this.playlist}`;
-      this.apiVald.updateSafeUrl(url);
-    }
-  }
+  changeSortPlaylist(check: boolean) {
+    this.isChecked = check;
+    console.log('---------------');
+    if (this.isChecked) {
+      // mélanger le tableau this.playlist
+      this.playlist.sort((a: any, b: any) => {
+        return 0.5 - Math.random();
+      });
 
-  getPlaylist(): void {
-    this.apiVald.getClips().subscribe((data) => {
-      this.playlist = data
+      this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
+        return (
+          clip.url.trim().toLowerCase() == this.clip.url.trim().toLowerCase()
+        );
+      });
+      console.log(this.playlist[this.selectedIndexClip + 1].name);
+    } else {
+      // remettre le tableau this.playlist a l'état initial
+      this.playlist = this.playlist
         .filter(
           (clip: any) =>
             clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
@@ -64,17 +134,151 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
           const dateA = new Date(a.date);
           const dateB = new Date(b.date);
           return dateB.getTime() - dateA.getTime();
-        })
-        .map((clip: any) => clip.url);
-      this.apiVald.getClipsByUrl(this.idClip).subscribe({
-        next: (clip) => {
-          this.clip = clip;
-          this.initClip();
-        },
-        error: (error) => {
-          console.error('Erreur lors du chargement de la vidéo', error);
-        },
+        });
+      this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
+        return (
+          clip.url.trim().toLowerCase() == this.clip.url.trim().toLowerCase()
+        );
       });
+      console.log(this.playlist[this.selectedIndexClip + 1].name);
+    }
+  }
+
+  onStageChange(e: any) {
+    console.log(e.target);
+    switch (e.data) {
+      case -1: // Chargement
+        console.log('code -1');
+        e.target.playVideo();
+        this.afterloaded();
+
+        break;
+      case 0: // Fin de la vidéo
+        console.log('End of Song');
+        if (this.playlist && this.playlist.length > 0) {
+          console.log('Lecture vidéo unique, passage manuel');
+          this.selectedIndexClip =
+            (this.selectedIndexClip + 1) % this.playlist.length;
+
+          this.clip = this.playlist[this.selectedIndexClip];
+          e.target.cueVideoById(this.playlist[this.selectedIndexClip].url);
+        }
+        break;
+      case 1: // Lecture en cours
+        console.log('Code 1');
+        this.afterloaded();
+
+        break;
+      case 2: // Pause
+        console.log('Pause');
+        break;
+      case 3:
+        console.log('Code 3');
+        break;
+      case 5: // Vidéo arrêtée
+        this.afterloaded();
+
+        console.log('code 5, start next video: ', e.target.videoTitle);
+        e.target.playVideo();
+
+        break;
+      default: {
+        console.error('OnStageChange for youtube: unkown data: ', e.data);
+        break;
+      }
+    }
+  }
+  onReady(e: any) {
+    e.target.setVolume(100);
+    e.target.playVideo();
+    this.afterloaded();
+  }
+
+  nextVideo(e: any) {
+    console.error('erreur de lecture de la video ID: ');
+    this.selectedIndexClip =
+      (this.selectedIndexClip + 1) % this.playlist.length;
+
+    this.clip = this.playlist[this.selectedIndexClip];
+    e.target.cueVideoById(this.playlist[this.selectedIndexClip].url);
+  }
+
+  getDataClip(idClip: string) {
+    const storage = localStorage.getItem('clipsPlaylist');
+    if (storage) {
+      console.log('IN LOCAL STORAGE');
+
+      this.clip = JSON.parse(storage).find(
+        (clip: { url: string }) => clip.url === this.idClip
+      );
+    }
+    this.apiVald.getClipsByUrl(idClip).subscribe({
+      next: (clip) => {
+        this.clip = clip;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement de la vidéo', error);
+      },
     });
+  }
+  getPlaylist(): void {
+    const storage = localStorage.getItem('clipsPlaylist');
+    if (storage) {
+      console.log('IN LOCAL STORAGE');
+      this.playlist = JSON.parse(storage);
+      this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
+        return (
+          clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
+        );
+      });
+    } else {
+      console.log('NOT IN LOCAL STORAGE');
+
+      this.apiVald.getClips().subscribe((data) => {
+        this.playlist = data
+          .filter(
+            (clip: any) =>
+              clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
+          )
+          .sort((a: any, b: any) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB.getTime() - dateA.getTime();
+          });
+        this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
+          return (
+            clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
+          );
+        });
+
+        localStorage.setItem('clipsPlaylist', JSON.stringify(this.playlist));
+      });
+    }
+  }
+
+  initializeHoverStates() {
+    const categories = [
+      'produced',
+      'featuring',
+      'mix',
+      'mastering',
+      'real',
+      'artiste',
+      'production',
+    ];
+    categories.forEach((category) => {
+      const artists = this.clip[category];
+      if (Array.isArray(artists)) {
+        artists.forEach((artist: Artiste) => {
+          this.hoverStates[`${category}-${artist.nameArtiste}`] = false;
+        });
+      } else if (artists) {
+        this.hoverStates[`${category}-${artists.nameArtiste}`] = false;
+      }
+    });
+  }
+
+  setHoverState(category: string, artistName: string, state: boolean) {
+    this.hoverStates[`${category}-${artistName}`] = state;
   }
 }
