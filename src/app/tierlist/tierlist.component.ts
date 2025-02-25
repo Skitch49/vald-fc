@@ -3,6 +3,7 @@ import {
   ElementRef,
   OnDestroy,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import html2canvas from 'html2canvas';
@@ -14,8 +15,9 @@ import html2canvas from 'html2canvas';
 })
 export class TierlistComponent implements OnDestroy {
   backgroundImg: string = '../../assets/img/68.jpg';
-  titreAlbum: string = '';
-  imageBlob: Blob | null = null;
+  customBackgroundImg: string =
+    '../../assets/background/initialCustomBackgroundImg.jpg';
+  titreAlbum: string = 'Mon Album Parfait';
   message: string = '';
   albums = [
     {
@@ -987,7 +989,25 @@ export class TierlistComponent implements OnDestroy {
   img4: string = '../../assets/covers/vv5.webp';
   lezarman: boolean = false;
   @ViewChildren('coverIntro') coverIntroElements?: QueryList<ElementRef>;
+  @ViewChild('file') file!: any;
   private musiclezarman?: HTMLAudioElement; // Propriété pour stocker la référence à l'audio
+
+  renderBackground(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.customBackgroundImg = `${e.target?.result}`;
+        console.log(this.customBackgroundImg);
+        this.backgroundImg = this.customBackgroundImg;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onFileButtonClick() {
+    this.file.nativeElement.click();
+  }
 
   public StartQuizz() {
     this.musiclezarman?.pause();
@@ -1025,7 +1045,11 @@ export class TierlistComponent implements OnDestroy {
     this.currentTrack++;
   }
   changeBackgroundImg(src: string) {
-    this.backgroundImg = src;
+    if (src === '../../assets/background/initialCustomBackgroundImg.jpg') {
+      this.onFileButtonClick();
+    } else {
+      this.backgroundImg = src;
+    }
   }
 
   public changeImg(index: number) {

@@ -95,7 +95,7 @@
             class="track-item"
             *ngFor="let track of YourBestAlbum; index as i"
           >
-            <h2>{{ i + 1 }} {{ track.title }}</h2>
+            <h2>{{ i + 1 }} {{ track.title }} <span *ngIf="i == 16">(Bonus)</span></h2>
           </div>
         </div>
       </div>
@@ -130,8 +130,8 @@
         </figure>
         <figure>
           <img
-            (click)="changeBackgroundImg('../../assets/img/38.jpg')"
-            src="../../assets/img/38.jpg"
+            (click)="changeBackgroundImg(customBackgroundImg)"
+            [src]="customBackgroundImg"
             alt=""
           />
         </figure>
@@ -139,10 +139,24 @@
       <div class="container-input">
         <h3>Donne un titre à ce chef d'oeuvre !</h3>
         <input type="text" [(ngModel)]="titreAlbum" />
+        <div class="wrapper-btn upload">
+          <input
+            type="file"
+            name=""
+            id="file"
+            #file
+            accept="image/*"
+            (change)="renderBackground($event)"
+          />
+          <button (click)="onFileButtonClick()">
+            Upload ton fond d'écran
+          </button>
+        </div>
         <div class="wrapper-btn">
           <button (click)="generateImage()">Télécharger</button>
           <button (click)="generateAndShareImage()">Partager</button>
         </div>
+
         <p>{{ message }}</p>
       </div>
     </div>
