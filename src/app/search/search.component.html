@@ -1,8 +1,7 @@
-<div class="container-search" *ngIf="clips && clips.length != 0">
-
-  
+<div class="container-search" *ngIf="contents && contents.length != 0">
   <div class="top-container">
-    <h3>Votre recherche <span>{{ query }}</span> ({{ clips.length }})
+    <h3>
+      Votre recherche <span>{{ query }}</span> ({{ contentsDisplay.length }})
     </h3>
     <div class="sort">
       <p>Trié par</p>
@@ -35,7 +34,7 @@
   </div>
 
   <div class="wrapper" *ngIf="!isMobileScreen">
-    <div class="card" *ngFor="let clip of clips">
+    <div class="card" *ngFor="let clip of contentsDisplay">
       <figure routerLink="/{{ clip.type }}/{{ clip.url }}">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
@@ -130,13 +129,23 @@
     </div>
   </div>
   <div class="wrapper" *ngIf="isMobileScreen">
-    <div class="card" *ngFor="let clip of clips">
+    <div class="card" *ngFor="let clip of contentsDisplay">
       <figure (click)="getClip(clip)">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
     </div>
   </div>
 </div>
-<div class="container-search" *ngIf="!clips || clips.length == 0">
+
+<!-- Si aucun contenu -->
+<div
+  class="container-search"
+  *ngIf="!contentsDisplay && contentsDisplay.length == 0"
+>
   <h3>Aucun resultat disponible pour votre recherche: {{ query }}</h3>
+</div>
+
+<!-- chargement -->
+<div class="container-search container-loader" #loader>
+  <div class="loader"></div>
 </div>

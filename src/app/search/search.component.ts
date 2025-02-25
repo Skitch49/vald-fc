@@ -1,4 +1,10 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiValdService } from '../services/api-vald.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,16 +17,17 @@ import { GoogleApiService } from '../services/google-api.service';
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit, AfterViewInit {
   query: string = '';
-  clips: any;
+  contents: any;
+  contentsDisplay: any = [];
   clipWithAllInfo: any;
   userId: string | null = null;
   isMobileScreen = false;
   typeVideo: string = 'Interview';
   sortDirection = false;
   @ViewChild('selectSort') selectSort!: any;
-
+  @ViewChild('loader') loader!: any;
   constructor(
     private route: ActivatedRoute,
     private apiValdService: ApiValdService,
@@ -28,9 +35,10 @@ export class SearchComponent {
     private readonly google: GoogleApiService
   ) {}
 
+
   changesortDirection() {
     this.sortDirection = !this.sortDirection;
-    this.clips.reverse();
+    this.contentsDisplay.reverse();
   }
 
   onSortChange() {
@@ -38,26 +46,24 @@ export class SearchComponent {
     const selectedValue = this.selectSort.nativeElement.value;
     switch (selectedValue) {
       case 'name':
-        this.clips.sort((a: any, b: any) => {
+        this.contentsDisplay.sort((a: any, b: any) => {
           return a.name.localeCompare(b.name);
         });
 
         break;
       case 'date':
-        this.clips.sort((a: any, b: any) => {
+        this.contentsDisplay.sort((a: any, b: any) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
 
         break;
       case 'cat':
-        console.log(this.clips);
-        this.clips.sort((a: any, b: any) => {
+        this.contentsDisplay.sort((a: any, b: any) => {
           return a.categorie.localeCompare(b.categorie);
         });
         break;
       case 'pop':
-        console.log(this.clips);
-        this.clips.sort((a: any, b: any) => {
+        this.contentsDisplay.sort((a: any, b: any) => {
           const aLikersCount = Array.isArray(a.likers) ? a.likers.length : 0;
           const bLikersCount = Array.isArray(b.likers) ? b.likers.length : 0;
           return bLikersCount - aLikersCount;
@@ -71,58 +77,134 @@ export class SearchComponent {
     this.google.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
     });
-
+    this.getAllContent();
     this.route.queryParams.subscribe((params) => {
-      this.query = params['q'] || '';
+      this.query = params['q'].toLowerCase().trim() || '';
       if (this.query) {
-        this.performSearch(this.query);
+        this.applyFilter();
       }
     });
   }
 
-  getTypeClip() {
-    if (this.clips) {
-      this.clips.map((clip: any) => {
+  ngAfterViewInit(): void {
+    if (this.contents) {
+      if (this.loader) {
+        this.loader.nativeElement.remove();
+      }
+    }
+  }
+
+  applyFilter() {
+    if (!this.contents) return; // Vérifie si les contenus sont chargés
+
+    // Tableau des mois en français
+    const monthsFr = [
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
+    ];
+
+    // Transformer la requête en tableau de mots-clés sans accents
+    const queryWords = this.normalizeText(this.query).split(' ');
+
+    this.contentsDisplay = this.contents.filter((content: any) => {
+      // Extraire l'année, le mois et le jour de la date
+      const dateObj = new Date(content.date);
+      const year = dateObj.getFullYear().toString(); // "2012"
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // "03"
+      const monthFr = monthsFr[dateObj.getMonth()]; // "mars"
+      const day = dateObj.getDate().toString().padStart(2, '0'); // "25"
+
+      // Récupérer les noms des artistes dans les tableaux
+      const producedNames = (content.produced || [])
+        .map((p: any) => p.nameArtiste)
+        .join(' ');
+      const productionNames = (content.production || [])
+        .map((p: any) => p.nameArtiste)
+        .join(' ');
+      const featuringNames = (content.featuring || [])
+        .map((f: any) => f.nameArtiste)
+        .join(' ');
+
+      // Normaliser et regrouper tous les champs dans une seule chaîne
+      const contentText = this.normalizeText(
+        `${content.categorie} ${content.description} ${content.name} ${content.author?.nameArtiste} 
+        ${content.artiste?.nameArtiste} ${featuringNames} ${content.mastering?.nameArtiste} 
+        ${content.mix?.nameArtiste} ${producedNames} ${productionNames} ${content.real?.nameArtiste} ${content.type}
+        ${year} ${month} ${monthFr} ${day}`
+      );
+
+      // Vérifier que chaque mot-clé de la recherche est présent dans le texte du contenu
+      return queryWords.every((word) => contentText.includes(word));
+    });
+
+  }
+
+  // Fonction pour normaliser le texte (mettre en minuscule et enlever les accents)
+  normalizeText(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize('NFD') // Décompose les caractères accentués
+      .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
+      .trim();
+  }
+
+  getTypeContent() {
+    if (this.contents) {
+      this.contents.map((clip: any) => {
         if (clip.author) {
           clip.type = 'interview';
         } else {
           clip.type = 'clip';
         }
       });
-      console.log(this.clips);
     }
   }
 
-  performSearch(query: string): void {
-    this.apiValdService.getClipsArtistesFeaturing(query).subscribe((data) => {
-      this.clips = data;
-      this.clips.sort((a: any, b: any) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+  getAllContent(): void {
+    const storedData = localStorage.getItem('allContent');
+
+    if (storedData) {
+      this.contents = JSON.parse(storedData);
+      this.applyFilter();
+      if (this.loader && this.loader.nativeElement) {
+        this.loader.nativeElement.remove();
+      }
+    } else {
+      this.apiValdService.getAllContent().subscribe((data) => {
+        this.contents = data;
+        this.contents.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+        this.getTypeContent();
+        this.applyFilter();
+        localStorage.setItem('allContent', JSON.stringify(this.contents));
+        if (this.loader && this.loader.nativeElement) {
+          this.loader.nativeElement.remove();
+        }
       });
-      this.getTypeClip();
-    });
+    }
   }
 
   getClip(clip: any): void {
-    console.log(JSON.stringify(clip));
     if (clip && clip.artiste) {
       this.typeVideo = 'Clip';
-      console.log('type :' + this.typeVideo);
-
-      this.apiValdService.getClipsByUrl(clip.url).subscribe((data) => {
-        this.clipWithAllInfo = data;
-
-        this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo); // Déplacez cette ligne ici
-      });
+      this.clipWithAllInfo = this.contents.find((c: any) => c._id === clip._id);
+      this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo);
     }
     if (clip && clip.author) {
       this.typeVideo = 'Interview';
-      console.log('type :' + this.typeVideo);
-      this.apiValdService.getVideoByUrl(clip.url).subscribe((data) => {
-        this.clipWithAllInfo = data;
-
-        this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo); // Déplacez cette ligne ici
-      });
+      this.clipWithAllInfo = this.contents.find((c: any) => c._id === clip._id);
+      this.openDialog(this.clipWithAllInfo, this.userId, this.typeVideo);
     }
   }
   openDialog(clip: any, userId: string | null, typeVideo: string) {

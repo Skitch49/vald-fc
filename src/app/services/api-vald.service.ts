@@ -126,6 +126,9 @@ export class ApiValdService {
     return this.http.get(`${this.apiUrl}/clip/categories/${category}`);
   }
 
+  getAllContent(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/video/all-videos-and-clips`)
+  }
   // Artistes
   getArtistes(): Observable<any> {
     return this.http.get(`${this.apiUrl}/artiste`);

@@ -1,27 +1,40 @@
 # ValdFc
+**Clone de Netflix** en Angular représentant tout les clips et toutes les videos youtubes de VALD !
+Projet à but de formation sur Angular et est en constante évolution.
+Ce projet est lié à l'[api-vald](https://github.com/Skitch49/api-vald) que j'ai également créer en NodeJS.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.10.
+![Logo du site](https://vald-fc.netlify.app/assets/logo.png)
+## Pages
+- page d'accueil regroupant tout le contenu video par catégorie
+- page clip regroupant tout les clips par catégorie
+- page player clip permet de visualisé le clip selectionner, afficher les informations du clip, si l'utilisateur est connecté permet de le mettre en favoris, toggle qui permet de mettre les prochains clips par date de sortie ou en aléatoire.
+- page video regroupant toutes les vidéos par catégorie
+- page player video permet de visualisé la vidéo selectionner, afficher les informations de la vidéo, si l'utilisateur est connecté permet de la mettre en favoris, toggle qui permet de mettre les prochaines vidéos par date de sortie ou en aléatoire.
+- page Ma liste regroupe tout le contenu mis en favoris par l'utilisateur.
+- page Search qui affiche le contenu suivant la saisi de l'utilisateur et peux être trier par différents critère (Date,Nom,Catégorie,Popularité) en ascendant ou en descendant.
+- page Album Ultime qui permet de créer une image de l'album parfait de l'utilisateur suivant ces choix fait lors d'un QCM.
+- page Me contacter permet d'envoyer un mail à l'auteur du site.
+- page gallery (en cours de dev).
+- page Dashboard accessible uniquement par l'auteur du site qui permet d'ajouter, de lire, modifier et supprimé (CRUD) les différents contenu de l'API sur les Artistes, Clips et Interview.
 
-## Development server
+## Installation
+1. Clonez le dépôt : `git clone https://github.com/Skitch49/tinder-dogs.git`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+2. Installer les dépendances : `npm i`
 
-## Code scaffolding
+3. Ajouter un fichier d'environment : `ng generate environments`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+4. Ajouter les clés API dans le nouveau fichier environment :
+```
+export const environment = {
+  apiValdUrl: 'API_KEY',
+  redirectUri: 'REDIRECT_URL_AFTER_LOGIN',
+  postLogoutRedirectUri: 'REDIRECT_URL_AFTER_LOGOUT',
+  recaptcha: 'API_KEY',
+};
+```
 
-## Build
+5. Lancer l'application : `ng serve`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Lien vers le projet
+[Le projet est disponible en ligne ici](http://vald-fc.netlify.app/)
