@@ -20,28 +20,6 @@ export class HomeComponent {
   lastClip: any;
   isMobileScreen: boolean = false;
   userId: string | null = null;
-  categories: any[] = [
-    "L'ère V",
-    'Post CMEC',
-    'Post Xeu',
-    'Concert',
-    'Post Agartha',
-    'Post NQNT 2',
-    'Entertainment',
-    'NQNT - NQNTMQMQMB',
-    'Amin & Hugo',
-    'Interview V',
-    'VALD sur Twitch',
-    'Documentaires | Courts métrages',
-    'Documentaires | Fan made',
-    'Interview Ce Monde Est Cruel',
-    'Interview Horizon Vertical',
-    'Interview Échelon',
-    'Interview Xeu',
-    'Interview Agartha',
-    'Interview NQNT 2',
-    'Interview NQNT',
-  ];
   videoByCategories: PeriodeData[] = [];
   displayVideo: any[] = [];
   categoriesLoaded: number = 2;
@@ -123,28 +101,69 @@ export class HomeComponent {
   }
 
   getAllVideosByCategory() {
-    const categoryRequests = this.categories.map((category) =>
-      this.apiVald
-        .getAllVideoByCategory(category)
-        .pipe(map((data) => ({ title: category, clips: data })))
-    );
+    const storedData = localStorage.getItem('allContent');
 
-    forkJoin(categoryRequests).subscribe(
-      (results: PeriodeData[]) => {
-        this.videoByCategories = results;
+    if (storedData) {
+      console.log('Récupération le localStorage...');
+
+      try {
+        this.videoByCategories = this.groupVideosByCategory(
+          JSON.parse(storedData)
+        );
+        this.videoByCategories.sort(this.randomSort);
         this.displayVideo = this.videoByCategories.slice(
           0,
           this.categoriesLoaded
         );
-      },
-      (error) => {
-        console.error('Erreur chargement des clips par categorie:', error);
+        return;
+      } catch (error) {
+        console.warn('Données corrompues dans le localStorage, suppression...');
+        localStorage.removeItem('allContent');
       }
-    );
+    } else {
+      console.log("Récupération des vidéos depuis l'API...");
+      this.apiVald.getAllContent().subscribe({
+        next: (videos: any[]) => {
+          this.getTypeContent(videos);
+          localStorage.setItem('allContent', JSON.stringify(videos));
+
+          this.videoByCategories = this.groupVideosByCategory(videos);
+          this.videoByCategories.sort(this.randomSort);
+          this.displayVideo = this.videoByCategories.slice(
+            0,
+            this.categoriesLoaded
+          );
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des vidéos:', error);
+        },
+      });
+    }
+  }
+
+  private groupVideosByCategory(videos: any[]): PeriodeData[] {
+    const categoryMap = new Map<string, any[]>();
+
+    videos.forEach((video) => {
+      if (!categoryMap.has(video.categorie)) {
+        categoryMap.set(video.categorie, []);
+      }
+      categoryMap.get(video.categorie)?.push(video);
+    });
+
+    return Array.from(categoryMap.entries()).map(([title, clips]) => ({
+      title,
+      clips,
+    }));
+  }
+
+  getTypeContent(videos: any[]) {
+    videos.forEach((clip) => {
+      clip.type = clip.author ? 'interview' : 'clip';
+    });
   }
 
   ngOnInit() {
-    this.categories.sort(this.randomSort);
     this.userId = this.google.getUserId();
     this.checkCategorieLoadded();
     if (typeof window !== 'undefined' && window.document) {

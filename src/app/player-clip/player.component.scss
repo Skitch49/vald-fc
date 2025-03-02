@@ -81,6 +81,14 @@
     max-width: initial;
     display: flex;
     align-items: center;
+    position: relative;
+    .error-loading {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
   }
   .wrapper-artistes {
     color: #777;
@@ -183,8 +191,8 @@
   .background-video {
     height: 100% !important;
   }
-  .wrapper-info{
-    margin-top: 0!important;
+  .wrapper-info {
+    margin-top: 0 !important;
   }
   .container-player {
     min-height: calc(100vh - 199px);
@@ -202,7 +210,6 @@
   .description {
     padding-right: 0 !important;
     padding-bottom: 1rem;
-
   }
   .wrapper-info-bottom {
     border-top: 1px solid #777 !important;

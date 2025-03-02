@@ -32,11 +32,11 @@ export class PlayerComponent
   clip: any;
   playlist: any;
   selectedIndexClip: any;
-
+  errorLoadVideo: boolean = false;
   userId: string | null = null;
   hoverStates: { [key: string]: boolean } = {}; //for tooltip
 
-  isChecked: boolean = false; // toggle for sort Next Video
+  isRandomSort: boolean = false; // toggle for sort Next Video
   constructor(
     private route: ActivatedRoute,
     private apiVald: ApiValdService,
@@ -73,6 +73,7 @@ export class PlayerComponent
       tag.src = 'https://www.youtube.com/iframe_api';
       document.body.appendChild(tag);
     }
+
     this.route.params.subscribe((params: any) => {
       this.idClip = params['id'];
       this.getDataClip(this.idClip);
@@ -81,6 +82,11 @@ export class PlayerComponent
     this.googleApiService.getUserIdObservable().subscribe((userId) => {
       this.userId = userId;
     });
+    const storageRandomToggle = localStorage.getItem('isRandomSort');
+    if (storageRandomToggle) {
+      this.isRandomSort = JSON.parse(storageRandomToggle);
+      this.changeSortPlaylist(this.isRandomSort);
+    }
   }
 
   isLikedByUser() {
@@ -109,9 +115,10 @@ export class PlayerComponent
   }
 
   changeSortPlaylist(check: boolean) {
-    this.isChecked = check;
+    this.isRandomSort = check;
+    localStorage.setItem('isRandomSort', JSON.stringify(this.isRandomSort));
     console.log('---------------');
-    if (this.isChecked) {
+    if (this.isRandomSort) {
       // mélanger le tableau this.playlist
       this.playlist.sort((a: any, b: any) => {
         return 0.5 - Math.random();
@@ -161,7 +168,7 @@ export class PlayerComponent
             (this.selectedIndexClip + 1) % this.playlist.length;
 
           this.clip = this.playlist[this.selectedIndexClip];
-          e.target.cueVideoById(this.playlist[this.selectedIndexClip].url);
+          e.target.loadVideoById(this.playlist[this.selectedIndexClip].url);
         }
         break;
       case 1: // Lecture en cours
@@ -196,11 +203,18 @@ export class PlayerComponent
 
   nextVideo(e: any) {
     console.error('erreur de lecture de la video ID: ');
-    this.selectedIndexClip =
-      (this.selectedIndexClip + 1) % this.playlist.length;
+    this.errorLoadVideo = true;
+    if (this.loader) {
+      this.loader.nativeElement.remove();
+    }
+    const nextIndex = (this.selectedIndexClip + 1) % this.playlist.length;
 
-    this.clip = this.playlist[this.selectedIndexClip];
-    e.target.cueVideoById(this.playlist[this.selectedIndexClip].url);
+    setTimeout(() => {
+      this.selectedIndexClip = nextIndex;
+      e.target.loadVideoById(this.playlist[this.selectedIndexClip].url);
+      this.clip = this.playlist[this.selectedIndexClip];
+      this.errorLoadVideo = false;
+    }, 5000);
   }
 
   getDataClip(idClip: string) {
@@ -211,15 +225,27 @@ export class PlayerComponent
       this.clip = JSON.parse(storage).find(
         (clip: { url: string }) => clip.url === this.idClip
       );
+      // Si clip existe mais n'est pas répertorier dans la playlist car restreint par youtube
+      if (!this.clip) {
+        this.apiVald.getClipsByUrl(idClip).subscribe({
+          next: (clip) => {
+            this.clip = clip;
+          },
+          error: (error) => {
+            console.error('Erreur lors du chargement de la vidéo', error);
+          },
+        });
+      }
+    } else {
+      this.apiVald.getClipsByUrl(idClip).subscribe({
+        next: (clip) => {
+          this.clip = clip;
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de la vidéo', error);
+        },
+      });
     }
-    this.apiVald.getClipsByUrl(idClip).subscribe({
-      next: (clip) => {
-        this.clip = clip;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement de la vidéo', error);
-      },
-    });
   }
   getPlaylist(): void {
     const storage = localStorage.getItem('clipsPlaylist');

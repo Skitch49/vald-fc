@@ -83,6 +83,13 @@ h1 {
     max-width: initial;
     display: flex;
     align-items: center;
+    position: relative;
+    .error-loading {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
   .wrapper-artistes {
     color: #777;

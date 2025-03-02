@@ -32,11 +32,11 @@ export class PlayerInterviewComponent
   video: any;
   playlist: any;
   selectedIndexVideo: any;
-
+  errorLoadVideo = false;
   userId: string | null = null;
   hoverStates: { [key: string]: boolean } = {}; //for tooltip
 
-  isChecked: boolean = false; // toggle for sort Next Video
+  isRandomSort: boolean = false; // toggle for sort Next Video
 
   constructor(
     private route: ActivatedRoute,
@@ -86,6 +86,11 @@ export class PlayerInterviewComponent
         this.userId = userId;
       });
     });
+    const storageRandomToggle = localStorage.getItem('isRandomSort');
+    if (storageRandomToggle) {
+      this.isRandomSort = JSON.parse(storageRandomToggle);
+      this.changeSortPlaylist(this.isRandomSort);
+    }
   }
 
   isLikedByUser() {
@@ -115,9 +120,10 @@ export class PlayerInterviewComponent
   }
 
   changeSortPlaylist(check: boolean) {
-    this.isChecked = check;
+    this.isRandomSort = check;
+    localStorage.setItem('isRandomSort', JSON.stringify(this.isRandomSort));
     console.log('---------------');
-    if (this.isChecked) {
+    if (this.isRandomSort) {
       // mélanger le tableau this.playlist
       this.playlist.sort((a: any, b: any) => {
         return 0.5 - Math.random();
@@ -171,7 +177,7 @@ export class PlayerInterviewComponent
             (this.selectedIndexVideo + 1) % this.playlist.length;
 
           this.video = this.playlist[this.selectedIndexVideo];
-          e.target.cueVideoById(this.playlist[this.selectedIndexVideo].url);
+          e.target.loadVideoById(this.playlist[this.selectedIndexVideo].url);
         }
         break;
       case 1: // Lecture en cours
@@ -207,15 +213,23 @@ export class PlayerInterviewComponent
   //If error iframe
   nextVideo(e: any) {
     console.error('erreur de lecture de la video ID: ');
-    this.selectedIndexVideo =
-      (this.selectedIndexVideo + 1) % this.playlist.length;
+    this.errorLoadVideo = true;
 
-    this.video = this.playlist[this.selectedIndexVideo];
-    e.target.cueVideoById(this.playlist[this.selectedIndexVideo].url);
+    if (this.loader) {
+      this.loader.nativeElement.remove();
+    }
+    const nextIndex = (this.selectedIndexVideo + 1) % this.playlist.length;
+
+    setTimeout(() => {
+      this.selectedIndexVideo = nextIndex;
+      e.target.loadVideoById(this.playlist[this.selectedIndexVideo].url);
+      this.video = this.playlist[this.selectedIndexVideo];
+      this.errorLoadVideo = false;
+    }, 5000);
   }
 
   async getDataClip() {
-    const storage = localStorage.getItem('videosPlaylist');
+    const storage = localStorage.getItem('allContent');
     if (storage) {
       console.log('getData Storage');
       this.video = JSON.parse(storage).find((video: { url: any }) => {
@@ -247,7 +261,6 @@ export class PlayerInterviewComponent
         );
       });
       console.log(this.playlist.map((video: { name: any }) => video.name));
-
     } else {
       this.apiVald.getVideos().subscribe({
         next: (data) => {

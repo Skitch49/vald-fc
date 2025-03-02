@@ -158,21 +158,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
       .trim();
   }
 
-  getTypeContent() {
-    if (this.contents) {
-      this.contents.map((clip: any) => {
-        if (clip.author) {
-          clip.type = 'interview';
-        } else {
-          clip.type = 'clip';
-        }
-      });
-    }
+  getTypeContent(videos: any[]) {
+    videos.forEach((clip) => {
+      clip.type = clip.author ? 'interview' : 'clip';
+    });
   }
 
   getAllContent(): void {
     const storedData = localStorage.getItem('allContent');
-
+  
     if (storedData) {
       this.contents = JSON.parse(storedData);
       this.applyFilter();
@@ -181,19 +175,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.apiValdService.getAllContent().subscribe((data) => {
-        this.contents = data;
-        this.contents.sort((a: any, b: any) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
-        this.getTypeContent();
-        this.applyFilter();
+        this.getTypeContent(data);
+        this.contents = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
         localStorage.setItem('allContent', JSON.stringify(this.contents));
+        this.applyFilter();
         if (this.loader && this.loader.nativeElement) {
           this.loader.nativeElement.remove();
         }
       });
     }
   }
+  
 
   getClip(clip: any): void {
     if (clip && clip.artiste) {

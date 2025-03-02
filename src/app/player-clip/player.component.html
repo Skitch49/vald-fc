@@ -22,6 +22,7 @@
       (error)="nextVideo($event)"
     >
     </youtube-player>
+    <div *ngIf="errorLoadVideo" class="error-loading">Prochaine Vidéo dans 5 secondes</div>
   </div>
   <div class="wrapper-info" *ngIf="clip">
     <h1>{{ clip.name }}</h1>
@@ -74,7 +75,7 @@
       </div>
       <div class="content-header-info-right">
         <app-toggle
-          [checked]="isChecked"
+          [checked]="isRandomSort"
           nameLabelForTrue="Prochain clip aléatoire"
           nameLabelForFalse="Prochain clip par ordre de sortie"
           (toggle)="changeSortPlaylist($event)"

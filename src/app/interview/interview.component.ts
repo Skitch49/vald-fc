@@ -22,22 +22,6 @@ export class InterviewComponent {
   isMobileScreen: boolean = false;
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  categories: any[] = [
-    'Entertainment',
-    'Interview V',
-    'Concert',
-    'Amin & Hugo',
-    'Documentaires | Courts métrages',
-    'Documentaires | Fan made',
-    'Interview Échelon',
-    'Interview Horizon Vertical',
-    'VALD sur Twitch',
-    'Interview Ce Monde Est Cruel',
-    'Interview Xeu',
-    'Interview Agartha',
-    'Interview NQNT 2',
-    'Interview NQNT',
-  ];
   VideoByCategories: PeriodeData[] = [];
   isMuted: boolean = true;
   displayedCategories: any[] = [];
@@ -73,8 +57,6 @@ export class InterviewComponent {
   }
 
   ngOnInit() {
-    this.categories.sort(this.randomSort);
-
     this.userId = this.google.getUserId();
 
     if (typeof window !== 'undefined' && window.document) {
@@ -110,26 +92,69 @@ export class InterviewComponent {
   }
 
   getVideosByCategory() {
-    const categoryRequests = this.categories.map((category) =>
-      this.apiVald
-        .getVideosByCategory(category)
-        .pipe(map((data) => ({ title: category, clips: data })))
-    );
+    const storedData = localStorage.getItem('allContent');
 
-    forkJoin(categoryRequests).subscribe(
-      (results: PeriodeData[]) => {
-        this.VideoByCategories = results;
+    if (storedData) {
+      console.log('Récupération le localStorage...');
+
+      try {
+        // Récupérer les vidéos et filtrer uniquement les interview
+        const allVideos = JSON.parse(storedData);
+        console.log(allVideos);
+        const interviewOnly = allVideos.filter((video: any) => !video.artiste); // Exclut les Clip
+        console.log(interviewOnly);
+
+        this.VideoByCategories = this.groupVideosByCategory(interviewOnly);
+        this.VideoByCategories.sort(this.randomSort);
         this.displayedCategories = this.VideoByCategories.slice(
           0,
           this.categoriesLoaded
         );
-      },
-      (error) => {
-        console.error('Erreur chargement des clips par categorie:', error);
+        return;
+      } catch (error) {
+        console.warn(error);
+        localStorage.removeItem('allContent');
       }
-    );
+    } else {
+      console.log("Récupération des vidéos depuis l'API...");
+      this.apiVald.getAllContent().subscribe({
+        next: (videos: any[]) => {
+          this.getTypeContent(videos);
+          localStorage.setItem('allContent', JSON.stringify(videos));
+          const filtredVideos = videos.filter((video) => !video.artiste);
+          this.VideoByCategories = this.groupVideosByCategory(filtredVideos);
+          this.displayedCategories = this.VideoByCategories.slice(
+            0,
+            this.categoriesLoaded
+          );
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des vidéos:', error);
+        },
+      });
+    }
+  }
+  private groupVideosByCategory(videos: any[]): PeriodeData[] {
+    const categoryMap = new Map<string, any[]>();
+
+    videos.forEach((video) => {
+      if (!categoryMap.has(video.categorie)) {
+        categoryMap.set(video.categorie, []);
+      }
+      categoryMap.get(video.categorie)?.push(video);
+    });
+
+    return Array.from(categoryMap.entries()).map(([title, clips]) => ({
+      title,
+      clips,
+    }));
   }
 
+  getTypeContent(videos: any[]) {
+    videos.forEach((clip) => {
+      clip.type = clip.author ? 'interview' : 'clip';
+    });
+  }
   updateSafeUrl() {
     if (this.lastVideo) {
       const safeUrl: SafeResourceUrl =

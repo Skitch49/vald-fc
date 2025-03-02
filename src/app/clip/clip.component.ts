@@ -20,14 +20,7 @@ export class ClipComponent implements OnInit, OnDestroy {
   isMobileScreen: boolean = false;
   likedClipIds: Set<string> = new Set();
   userId: string | null = null;
-  categories: any[] = [
-    "L'ère V",
-    'Post CMEC',
-    'Post Xeu',
-    'Post Agartha',
-    'Post NQNT 2',
-    'NQNT - NQNTMQMQMB',
-  ];
+
   VideoByCategories: PeriodeData[] = [];
   private subscriptions: Subscription = new Subscription();
 
@@ -76,8 +69,6 @@ export class ClipComponent implements OnInit, OnDestroy {
       startIndex,
       startIndex + this.categoriesLoaded
     );
-    console.log(`newClips 1: ${JSON.stringify(newClips[0].title)}`);
-    console.log(`newClips 2: ${JSON.stringify(newClips[1].title)}`);
 
     newClips.forEach((newClip) => {
       const alreadyExists = this.displayedCategories.some(
@@ -131,24 +122,73 @@ export class ClipComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
   getClipsByCategory() {
-    const categoryRequests = this.categories.map((category) =>
-      this.apiVald
-        .getAllVideoByCategory(category)
-        .pipe(map((data) => ({ title: category, clips: data })))
-    );
+    const storedData = localStorage.getItem('allContent');
 
-    forkJoin(categoryRequests).subscribe(
-      (results: PeriodeData[]) => {
-        this.VideoByCategories = results;
+    if (storedData) {
+      console.log("Récupération le localStorage...");
+
+      try {
+        // Récupérer les vidéos et filtrer uniquement les clips
+        const allVideos = JSON.parse(storedData);
+        const clipsOnly = allVideos.filter((video: any) => !video.author); // Exclut les interviews
+
+        // Regrouper par catégorie
+        this.VideoByCategories = this.groupVideosByCategory(clipsOnly);
+
+        // Limiter l'affichage initial
+        this.displayedCategories = this.VideoByCategories.slice(
+          0,
+          this.categoriesLoaded
+        );
+        return;
+      } catch (error) {
+        console.warn('Données corrompues dans le localStorage, suppression...');
+        localStorage.removeItem('allContent'); // Suppression des données corrompues
+      }
+    }else{
+
+    console.log("Récupération des clips depuis l'API...");
+
+    this.apiVald.getAllContent().subscribe({
+      next: (videos: any[]) => {
+        this.getTypeContent(videos);
+        localStorage.setItem('allContent', JSON.stringify(videos));
+        const filtredVideos = videos.filter((video) => !video.author);
+        this.VideoByCategories = this.groupVideosByCategory(filtredVideos);
         this.displayedCategories = this.VideoByCategories.slice(
           0,
           this.categoriesLoaded
         );
       },
-      (error) => {
-        console.error('Erreur chargement des clips par categorie:', error);
+      error: (error) => {
+        console.error('Erreur lors du chargement des vidéos:', error);
+      },
+    });}
+  }
+
+  private groupVideosByCategory(videos: any[]): PeriodeData[] {
+    const categoryMap = new Map<string, any[]>();
+
+    videos.forEach((video) => {
+      if (!categoryMap.has(video.categorie)) {
+        categoryMap.set(video.categorie, []);
       }
-    );
+      categoryMap.get(video.categorie)?.push(video);
+    });
+
+    return Array.from(categoryMap.entries())
+      .map(([title, clips]) => ({ title, clips }))
+      .sort(
+        (a, b) =>
+          new Date(b.clips[0].date).getTime() -
+          new Date(a.clips[0].date).getTime()
+      );
+  }
+
+  getTypeContent(videos: any[]) {
+    videos.forEach((clip) => {
+      clip.type = clip.author ? 'interview' : 'clip';
+    });
   }
 
   ClipIsLiked() {
