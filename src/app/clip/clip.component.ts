@@ -125,7 +125,7 @@ export class ClipComponent implements OnInit, OnDestroy {
     const storedData = localStorage.getItem('allContent');
 
     if (storedData) {
-      console.log("Récupération le localStorage...");
+      console.log('Récupération le localStorage...');
 
       try {
         // Récupérer les vidéos et filtrer uniquement les clips
@@ -145,25 +145,25 @@ export class ClipComponent implements OnInit, OnDestroy {
         console.warn('Données corrompues dans le localStorage, suppression...');
         localStorage.removeItem('allContent'); // Suppression des données corrompues
       }
-    }else{
+    } else {
+      console.log("Récupération des clips depuis l'API...");
 
-    console.log("Récupération des clips depuis l'API...");
-
-    this.apiVald.getAllContent().subscribe({
-      next: (videos: any[]) => {
-        this.getTypeContent(videos);
-        localStorage.setItem('allContent', JSON.stringify(videos));
-        const filtredVideos = videos.filter((video) => !video.author);
-        this.VideoByCategories = this.groupVideosByCategory(filtredVideos);
-        this.displayedCategories = this.VideoByCategories.slice(
-          0,
-          this.categoriesLoaded
-        );
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des vidéos:', error);
-      },
-    });}
+      this.apiVald.getAllContent().subscribe({
+        next: (videos: any[]) => {
+          this.getTypeContent(videos);
+          localStorage.setItem('allContent', JSON.stringify(videos));
+          const filtredVideos = videos.filter((video) => !video.author);
+          this.VideoByCategories = this.groupVideosByCategory(filtredVideos);
+          this.displayedCategories = this.VideoByCategories.slice(
+            0,
+            this.categoriesLoaded
+          );
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des vidéos:', error);
+        },
+      });
+    }
   }
 
   private groupVideosByCategory(videos: any[]): PeriodeData[] {
@@ -201,15 +201,23 @@ export class ClipComponent implements OnInit, OnDestroy {
   }
 
   getLastClip() {
-    const sub = this.apiVald.getLastClip().subscribe((data) => {
-      this.lastClip = data;
-      const safeUrl: SafeResourceUrl =
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
-        );
-      this.lastClip.safeUrl = safeUrl;
-    });
-    this.subscriptions.add(sub);
+    const storage = localStorage.getItem('lastClip');
+    if (storage) {
+      this.lastClip = JSON.parse(storage);
+      this.updateSafeUrl()
+
+    } else {
+      const sub = this.apiVald.getLastClip().subscribe((data) => {
+        this.lastClip = data;
+        const safeUrl: SafeResourceUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(
+            `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
+          );
+        this.lastClip.safeUrl = safeUrl;
+        localStorage.setItem('lastClip', JSON.stringify(this.lastClip));
+      });
+      this.subscriptions.add(sub);
+    }
   }
 
   updateSafeUrl() {

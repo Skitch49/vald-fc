@@ -130,25 +130,45 @@ figure {
     }
     .container-tracks {
       user-select: none;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+
+      padding-left: 2rem;
       align-content: flex-start;
       gap: 20px 0;
+      padding-bottom: 20px;
       .track-item {
+        overflow: hidden;
+        z-index: 2;
+
         display: flex;
-        width: 33%;
+        width: fit-content;
         transition: transform 0.2s ease-out;
         cursor: pointer;
+       
+        
+        h2::after{
+          content: '';
+          height: 2px;
+          transform: scaleX(0);
+          transition: transform 0.4s ease-out;
+          transform-origin: right;
+          display: flex;
+          background-color: red;
+        }
         &:hover {
           transform: scale(1.08);
           transition: transform 0.2s ease-out;
+          h2::after{
+            transform: scaleX(1);
+            transform-origin: left;
+
+          }
         }
         .info {
           padding-left: 1rem;
-          width: calc(100% - 130px);
           overflow: hidden;
+          max-width: 25vw;
         }
       }
     }
@@ -233,13 +253,13 @@ figure {
   }
   .question {
     .container-tracks {
+
       .track-item {
         figure {
           width: 110px !important;
           height: 110px !important;
         }
         .info {
-          width: calc(100% - 110px) !important;
           h2 {
             font-size: 21px !important;
           }
@@ -254,9 +274,9 @@ figure {
 @media screen and (max-width: 900px) {
   .question {
     .container-tracks {
-      .track-item {
-        width: 50% !important;
-      }
+      grid-template-columns: repeat(2, minmax(0, 1fr))!important;
+
+
     }
   }
 }
@@ -297,8 +317,13 @@ figure {
 @media screen and (max-width: 660px) {
   .question {
     .container-tracks {
+      display: flex!important;
+      flex-direction: column;
       .track-item {
-        width: 100% !important;
+        .info{
+          max-width: max-content!important;
+        }
+
       }
     }
   }
@@ -349,9 +374,7 @@ figure {
           width: 100px !important;
           height: 100px !important;
         }
-        .info {
-          width: calc(100% - 100px) !important;
-        }
+       
       }
     }
   }

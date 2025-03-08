@@ -825,6 +825,86 @@ export class TierlistComponent implements OnDestroy {
       title: 'Microphone check',
       album: 'VV5',
     },
+    {
+      track: 1,
+      title: 'Dieu merci',
+      album: 'Pandémonium',
+    },
+    {
+      track: 2,
+      title: 'Regulation',
+      album: 'Pandémonium',
+    },
+    {
+      track: 3,
+      title: 'Léthargie',
+      album: 'Pandémonium',
+    },
+    {
+      track: 4,
+      title: 'Pandémonium',
+      album: 'Pandémonium',
+    },
+    {
+      track: 5,
+      title: 'FLPVCOF',
+      album: 'Pandémonium',
+    },
+    {
+      track: 6,
+      title: 'Gauche droite',
+      album: 'Pandémonium',
+    },
+    {
+      track: 7,
+      title: 'Roche noire',
+      album: 'Pandémonium',
+    },
+    {
+      track: 8,
+      title: 'Darknet',
+      album: 'Pandémonium',
+    },
+    {
+      track: 9,
+      title: 'Fumée',
+      album: 'Pandémonium',
+    },
+    {
+      track: 10,
+      title: 'Que des problèmes',
+      album: 'Pandémonium',
+    },
+    {
+      track: 11,
+      title: 'UFOV',
+      album: 'Pandémonium',
+    },
+    {
+      track: 12,
+      title: 'Superman',
+      album: 'Pandémonium',
+    },
+    {
+      track: 13,
+      title: 'Prozaczopixan',
+      album: 'Pandémonium',
+    },
+    {
+      track: 14,
+      title: 'interlude',
+      album: 'Pandémonium',
+    },
+    {
+      track: 15,
+      title: '93 Milliards',
+      album: 'Pandémonium',
+    },
+    {
+      track: 16,
+      title: 'Les échappés',
+      album: 'Pandémonium',
+    },
   ];
 
   YourBestAlbum: any[] = [];
@@ -888,6 +968,11 @@ export class TierlistComponent implements OnDestroy {
       track: 13,
       title: 'Sushi',
       album: 'VV5',
+    },
+    {
+      track: 17,
+      title: 'Paradis perdu',
+      album: 'Pandémonium',
     },
   ];
 
@@ -976,6 +1061,21 @@ export class TierlistComponent implements OnDestroy {
       track: 14,
       title: 'Hottest',
       album: 'VV5',
+    },
+    {
+      track: 18,
+      title: 'PTSD',
+      album: 'Pandémonium PTSD',
+    },
+    {
+      track: 18,
+      title: 'Démon',
+      album: 'Pandémonium démon',
+    },
+    {
+      track: 18,
+      title: 'Victoire',
+      album: 'Pandémonium victoire',
     },
   ];
   menu: boolean = true;

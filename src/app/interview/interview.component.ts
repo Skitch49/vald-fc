@@ -81,14 +81,21 @@ export class InterviewComponent {
   }
 
   getLastVideo() {
-    this.apiVald.getLastVideo().subscribe((data) => {
-      this.lastVideo = data;
-      const safeUrl: SafeResourceUrl =
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${this.lastVideo.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastVideo.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
-        );
-      this.lastVideo.safeUrl = safeUrl;
-    });
+    const storage = localStorage.getItem('lastVideo');
+    if (storage) {
+      this.lastVideo = JSON.parse(storage);
+      this.updateSafeUrl()
+    } else {
+      this.apiVald.getLastVideo().subscribe((data) => {
+        this.lastVideo = data;
+        const safeUrl: SafeResourceUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(
+            `https://www.youtube.com/embed/${this.lastVideo.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastVideo.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
+          );
+        this.lastVideo.safeUrl = safeUrl;
+        localStorage.setItem('lastVideo', JSON.stringify(this.lastVideo));
+      });
+    }
   }
 
   getVideosByCategory() {

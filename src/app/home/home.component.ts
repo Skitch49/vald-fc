@@ -187,14 +187,22 @@ export class HomeComponent {
   }
 
   getLastClip() {
-    this.apiVald.getLastClip().subscribe((data) => {
-      this.lastClip = data;
-      const safeUrl: SafeResourceUrl =
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
-        );
-      this.lastClip.safeUrl = safeUrl;
-    });
+    const storage = localStorage.getItem('lastClip');
+    if (storage) {
+     this.lastClip = JSON.parse(storage);
+     this.updateSafeUrl()
+
+    } else {
+      this.apiVald.getLastClip().subscribe((data) => {
+        this.lastClip = data;
+        const safeUrl: SafeResourceUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(
+            `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
+          );
+        this.lastClip.safeUrl = safeUrl;
+        localStorage.setItem('lastClip',JSON.stringify(this.lastClip));
+      });
+    }
   }
 
   updateSafeUrl() {
