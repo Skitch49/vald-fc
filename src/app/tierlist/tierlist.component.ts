@@ -1245,7 +1245,9 @@ export class TierlistComponent implements OnDestroy {
       });
 
       // Partager l'image
-      if (navigator.share) {
+      if (navigator.canShare({title: "L'album parfait de VALD",
+        text: 'Découvrez mon album parfait de VALD!',
+        files: [file],})) {
         await navigator.share({
           title: "L'album parfait de VALD",
           text: 'Découvrez mon album parfait de VALD!',
@@ -1257,8 +1259,7 @@ export class TierlistComponent implements OnDestroy {
         console.error(
           "L'API Web Share n'est pas prise en charge dans ce navigateur."
         );
-        this.message =
-          "L'API Web Share n'est pas prise en charge dans ce navigateur.";
+        this.message = "Impossible de partager l'image depuis ce navigateur.";
       }
     } catch (error) {
       console.error('Une erreur est survenue :', error);

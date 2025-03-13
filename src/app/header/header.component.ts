@@ -8,6 +8,7 @@ import {
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { GoogleApiService, UserInfo } from '../services/google-api.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +27,8 @@ export class HeaderComponent {
 
   constructor(
     private router: Router,
-    private readonly google: GoogleApiService
+    private readonly google: GoogleApiService,
+    private dialog: MatDialog
   ) {
     this.checkScreenSize();
     google.userProfileSubject.subscribe((info) => {

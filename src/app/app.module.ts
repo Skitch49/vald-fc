@@ -48,6 +48,7 @@ import { environment } from '../environments/environment';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { ToggleComponent } from './shared/components/toggle/toggle.component';
+import { MaxLengthPipe } from './shared/pipes/max-length.pipe';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { ToggleComponent } from './shared/components/toggle/toggle.component';
     ContactComponent,
     ToastComponent,
     ToggleComponent,
+    MaxLengthPipe,
 
   ],
   imports: [BrowserModule,ReactiveFormsModule,RecaptchaV3Module,YouTubePlayerModule, AppRoutingModule,MaterialModule,FormsModule,BrowserAnimationsModule,HttpClientModule,OAuthModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', {

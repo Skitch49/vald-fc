@@ -324,3 +324,10 @@ header:has(.notShowMobileMenu) {
   .active {
 border: 2px solid #d21c28!important;  }
 }
+
+// augmente la font-size pour éviter le zoom auto sur safari sous IOS.
+@supports (-webkit-touch-callout: none) {
+  .search-input {
+    font-size: 16px;
+  }
+}

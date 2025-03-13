@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /add-data
+Disallow: /gallery
+
+Sitemap: https://vald-fc.netlify.app/sitemap.xml

@@ -15,7 +15,7 @@
     <div class="fill-container" *ngIf="lastVideo">
       <div class="last-clip">
         <h1>{{ lastVideo.name }}</h1>
-        <p>{{ lastVideo.description }}</p>
+        <p>{{ lastVideo.description | maxLength}}</p>
   
         <div class="wrapper-btn">
           <button class="btn-primary" routerLink="/interview/{{lastVideo.url}}">
