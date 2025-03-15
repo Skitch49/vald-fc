@@ -181,7 +181,7 @@
     margin-top: 102px;
     margin-bottom: 0 !important;
     min-height: calc(100vh - 182px) !important ;
-    .top-container{
+    .top-container {
       margin-top: 7rem;
     }
   }
@@ -202,5 +202,38 @@
 @media screen and (max-width: 360px) {
   .card {
     width: 100% !important;
+  }
+}
+
+// loader
+.container-loader {
+  height: 100%;
+  background: black;
+  z-index: 20;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #fb1717;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+}
+@keyframes rotation {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }

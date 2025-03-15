@@ -59,6 +59,7 @@ export class PlayerInterviewComponent
 
   afterloaded() {
     if (this.loader) {
+      this.viewportScroller.scrollToPosition([0, 0]);
       this.loader.nativeElement.classList.add('loading-out');
       setTimeout(() => {
         this.loader.nativeElement.remove();
@@ -91,6 +92,11 @@ export class PlayerInterviewComponent
       this.isRandomSort = JSON.parse(storageRandomToggle);
       this.changeSortPlaylist(this.isRandomSort);
     }
+
+    // Force a supprimer le loader si il y a une erreur
+    setTimeout(() => {
+      this.afterloaded();
+    }, 5000);
   }
 
   isLikedByUser() {
@@ -229,68 +235,85 @@ export class PlayerInterviewComponent
   }
 
   async getDataClip() {
-    const storage = localStorage.getItem('allContent');
-    if (storage) {
-      console.log('getData Storage');
-      this.video = JSON.parse(storage).find((video: { url: any }) => {
-        return video.url === this.idVideo;
-      });
-      console.log(this.video);
-    } else {
-      this.video = await this.apiVald.getVideoByUrl(this.idVideo).subscribe({
-        next: (video) => {
-          this.video = video;
-          console.log(this.video);
-        },
-        error: (error) => {
-          console.error('Erreur lors du chargement de la vidéo', error);
-        },
-      });
+    try {
+      const storage = localStorage.getItem('allContent');
+      if (storage) {
+        console.log('getData Storage');
+        this.video = JSON.parse(storage).find((video: { url: any }) => {
+          return video.url === this.idVideo;
+        });
+        console.log(this.video);
+      } else {
+        this.video = await this.apiVald.getVideoByUrl(this.idVideo).subscribe({
+          next: (video) => {
+            this.video = video;
+            console.log(this.video);
+          },
+          error: (error) => {
+            console.error('Erreur lors du chargement de la vidéo', error);
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Erreur dans getDataClip: ', error);
     }
   }
 
   getPlaylist() {
-    const storage = localStorage.getItem('videosPlaylist');
-    if (storage) {
-      console.log('IN LOCAL STORAGE');
+    try {
+      const storage = localStorage.getItem('videosPlaylist');
+      if (storage) {
+        console.log('IN LOCAL STORAGE');
 
-      this.playlist = JSON.parse(storage);
-      this.selectedIndexVideo = this.playlist.findIndex((clip: any) => {
-        return (
-          clip.url.trim().toLowerCase() == this.idVideo.trim().toLowerCase()
-        );
-      });
-      console.log(this.playlist.map((video: { name: any }) => video.name));
-    } else {
-      this.apiVald.getVideos().subscribe({
-        next: (data) => {
-          this.playlist = data.sort((a: any, b: any) => {
-            // Comparaison par catégorie
-            const categorySort = a.categorie.localeCompare(b.categorie);
-            if (categorySort !== 0) return categorySort;
+        this.playlist = JSON.parse(storage);
+        this.selectedIndexVideo = this.playlist.findIndex((clip: any) => {
+          return (
+            clip.url.trim().toLowerCase() == this.idVideo.trim().toLowerCase()
+          );
+        });
+        console.log(this.playlist.map((video: { name: any }) => video.name));
+      } else {
+        this.apiVald.getVideos().subscribe({
+          next: (data) => {
+            this.playlist = data.sort((a: any, b: any) => {
+              // Comparaison par catégorie
+              const categorySort = a.categorie.localeCompare(b.categorie);
+              if (categorySort !== 0) return categorySort;
 
-            // Comparaison par nom d'auteur
-            const authorComparison = a.author.nameArtiste.localeCompare(
-              b.author.nameArtiste
+              // Comparaison par nom d'auteur
+              const authorComparison = a.author.nameArtiste.localeCompare(
+                b.author.nameArtiste
+              );
+              if (authorComparison !== 0) return authorComparison;
+
+              // Comparaison par date (du plus ancien au plus récent)
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+            console.log(
+              this.playlist.map((video: { name: any }) => video.name)
             );
-            if (authorComparison !== 0) return authorComparison;
+            this.selectedIndexVideo = this.playlist.findIndex((clip: any) => {
+              return (
+                clip.url.trim().toLowerCase() ==
+                this.idVideo.trim().toLowerCase()
+              );
+            });
 
-            // Comparaison par date (du plus ancien au plus récent)
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
-          });
-          console.log(this.playlist.map((video: { name: any }) => video.name));
-          this.selectedIndexVideo = this.playlist.findIndex((clip: any) => {
-            return (
-              clip.url.trim().toLowerCase() == this.idVideo.trim().toLowerCase()
+            localStorage.setItem(
+              'videosPlaylist',
+              JSON.stringify(this.playlist)
             );
-          });
-
-          localStorage.setItem('videosPlaylist', JSON.stringify(this.playlist));
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération de la playlist', error);
-        },
-      });
+          },
+          error: (error) => {
+            console.error(
+              'Erreur lors de la récupération de la playlist',
+              error
+            );
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Erreur dans getPlaylist: ', error);
     }
   }
 

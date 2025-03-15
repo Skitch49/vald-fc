@@ -27,6 +27,8 @@ export class MyListComponent implements OnInit {
   cardElement: HTMLElement | null = null;
   @ViewChild('selectSort') selectSort!: any;
   @ViewChild(ToastComponent) toastComponent!: ToastComponent;
+  @ViewChild('loader') loader!: any;
+
 
   cardStates: { [key: string]: boolean } = {}; // Un objet pour suivre l'état de suppression des cartes
 
@@ -86,6 +88,11 @@ export class MyListComponent implements OnInit {
         this.videosDisplay.sort((a: any, b: any) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
+
+        if (this.loader && this.loader.nativeElement) {
+          this.loader.nativeElement.remove();
+        }
+  
       });
     }
   }

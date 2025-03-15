@@ -2,7 +2,13 @@
   command = "ng build"
   publish = "dist/vald-fc/browser"
 
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+
 [[redirects]]
-  from = "/*"
-  to = "/"
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
   status = 200
+  force = true

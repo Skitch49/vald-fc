@@ -2,7 +2,7 @@
   min-height: 100vh;
   .playerBox {
     position: absolute;
-    z-index: 0;
+    z-index: -1;
     width: 100%; /* Utilise 100% de la largeur de la vue avec une marge de 20px */
     height: calc(
       (9 / 16) * (100vw)

@@ -74,7 +74,7 @@
           </svg>
         </button>
       </div>
-      <div class="content-header-info-right">
+      <div class="content-header-info-right" *ngIf="playlist">
         <app-toggle
           [checked]="isRandomSort"
           nameLabelForTrue="Prochaine interview aléatoire"
@@ -114,7 +114,7 @@
         </div>
       </div>
     </div>
-    <p class="nextVideo">
+    <p class="nextVideo" *ngIf="playlist">
       Video suivante:&nbsp;
       <span
         [routerLink]="[

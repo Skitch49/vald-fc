@@ -56,6 +56,7 @@ export class PlayerComponent
   }
   afterloaded() {
     if (this.loader) {
+      this.viewportScroller.scrollToPosition([0, 0]);
       this.loader.nativeElement.classList.add('loading-out');
       setTimeout(() => {
         this.loader.nativeElement.remove();
@@ -87,6 +88,11 @@ export class PlayerComponent
       this.isRandomSort = JSON.parse(storageRandomToggle);
       this.changeSortPlaylist(this.isRandomSort);
     }
+
+    // Force a supprimer le loader si il y a une erreur
+    setTimeout(() => {
+      this.afterloaded();
+    }, 5000);
   }
 
   isLikedByUser() {
@@ -218,6 +224,7 @@ export class PlayerComponent
   }
 
   getDataClip(idClip: string) {
+    try{
     const storage = localStorage.getItem('clipsPlaylist');
     if (storage) {
       console.log('IN LOCAL STORAGE');
@@ -246,39 +253,46 @@ export class PlayerComponent
         },
       });
     }
+  } catch (error) {
+    console.error('Erreur dans getDataClip: ', error);
+  }
   }
   getPlaylist(): void {
-    const storage = localStorage.getItem('clipsPlaylist');
-    if (storage) {
-      console.log('IN LOCAL STORAGE');
-      this.playlist = JSON.parse(storage);
-      this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
-        return (
-          clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
-        );
-      });
-    } else {
-      console.log('NOT IN LOCAL STORAGE');
-
-      this.apiVald.getClips().subscribe((data) => {
-        this.playlist = data
-          .filter(
-            (clip: any) =>
-              clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
-          )
-          .sort((a: any, b: any) => {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
-            return dateB.getTime() - dateA.getTime();
-          });
+    try {
+      const storage = localStorage.getItem('clipsPlaylist');
+      if (storage) {
+        console.log('IN LOCAL STORAGE');
+        this.playlist = JSON.parse(storage);
         this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
           return (
             clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
           );
         });
+      } else {
+        console.log('NOT IN LOCAL STORAGE');
 
-        localStorage.setItem('clipsPlaylist', JSON.stringify(this.playlist));
-      });
+        this.apiVald.getClips().subscribe((data) => {
+          this.playlist = data
+            .filter(
+              (clip: any) =>
+                clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
+            )
+            .sort((a: any, b: any) => {
+              const dateA = new Date(a.date);
+              const dateB = new Date(b.date);
+              return dateB.getTime() - dateA.getTime();
+            });
+          this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
+            return (
+              clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
+            );
+          });
+
+          localStorage.setItem('clipsPlaylist', JSON.stringify(this.playlist));
+        });
+      }
+    } catch (error) {
+      console.error('Erreur dans getPlaylist :', error);
     }
   }
 

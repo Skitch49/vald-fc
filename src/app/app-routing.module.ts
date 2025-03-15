@@ -30,6 +30,7 @@ const routes: Routes = [
   { path: 'add-data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
   { path: 'add-data/:data', component: AddDataComponent , canActivate: [adminAuthGuard]}  ,
   { path: 'dashboard', component: DashboardComponent, canActivate: [adminAuthGuard]},
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 
 ];
 

@@ -1,12 +1,9 @@
 <div class="container">
-
   <app-toast
-  (onActionConfirmed)="onToastConfirmed()"
-  (onUndoAction)="onToastUndo()"
-
-></app-toast>
-<div #toastContainer></div>
-
+    (onActionConfirmed)="onToastConfirmed()"
+    (onUndoAction)="onToastUndo()"
+  ></app-toast>
+  <div #toastContainer></div>
 
   <div class="top-container" *ngIf="videos && videos.length > 0">
     <h3>Vous avez {{ videos.length }} vidéos en favoris !</h3>
@@ -40,12 +37,19 @@
   </div>
 
   <div class="wrapper" *ngIf="!isMobileScreen">
-    <div class="not-liked" *ngIf='this.videos == ""'>
+    <div class="container-loader" #loader>
+      <div class="loader"></div>
+    </div>
+    <div class="not-liked" *ngIf="this.videos == ''">
       <h3>Retrouver vos vidéos favorites ici !</h3>
       <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>
     </div>
 
-    <div class="card card-remove" *ngFor="let video of videosDisplay" [ngClass]="{ 'card-remove': cardStates[video._id] }">
+    <div
+      class="card card-remove"
+      *ngFor="let video of videosDisplay"
+      [ngClass]="{ 'card-remove': cardStates[video._id] }"
+    >
       <figure routerLink="/clip/{{ video.url }}" *ngIf="video.artiste">
         <img src="https://i.ytimg.com/vi/{{ video.url }}/hqdefault.jpg" />
       </figure>
@@ -191,6 +195,9 @@
     </div>
   </div>
   <div class="wrapper" *ngIf="isMobileScreen">
+    <div class="container-loader" #loader>
+      <div class="loader"></div>
+    </div>
     <div class="not-liked" *ngIf="!videos || videos.length == 0">
       <h3>Retrouver vos vidéos favorites ici !</h3>
       <p>Vous n'avez aucune vidéos dans vos favoris actuellement</p>

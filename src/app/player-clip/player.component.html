@@ -73,7 +73,7 @@
           </svg>
         </button>
       </div>
-      <div class="content-header-info-right">
+      <div class="content-header-info-right" *ngIf="playlist">
         <app-toggle
           [checked]="isRandomSort"
           nameLabelForTrue="Prochain clip aléatoire"
@@ -215,7 +215,7 @@
         </div>
       </div>
     </div>
-    <p class="nextVideo">
+    <p class="nextVideo" *ngIf="playlist">
       Clip suivant:&nbsp;
       <span
         [routerLink]="[
