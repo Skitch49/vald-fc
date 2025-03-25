@@ -165,10 +165,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   getAllContent(): void {
-    const storedData = localStorage.getItem('allContent');
+    const storedData = sessionStorage.getItem('allContent');
   
     if (storedData) {
-      this.contents = JSON.parse(storedData);
+      this.contents = JSON.parse(storedData).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());;
       this.applyFilter();
       if (this.loader && this.loader.nativeElement) {
         this.loader.nativeElement.remove();
@@ -177,7 +177,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.apiValdService.getAllContent().subscribe((data) => {
         this.getTypeContent(data);
         this.contents = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        localStorage.setItem('allContent', JSON.stringify(this.contents));
+        sessionStorage.setItem('allContent', JSON.stringify(this.contents));
         this.applyFilter();
         if (this.loader && this.loader.nativeElement) {
           this.loader.nativeElement.remove();

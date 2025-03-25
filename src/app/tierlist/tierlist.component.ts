@@ -1086,7 +1086,7 @@ export class TierlistComponent implements OnDestroy {
   img1: string = '../../assets/covers/nqntmqmqmb.webp';
   img2: string = '../../assets/covers/nqnt 2.webp';
   img3: string = '../../assets/covers/xeu.webp';
-  img4: string = '../../assets/covers/vv5.webp';
+  img4: string = '../../assets/covers/pandémonium.webp';
   lezarman: boolean = false;
   @ViewChildren('coverIntro') coverIntroElements?: QueryList<ElementRef>;
   @ViewChild('file') file!: any;
@@ -1188,9 +1188,9 @@ export class TierlistComponent implements OnDestroy {
             : (this.img3 = '../../assets/covers/xeu.webp');
           break;
         case 4:
-          this.img4 == '../../assets/covers/vv5.webp'
+          this.img4 == '../../assets/covers/pandémonium.webp'
             ? (this.img4 = '../../assets/covers/lezarman/lezarman-4.webp')
-            : (this.img4 = '../../assets/covers/vv5.webp');
+            : (this.img4 = '../../assets/covers/pandémonium.webp');
           break;
       }
       if (

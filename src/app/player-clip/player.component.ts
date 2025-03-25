@@ -17,9 +17,7 @@ import { GoogleApiService } from '../services/google-api.service';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent
-  implements OnInit, AfterViewInit, AfterContentChecked
-{
+export class PlayerComponent implements OnInit, AfterContentChecked {
   @ViewChild('youtubePlayer') youtubePlayer!: YouTubePlayer;
   @ViewChild('loader') loader!: any;
   playerConfig = {
@@ -36,7 +34,9 @@ export class PlayerComponent
   userId: string | null = null;
   hoverStates: { [key: string]: boolean } = {}; //for tooltip
 
-  isRandomSort: boolean = false; // toggle for sort Next Video
+  isRandomSort: boolean = false; // toggle for sort Next Clip
+  sortDirection: boolean = true; // toggle for sort ASC or DESC Clip
+
   constructor(
     private route: ActivatedRoute,
     private apiVald: ApiValdService,
@@ -51,9 +51,6 @@ export class PlayerComponent
     }
   }
 
-  ngAfterViewInit(): void {
-    this.viewportScroller.scrollToPosition([0, 0]);
-  }
   afterloaded() {
     if (this.loader) {
       this.viewportScroller.scrollToPosition([0, 0]);
@@ -84,14 +81,27 @@ export class PlayerComponent
       this.userId = userId;
     });
     const storageRandomToggle = localStorage.getItem('isRandomSort');
-    if (storageRandomToggle) {
+    const storageSortDirection = localStorage.getItem('sortDirection');
+
+    if (storageRandomToggle && JSON.parse(storageRandomToggle) === true) {
       this.isRandomSort = JSON.parse(storageRandomToggle);
-      this.changeSortPlaylist(this.isRandomSort);
+      if (storageSortDirection) {
+        this.sortDirection = JSON.parse(storageSortDirection);
+      }
+      this.changeSortPlaylist(this.isRandomSort, this.sortDirection);
+    } else if (storageSortDirection) {
+      this.sortDirection = JSON.parse(storageSortDirection);
+      this.changeSortPlaylist(false, this.sortDirection);
     }
 
     // Force a supprimer le loader si il y a une erreur
     setTimeout(() => {
-      this.afterloaded();
+      if (this.loader) {
+        this.loader.nativeElement.classList.add('loading-out');
+        setTimeout(() => {
+          this.loader.nativeElement.remove();
+        }, 200);
+      }
     }, 5000);
   }
 
@@ -120,9 +130,10 @@ export class PlayerComponent
     });
   }
 
-  changeSortPlaylist(check: boolean) {
+  changeSortPlaylist(check: boolean, sortDirection: boolean) {
     this.isRandomSort = check;
     localStorage.setItem('isRandomSort', JSON.stringify(this.isRandomSort));
+    localStorage.setItem('sortDirection', JSON.stringify(this.sortDirection));
     console.log('---------------');
     if (this.isRandomSort) {
       // mélanger le tableau this.playlist
@@ -138,16 +149,18 @@ export class PlayerComponent
       console.log(this.playlist[this.selectedIndexClip + 1].name);
     } else {
       // remettre le tableau this.playlist a l'état initial
-      this.playlist = this.playlist
-        .filter(
-          (clip: any) =>
-            clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
-        )
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
+      this.playlist = this.playlist.sort((a: any, b: any) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (sortDirection) {
+          console.log('DESC');
           return dateB.getTime() - dateA.getTime();
-        });
+        } else {
+          console.log('ASC');
+
+          return dateA.getTime() - dateB.getTime();
+        }
+      });
       this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
         return (
           clip.url.trim().toLowerCase() == this.clip.url.trim().toLowerCase()
@@ -178,6 +191,7 @@ export class PlayerComponent
         }
         break;
       case 1: // Lecture en cours
+      this.errorLoadVideo = false;
         console.log('Code 1');
         this.afterloaded();
 
@@ -205,6 +219,7 @@ export class PlayerComponent
     e.target.setVolume(100);
     e.target.playVideo();
     this.afterloaded();
+    this.errorLoadVideo = false;
   }
 
   nextVideo(e: any) {
@@ -224,16 +239,26 @@ export class PlayerComponent
   }
 
   getDataClip(idClip: string) {
-    try{
-    const storage = localStorage.getItem('clipsPlaylist');
-    if (storage) {
-      console.log('IN LOCAL STORAGE');
+    try {
+      const storage = sessionStorage.getItem('clipsPlaylist');
+      if (storage) {
+        console.log('IN LOCAL STORAGE');
 
-      this.clip = JSON.parse(storage).find(
-        (clip: { url: string }) => clip.url === this.idClip
-      );
-      // Si clip existe mais n'est pas répertorier dans la playlist car restreint par youtube
-      if (!this.clip) {
+        this.clip = JSON.parse(storage).find(
+          (clip: { url: string }) => clip.url === this.idClip
+        );
+        // Si clip existe mais n'est pas répertorier dans la playlist car restreint par youtube
+        if (!this.clip) {
+          this.apiVald.getClipsByUrl(idClip).subscribe({
+            next: (clip) => {
+              this.clip = clip;
+            },
+            error: (error) => {
+              console.error('Erreur lors du chargement de la vidéo', error);
+            },
+          });
+        }
+      } else {
         this.apiVald.getClipsByUrl(idClip).subscribe({
           next: (clip) => {
             this.clip = clip;
@@ -243,26 +268,24 @@ export class PlayerComponent
           },
         });
       }
-    } else {
-      this.apiVald.getClipsByUrl(idClip).subscribe({
-        next: (clip) => {
-          this.clip = clip;
-        },
-        error: (error) => {
-          console.error('Erreur lors du chargement de la vidéo', error);
-        },
-      });
+    } catch (error) {
+      console.error('Erreur dans getDataClip: ', error);
     }
-  } catch (error) {
-    console.error('Erreur dans getDataClip: ', error);
-  }
   }
   getPlaylist(): void {
     try {
-      const storage = localStorage.getItem('clipsPlaylist');
+      const storage = sessionStorage.getItem('clipsPlaylist');
       if (storage) {
         console.log('IN LOCAL STORAGE');
-        this.playlist = JSON.parse(storage);
+        this.playlist = JSON.parse(storage).sort((a: any, b: any) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          if (this.sortDirection) {
+            return dateB.getTime() - dateA.getTime();
+          } else {
+            return dateA.getTime() - dateB.getTime();
+          }
+        });
         this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
           return (
             clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
@@ -272,23 +295,25 @@ export class PlayerComponent
         console.log('NOT IN LOCAL STORAGE');
 
         this.apiVald.getClips().subscribe((data) => {
-          this.playlist = data
-            .filter(
-              (clip: any) =>
-                clip.url !== 'uFnlCzgThS8' && clip.url !== 'vfUFTHAQKeg'
-            )
-            .sort((a: any, b: any) => {
-              const dateA = new Date(a.date);
-              const dateB = new Date(b.date);
+          this.playlist = data.sort((a: any, b: any) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            if (this.sortDirection) {
               return dateB.getTime() - dateA.getTime();
-            });
+            } else {
+              return dateA.getTime() - dateB.getTime();
+            }
+          });
           this.selectedIndexClip = this.playlist.findIndex((clip: any) => {
             return (
               clip.url.trim().toLowerCase() == this.idClip.trim().toLowerCase()
             );
           });
 
-          localStorage.setItem('clipsPlaylist', JSON.stringify(this.playlist));
+          sessionStorage.setItem(
+            'clipsPlaylist',
+            JSON.stringify(this.playlist)
+          );
         });
       }
     } catch (error) {

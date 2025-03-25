@@ -37,6 +37,7 @@ export class PlayerInterviewComponent
   hoverStates: { [key: string]: boolean } = {}; //for tooltip
 
   isRandomSort: boolean = false; // toggle for sort Next Video
+  sortDirection: boolean = true; // toggle for sort ASC or DESC Video
 
   constructor(
     private route: ActivatedRoute,
@@ -88,14 +89,28 @@ export class PlayerInterviewComponent
       });
     });
     const storageRandomToggle = localStorage.getItem('isRandomSort');
-    if (storageRandomToggle) {
+    const storageSortDirection = localStorage.getItem('sortDirection');
+
+    if (storageRandomToggle && JSON.parse(storageRandomToggle) === true) {
       this.isRandomSort = JSON.parse(storageRandomToggle);
-      this.changeSortPlaylist(this.isRandomSort);
+      if (storageSortDirection) {
+        this.sortDirection = JSON.parse(storageSortDirection);
+      }
+
+      this.changeSortPlaylist(this.isRandomSort, this.sortDirection);
+    } else if (storageSortDirection) {
+      this.sortDirection = JSON.parse(storageSortDirection);
+      this.changeSortPlaylist(false, this.sortDirection);
     }
 
     // Force a supprimer le loader si il y a une erreur
     setTimeout(() => {
-      this.afterloaded();
+      if (this.loader) {
+        this.loader.nativeElement.classList.add('loading-out');
+        setTimeout(() => {
+          this.loader.nativeElement.remove();
+        }, 200);
+      }
     }, 5000);
   }
 
@@ -125,9 +140,11 @@ export class PlayerInterviewComponent
       });
   }
 
-  changeSortPlaylist(check: boolean) {
+  changeSortPlaylist(check: boolean, sortDirection: boolean) {
     this.isRandomSort = check;
     localStorage.setItem('isRandomSort', JSON.stringify(this.isRandomSort));
+    localStorage.setItem('sortDirection', JSON.stringify(this.sortDirection));
+
     console.log('---------------');
     if (this.isRandomSort) {
       // mélanger le tableau this.playlist
@@ -154,8 +171,15 @@ export class PlayerInterviewComponent
         );
         if (authorComparison !== 0) return authorComparison;
 
-        // Comparaison par date (du plus ancien au plus récent)
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+        // Comparaison par date (ASC ou DESC suivant sortDirection)
+        if (sortDirection) {
+          console.log('DESC');
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        } else {
+          console.log('ASC');
+
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }
       });
       this.selectedIndexVideo = this.playlist.findIndex((video: any) => {
         return (
@@ -187,6 +211,7 @@ export class PlayerInterviewComponent
         }
         break;
       case 1: // Lecture en cours
+      this.errorLoadVideo = false;
         console.log('Code 1');
         this.afterloaded();
 
@@ -214,6 +239,7 @@ export class PlayerInterviewComponent
     e.target.setVolume(100);
     e.target.playVideo();
     this.afterloaded();
+    this.errorLoadVideo = false;
   }
 
   //If error iframe
@@ -236,7 +262,7 @@ export class PlayerInterviewComponent
 
   async getDataClip() {
     try {
-      const storage = localStorage.getItem('allContent');
+      const storage = sessionStorage.getItem('allContent');
       if (storage) {
         console.log('getData Storage');
         this.video = JSON.parse(storage).find((video: { url: any }) => {
@@ -261,11 +287,17 @@ export class PlayerInterviewComponent
 
   getPlaylist() {
     try {
-      const storage = localStorage.getItem('videosPlaylist');
+      const storage = sessionStorage.getItem('videosPlaylist');
       if (storage) {
         console.log('IN LOCAL STORAGE');
 
-        this.playlist = JSON.parse(storage);
+        this.playlist = JSON.parse(storage).sort((a: any, b: any) => {
+          if (this.sortDirection) {
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          } else {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+          }
+        });
         this.selectedIndexVideo = this.playlist.findIndex((clip: any) => {
           return (
             clip.url.trim().toLowerCase() == this.idVideo.trim().toLowerCase()
@@ -287,7 +319,11 @@ export class PlayerInterviewComponent
               if (authorComparison !== 0) return authorComparison;
 
               // Comparaison par date (du plus ancien au plus récent)
-              return new Date(a.date).getTime() - new Date(b.date).getTime();
+              if (this.sortDirection) {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+              } else {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+              }
             });
             console.log(
               this.playlist.map((video: { name: any }) => video.name)
@@ -299,7 +335,7 @@ export class PlayerInterviewComponent
               );
             });
 
-            localStorage.setItem(
+            sessionStorage.setItem(
               'videosPlaylist',
               JSON.stringify(this.playlist)
             );

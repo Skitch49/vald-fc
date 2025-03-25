@@ -17,6 +17,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
   styleUrl: './contact.component.scss',
 })
 export class ContactComponent implements OnInit, OnDestroy {
+  public envoie: boolean = false;
   private subscription: Subscription = new Subscription();
 
   constructor(
@@ -27,6 +28,14 @@ export class ContactComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private _platformId: any
   ) {}
 
+  navigateToExternalLink(link: string) {
+    window.open(link, '_blank');
+  }
+  RotationAnimation(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    target.classList.add('rotate-animation');
+    setTimeout(() => target.classList.remove('rotate-animation'), 751);
+  }
   ngOnInit(): void {
     if (isPlatformBrowser(this._platformId)) {
       this._document.body.classList.add('recaptcha');
@@ -76,10 +85,10 @@ export class ContactComponent implements OnInit, OnDestroy {
   });
 
   public submit() {
-    const recaptchaSubscription = this.recaptchaV3Service
-      .execute('importantAction')
-      .subscribe((token: string) => {
-        if (this.formContact.valid) {
+    if (this.formContact.valid) {
+      const recaptchaSubscription = this.recaptchaV3Service
+        .execute('importantAction')
+        .subscribe((token: string) => {
           const data = {
             name: this.Name?.value,
             firstName: this.FirstName?.value,
@@ -89,13 +98,16 @@ export class ContactComponent implements OnInit, OnDestroy {
           console.log(data);
           this.apiVald.postMail(data).subscribe();
           this.formContact.reset();
-        } else {
-          console.log(
-            'Erreur dans le formulaire. Veuillez remplir tout les champs nécéssaires !'
-          );
-        }
-      });
+          this.envoie = true;
+        });
 
-    this.subscription.add(recaptchaSubscription);
+      this.subscription.add(recaptchaSubscription);
+    } else {
+      this.envoie = false;
+      this.formContact.markAllAsTouched();
+      console.log(
+        'Erreur dans le formulaire. Veuillez remplir tout les champs nécéssaires !'
+      );
+    }
   }
 }

@@ -13,7 +13,9 @@
         <div class="item">
           <label
             for="firstName"
-            [ngClass]="{ 'error-form': FirstName!.errors && FirstName!.touched }"
+            [ngClass]="{
+              'error-form': FirstName!.errors && FirstName!.touched && !envoie
+            }"
             >Prénom</label
           >
           <input
@@ -26,7 +28,9 @@
         <div class="item">
           <label
             for="name"
-            [ngClass]="{ 'error-form': Name!.errors && Name!.touched }"
+            [ngClass]="{
+              'error-form': Name!.errors && Name!.touched && !envoie
+            }"
             >Nom</label
           >
           <input
@@ -40,7 +44,9 @@
       <div class="item">
         <label
           for="email"
-          [ngClass]="{ 'error-form': Email!.errors && Email!.touched }"
+          [ngClass]="{
+            'error-form': Email!.errors && Email!.touched && !envoie
+          }"
           >Email</label
         >
         <input
@@ -53,7 +59,9 @@
       <div class="item">
         <label
           for="messsage"
-          [ngClass]="{ 'error-form': Message!.errors && Message!.touched }"
+          [ngClass]="{
+            'error-form': Message!.errors && Message!.touched && !envoie
+          }"
           >Message</label
         >
         <textarea
@@ -65,11 +73,38 @@
       <div class="item">
         <button
           type="submit"
-          [ngClass]="{ active: formContact!.valid && Message!.touched }"
+          [ngClass]="{
+            active: formContact!.valid && Message!.touched && !envoie
+          }"
         >
           Envoyer
         </button>
       </div>
     </form>
+    <p class="succes-msg" [ngClass]="{active : envoie}">Message envoyé !</p>
+  </div>
+
+  <div class="social-media-section">
+    <h2>Sinon contact moi directement ici !</h2>
+    <div class="container-social-media">
+      <div (click)="navigateToExternalLink('https://x.com/Skitch49')">
+        <img
+          src="../../../../assets/icons/icon_twitter.webp"
+          id="twitter"
+          (mouseenter)="RotationAnimation($event)"
+        />
+      </div>
+      <div
+        (click)="
+          navigateToExternalLink('https://www.instagram.com/alexis_delaunay_49')
+        "
+      >
+        <img
+          src="../../../../assets/icons/icon_instagram.png"
+          id="github"
+          (mouseenter)="RotationAnimation($event)"
+        />
+      </div>
+    </div>
   </div>
 </div>

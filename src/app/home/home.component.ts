@@ -96,15 +96,15 @@ export class HomeComponent {
     this.updateSafeUrl();
 
     if (typeof window !== 'undefined' && window.document) {
-      localStorage.setItem('mute', this.isMuted.toString());
+      sessionStorage.setItem('mute', this.isMuted.toString());
     }
   }
 
   getAllVideosByCategory() {
-    const storedData = localStorage.getItem('allContent');
+    const storedData = sessionStorage.getItem('allContent');
 
     if (storedData) {
-      console.log('Récupération le localStorage...');
+      console.log('Récupération le sessionStorage...');
 
       try {
         this.videoByCategories = this.groupVideosByCategory(
@@ -117,15 +117,15 @@ export class HomeComponent {
         );
         return;
       } catch (error) {
-        console.warn('Données corrompues dans le localStorage, suppression...');
-        localStorage.removeItem('allContent');
+        console.warn('Données corrompues dans le sessionStorage, suppression...');
+        sessionStorage.removeItem('allContent');
       }
     } else {
       console.log("Récupération des vidéos depuis l'API...");
       this.apiVald.getAllContent().subscribe({
         next: (videos: any[]) => {
           this.getTypeContent(videos);
-          localStorage.setItem('allContent', JSON.stringify(videos));
+          sessionStorage.setItem('allContent', JSON.stringify(videos));
 
           this.videoByCategories = this.groupVideosByCategory(videos);
           this.videoByCategories.sort(this.randomSort);
@@ -167,7 +167,7 @@ export class HomeComponent {
     this.userId = this.google.getUserId();
     this.checkCategorieLoadded();
     if (typeof window !== 'undefined' && window.document) {
-      const muteValue = localStorage.getItem('mute');
+      const muteValue = sessionStorage.getItem('mute');
       if (muteValue) {
         this.isMuted = muteValue === 'true'; // Convertissez la chaîne en booléen
         this.updateSafeUrl();
@@ -187,7 +187,7 @@ export class HomeComponent {
   }
 
   getLastClip() {
-    const storage = localStorage.getItem('lastClip');
+    const storage = sessionStorage.getItem('lastClip');
     if (storage) {
      this.lastClip = JSON.parse(storage);
      this.updateSafeUrl()
@@ -200,7 +200,7 @@ export class HomeComponent {
             `https://www.youtube.com/embed/${this.lastClip.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastClip.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
           );
         this.lastClip.safeUrl = safeUrl;
-        localStorage.setItem('lastClip',JSON.stringify(this.lastClip));
+        sessionStorage.setItem('lastClip',JSON.stringify(this.lastClip));
       });
     }
   }

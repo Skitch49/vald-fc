@@ -1,4 +1,4 @@
-<div class="loader" #loader >
+<div class="loader" #loader>
   <div class="letters">
     <h2>
       <span>V</span>
@@ -22,7 +22,9 @@
       (error)="nextVideo($event)"
     >
     </youtube-player>
-    <div *ngIf="errorLoadVideo" class="error-loading">Prochaine Vidéo dans 5 secondes</div>
+    <div *ngIf="errorLoadVideo" class="error-loading">
+      Prochaine Vidéo dans 5 secondes
+    </div>
   </div>
   <div class="wrapper-info" *ngIf="clip">
     <h1>{{ clip.name }}</h1>
@@ -72,14 +74,6 @@
             ></path>
           </svg>
         </button>
-      </div>
-      <div class="content-header-info-right" *ngIf="playlist">
-        <app-toggle
-          [checked]="isRandomSort"
-          nameLabelForTrue="Prochain clip aléatoire"
-          nameLabelForFalse="Prochain clip par ordre de sortie"
-          (toggle)="changeSortPlaylist($event)"
-        ></app-toggle>
       </div>
     </div>
     <div class="content-footer-info">
@@ -215,16 +209,55 @@
         </div>
       </div>
     </div>
-    <p class="nextVideo" *ngIf="playlist">
-      Clip suivant:&nbsp;
-      <span
-        [routerLink]="[
-          '/clip',
-          playlist[(selectedIndexClip + 1) % playlist.length]?.url
-        ]"
-      >
-        {{ playlist[(selectedIndexClip + 1) % playlist.length]?.name }}
-      </span>
-    </p>
+    <div class="next-video-container">
+      <div class="header-next-video-container">
+        <h2>Prochain Clip</h2>
+        <div  *ngIf="playlist" class="content-sort">
+          <app-toggle
+            [checked]="isRandomSort"
+            nameLabelForTrue="Aléatoire"
+            nameLabelForFalse="Par ordre de sortie"
+            (toggle)="changeSortPlaylist($event, sortDirection)"
+          ></app-toggle>
+          <div class="sort-direction-container" *ngIf="!isRandomSort" (click)="
+          sortDirection = !sortDirection;
+          changeSortPlaylist(isRandomSort, sortDirection)
+        ">
+            <p *ngIf="!sortDirection">Aller au plus récent</p>
+            <p *ngIf="sortDirection">Aller au plus ancien</p>
+            <svg
+              
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              class="triangle"
+              [ngClass]="{
+                'triangle-bottom': sortDirection == true,
+                'triangle-top': sortDirection == false
+              }"
+              data-name="Play"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <p class="nextVideo" *ngIf="playlist">
+        Clip suivant:&nbsp;
+        <span
+          [routerLink]="[
+            '/clip',
+            playlist[(selectedIndexClip + 1) % playlist.length]?.url
+          ]"
+        >
+          {{ playlist[(selectedIndexClip + 1) % playlist.length]?.name }}
+        </span>
+      </p>
+    </div>
   </div>
 </div>

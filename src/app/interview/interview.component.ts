@@ -41,7 +41,7 @@ export class InterviewComponent {
     this.updateSafeUrl();
 
     if (typeof window !== 'undefined' && window.document) {
-      localStorage.setItem('mute', this.isMuted.toString());
+      sessionStorage.setItem('mute', this.isMuted.toString());
     }
   }
 
@@ -60,7 +60,7 @@ export class InterviewComponent {
     this.userId = this.google.getUserId();
 
     if (typeof window !== 'undefined' && window.document) {
-      const muteValue = localStorage.getItem('mute');
+      const muteValue = sessionStorage.getItem('mute');
       if (muteValue) {
         this.isMuted = muteValue === 'true'; // Convertissez la chaîne en booléen
         this.updateSafeUrl();
@@ -81,7 +81,7 @@ export class InterviewComponent {
   }
 
   getLastVideo() {
-    const storage = localStorage.getItem('lastVideo');
+    const storage = sessionStorage.getItem('lastVideo');
     if (storage) {
       this.lastVideo = JSON.parse(storage);
       this.updateSafeUrl()
@@ -93,16 +93,16 @@ export class InterviewComponent {
             `https://www.youtube.com/embed/${this.lastVideo.url}?si=bIxfegmGGYSRY5Wm&controls=0&showinfo=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&loop=1&playlist=${this.lastVideo.url}&disablekb=1&enablejsapi=1&autoplay=1&mute=${this.isMuted}`
           );
         this.lastVideo.safeUrl = safeUrl;
-        localStorage.setItem('lastVideo', JSON.stringify(this.lastVideo));
+        sessionStorage.setItem('lastVideo', JSON.stringify(this.lastVideo));
       });
     }
   }
 
   getVideosByCategory() {
-    const storedData = localStorage.getItem('allContent');
+    const storedData = sessionStorage.getItem('allContent');
 
     if (storedData) {
-      console.log('Récupération le localStorage...');
+      console.log('Récupération le sessionStorage...');
 
       try {
         // Récupérer les vidéos et filtrer uniquement les interview
@@ -120,14 +120,14 @@ export class InterviewComponent {
         return;
       } catch (error) {
         console.warn(error);
-        localStorage.removeItem('allContent');
+        sessionStorage.removeItem('allContent');
       }
     } else {
       console.log("Récupération des vidéos depuis l'API...");
       this.apiVald.getAllContent().subscribe({
         next: (videos: any[]) => {
           this.getTypeContent(videos);
-          localStorage.setItem('allContent', JSON.stringify(videos));
+          sessionStorage.setItem('allContent', JSON.stringify(videos));
           const filtredVideos = videos.filter((video) => !video.artiste);
           this.VideoByCategories = this.groupVideosByCategory(filtredVideos);
           this.displayedCategories = this.VideoByCategories.slice(

@@ -28,7 +28,7 @@
             <button
             *ngIf="this.userId"
               class="btn-circle-secondary"
-              (click)="likeClip(this.clip)"
+              (click)="likeClip(clip)"
             >
               <svg
                 *ngIf="!isLikedByUser(clip)"
@@ -66,7 +66,7 @@
               </svg>
             </button>
           </div>
-          <button class="btn-circle-secondary" (click)="openDialog(this.clip,this.userId,this.typeVideo)">
+          <button class="btn-circle-secondary" (click)="openDialog(clip,this.userId,this.typeVideo)">
             <svg
               width="24"
               height="24"
@@ -97,7 +97,7 @@
 <div class="wrapper" *ngIf="isMobileScreen">
   <swiper-container appSwiper #swiper [config]="getSwiperConfig()">
     <swiper-slide *ngFor="let clip of clips">
-      <figure (click)="openDialog(this.clip, this.userId,this.typeVideo)">
+      <figure (click)="openDialog(clip, this.userId,this.typeVideo)">
         <img src="https://i.ytimg.com/vi/{{ clip.url }}/hqdefault.jpg" />
       </figure>
     </swiper-slide>

@@ -55,6 +55,7 @@
           class="btn-circle"
           *ngIf="data.userId"
           (click)="likeClip(this.data.clip)"
+          title="Favoris"
         >
           <svg
             *ngIf="!isLikedByUser(clip)"
