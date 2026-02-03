@@ -42,7 +42,6 @@
     .title {
       font-size: 3.5vw;
       text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.39);
-
     }
     .wrapper-btn {
       display: flex;
@@ -108,6 +107,7 @@
         }
         p {
           line-height: 22px;
+          white-space: pre-line;
         }
       }
       .artiste-info {
@@ -134,7 +134,7 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-      .title-more-info{
+      .title-more-info {
         display: none;
         font-size: 16px;
         font-weight: 400;
@@ -191,17 +191,17 @@
   }
   .content-dialog {
     padding: 0 1.4em !important;
-    flex-direction: column!important;
-    gap: 0!important;
-    .right-content{
-      border-top:1px solid #686868 ;
+    flex-direction: column !important;
+    gap: 0 !important;
+    .right-content {
+      border-top: 1px solid #686868;
       margin-top: 10px;
       padding-top: 16px;
-      .title-more-info{
-        display: flex!important;
+      .title-more-info {
+        display: flex !important;
       }
-      p{
-        margin: 0!important;
+      p {
+        margin: 0 !important;
         padding-bottom: 8px;
       }
     }

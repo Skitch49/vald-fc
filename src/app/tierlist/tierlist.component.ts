@@ -905,6 +905,121 @@ export class TierlistComponent implements OnDestroy {
       title: 'Les échappés',
       album: 'Pandémonium',
     },
+    {
+      track: 1,
+      title: 'Démon Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 2,
+      title: 'Dieu Merci Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 3,
+      title: 'Régulation Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 4,
+      title: 'TAL/TAL',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 5,
+      title: 'Que Des Problèmes Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 6,
+      title: 'Prozaczopixan Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 7,
+      title: 'Interlude Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 8,
+      title: 'Gauche Droite Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 9,
+      title: 'RIP RAP',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 10,
+      title: 'Darknet Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 11,
+      title: 'UFOV Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 12,
+      title: 'Pandémonium Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 1,
+      title: 'Blauwburgwal',
+      album: 'Magnificat',
+    },
+    {
+      track: 2,
+      title: 'Dans la rue',
+      album: 'Magnificat',
+    },
+    {
+      track: 3,
+      title: 'Magnificat',
+      album: 'Magnificat',
+    },
+    {
+      track: 4,
+      title: 'Retomber amoureux',
+      album: 'Magnificat',
+    },
+    {
+      track: 5,
+      title: 'Dimension parallèle',
+      album: 'Magnificat',
+    },
+    {
+      track: 6,
+      title: 'Jolie Fleur',
+      album: 'Magnificat',
+    },
+    {
+      track: 7,
+      title: 'Abysses',
+      album: 'Magnificat',
+    },
+    {
+      track: 8,
+      title: 'Décadence',
+      album: 'Magnificat',
+    },
+    {
+      track: 9,
+      title: 'Strass & Paillettes',
+      album: 'Magnificat',
+    },
+    {
+      track: 10,
+      title: "Changer d'Air",
+      album: 'Magnificat',
+    },
+    {
+      track: 11,
+      title: 'Toujours Pareil',
+      album: 'Magnificat',
+    },
   ];
 
   YourBestAlbum: any[] = [];
@@ -973,6 +1088,16 @@ export class TierlistComponent implements OnDestroy {
       track: 17,
       title: 'Paradis perdu',
       album: 'Pandémonium',
+    },
+    {
+      track: 13,
+      title: 'FLPVC Reloaded',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 12,
+      title: 'Mamacita',
+      album: 'Magnificat',
     },
   ];
 
@@ -1077,6 +1202,21 @@ export class TierlistComponent implements OnDestroy {
       title: 'Victoire',
       album: 'Pandémonium victoire',
     },
+    {
+      track: 14,
+      title: 'MYM Bonus Aociz',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 15,
+      title: 'Superman Bonus Aociz',
+      album: 'Pandémonium Reloaded',
+    },
+    {
+      track: 16,
+      title: 'Victoire Bonus Aociz',
+      album: 'Pandémonium Reloaded',
+    },
   ];
   menu: boolean = true;
   quizz: boolean = false;
@@ -1117,7 +1257,7 @@ export class TierlistComponent implements OnDestroy {
 
   filteredTracks() {
     const filteredTracks = this.albums.filter(
-      (album) => album.track === this.currentTrack
+      (album) => album.track === this.currentTrack,
     );
     if (this.currentTrack === 16) {
       return this.outroAlbum;
@@ -1245,9 +1385,13 @@ export class TierlistComponent implements OnDestroy {
       });
 
       // Partager l'image
-      if (navigator.canShare({title: "L'album parfait de VALD",
-        text: 'Découvrez mon album parfait de VALD!',
-        files: [file],})) {
+      if (
+        navigator.canShare({
+          title: "L'album parfait de VALD",
+          text: 'Découvrez mon album parfait de VALD!',
+          files: [file],
+        })
+      ) {
         await navigator.share({
           title: "L'album parfait de VALD",
           text: 'Découvrez mon album parfait de VALD!',
@@ -1257,7 +1401,7 @@ export class TierlistComponent implements OnDestroy {
         this.message = "Merci d'avoir partagée !";
       } else {
         console.error(
-          "L'API Web Share n'est pas prise en charge dans ce navigateur."
+          "L'API Web Share n'est pas prise en charge dans ce navigateur.",
         );
         this.message = "Impossible de partager l'image depuis ce navigateur.";
       }
